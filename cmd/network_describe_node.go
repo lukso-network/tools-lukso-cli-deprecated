@@ -5,9 +5,9 @@ Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"cli/utils"
-	"cli/utils/gethrpc"
 	"fmt"
+	"github.com/lukso-network/lukso-cli/utils"
+	"github.com/lukso-network/lukso-cli/utils/gethrpc"
 	"github.com/spf13/cobra"
 )
 
