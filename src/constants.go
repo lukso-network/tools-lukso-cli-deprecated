@@ -11,6 +11,7 @@ const (
 // Keys that are used in Viper
 const (
 	ViperKeyNetworkName = "NETWORK_NAME"
+	ViperKeyConfigDir   = "CONFIGS_VOLUME"
 )
 
 var (

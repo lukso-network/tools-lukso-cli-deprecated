@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"os"
 	"path"
 
 	"github.com/lukso-network/lukso-cli/src"
@@ -87,4 +88,12 @@ func getConfigPath() (string, error) {
 	}
 
 	return envVariables["CONFIGS_VOLUME"], nil
+}
+
+func FileExists(filePath string) bool {
+	_, err := os.Stat(filePath)
+	if os.IsNotExist(err) {
+		return false
+	}
+	return true
 }
