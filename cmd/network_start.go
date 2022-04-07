@@ -6,10 +6,9 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/lukso-network/lukso-cli/src"
 	"github.com/lukso-network/lukso-cli/src/network"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
+	"os"
 	"os/exec"
 )
 
@@ -20,7 +19,11 @@ var startCmd = &cobra.Command{
 	Long: `start command spins up LUKSO node using .env and docker-compose file. It spins up
 consensus engine, execution engine and eth2-stats containers.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		configDirName := viper.GetString(src.ViperKeyConfigDir)
+		configDirName, err := network.GetConfigPath()
+		if err != nil {
+			cobra.CompErrorln(err.Error())
+			os.Exit(1)
+		}
 		if configDirName != "" && network.FileExists(configDirName) {
 			fmt.Println("You may need to provide super user (sudo) password to run docker (if needed)")
 			command := exec.Command("sudo", "docker-compose", "up", "-d", "init-geth", "geth", "prysm_beacon", "eth2stats-client")
@@ -35,14 +38,4 @@ consensus engine, execution engine and eth2-stats containers.`,
 
 func init() {
 	networkCmd.AddCommand(startCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// startCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// startCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }

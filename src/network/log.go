@@ -49,7 +49,6 @@ func getReadCloser(containerName, tail string, follow bool) io.ReadCloser {
 }
 
 func ReadLog(containerName, tail string, follow bool) {
-	fmt.Println(tail, follow)
 	stream := getReadCloser(containerName, tail, follow)
 	if stream == nil {
 		fmt.Printf("can't read log for %s. Check if the container is running or not\n", containerName)

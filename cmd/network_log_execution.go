@@ -11,14 +11,10 @@ import (
 
 // executionCmd represents the execution command
 var executionCmd = &cobra.Command{
-	Use:   "execution",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Use:     "execution",
+	Short:   "Show logs for execution engine",
+	Long:    `This command shows log for geth container where execution engine is running`,
+	Example: "lukso-cli network log execution --tail 30 -f",
 	Run: func(cmd *cobra.Command, args []string) {
 		network.ReadLog("lukso-geth", tail, follow)
 	},
@@ -26,14 +22,4 @@ to quickly create a Cobra application.`,
 
 func init() {
 	logCmd.AddCommand(executionCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// executionCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// executionCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }

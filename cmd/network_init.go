@@ -19,8 +19,6 @@ package cmd
 import (
 	"github.com/lukso-network/lukso-cli/src"
 	"github.com/lukso-network/lukso-cli/src/network"
-	"os"
-
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -31,6 +29,7 @@ var initCmd = &cobra.Command{
 	Short: "Initializes node by downloading configs and scripts",
 	Long: `This command downloads network starter scripts and config files
 from the github repository. It also updates node name and IP address in the .env file`,
+	Example: "lukso-cli network init --nodeconf ./node_config.yaml --chainId l16 --nodeName my_node --docker",
 	RunE: func(cmd *cobra.Command, args []string) error {
 
 		viper.Set(src.ViperKeyNetworkName, viper.GetString("chainId"))
@@ -41,11 +40,9 @@ from the github repository. It also updates node name and IP address in the .env
 func init() {
 	networkCmd.AddCommand(initCmd)
 
-	defaultNodeName, _ := os.Hostname()
-
-	initCmd.Flags().String("chainId", src.DefaultNetworkID, "provide chain ID for LUKSO network")
+	initCmd.Flags().String("chainId", src.DefaultNetworkID, "provide chainId for the LUKSO network")
 	initCmd.Flags().Bool("docker", true, "use docker or not")
-	initCmd.Flags().String("nodeName", defaultNodeName, "set node name")
+	initCmd.Flags().String("nodeName", "", "set node name")
 
 	viper.BindPFlag("chainId", initCmd.Flags().Lookup("chainId"))
 	viper.BindPFlag("docker", initCmd.Flags().Lookup("docker"))

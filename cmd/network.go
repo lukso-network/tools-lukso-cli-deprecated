@@ -5,19 +5,13 @@ Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/spf13/cobra"
 )
 
 // networkCmd represents the network command
 var networkCmd = &cobra.Command{
 	Use:   "network",
-	Short: "A brief description of your command",
-	Long:  ``,
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("network called")
-	},
+	Short: "subcommand \"network\" for LUKSO network related things",
 }
 
 func init() {

@@ -36,7 +36,7 @@ func downloadNetworkSetupFiles() error {
 }
 
 func downloadConfigFiles() error {
-	dstConfigPath, err := getConfigPath()
+	dstConfigPath, err := GetConfigPath()
 	if err != nil {
 		return err
 	}
@@ -53,21 +53,9 @@ func downloadConfigFiles() error {
 	return nil
 }
 
-func modifyEnvFile(hostName string) error {
-	envVariables, err := godotenv.Read(".env")
-	if err != nil {
-		return err
-	}
+func generateEnvFile(hostName string) error {
 
-	publicIp, err := getPublicIP()
-	if err != nil {
-		return err
-	}
-
-	envVariables["NODE_NAME"] = hostName
-	envVariables["EXTERNAL_IP"] = publicIp
-
-	return godotenv.Write(envVariables, ".env")
+	return godotenv.Write(getEnvironmentConfig(hostName), ".env")
 }
 
 func SetupNetwork(nodeName string) error {
@@ -76,7 +64,7 @@ func SetupNetwork(nodeName string) error {
 		return err
 	}
 
-	err = modifyEnvFile(nodeName)
+	err = generateEnvFile(nodeName)
 	if err != nil {
 		return err
 	}

@@ -11,10 +11,11 @@ const (
 // Keys that are used in Viper
 const (
 	ViperKeyNetworkName = "NETWORK_NAME"
-	ViperKeyConfigDir   = "CONFIGS_VOLUME"
+	ViperKeyNodeName    = "NODE_NAME"
+	ViperKeyExternalIP  = "EXTERNAL_IP"
 )
 
 var (
-	NetworkSetupFiles = []string{".env", "docker-compose.yml", "secrets.env", "send_deposit.sh"}
+	NetworkSetupFiles = []string{"docker-compose.yml", "secrets.env", "send_deposit.sh"}
 	ConfigFiles       = []string{"config.yaml", "genesis.json", "genesis.ssz"}
 )
