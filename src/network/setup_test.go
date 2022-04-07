@@ -13,7 +13,11 @@ func TestDownloadClient(t *testing.T) {
 		require.NoError(t, downloadNetworkSetupFiles())
 	})
 	t.Run("modify env file", func(t *testing.T) {
-		require.NoError(t, modifyEnvFile("test-host"))
+		viper.SetConfigFile("../../node_config.yaml")
+		err := viper.ReadInConfig()
+		require.NoError(t, err)
+
+		require.NoError(t, generateEnvFile("test-host"))
 	})
 	t.Run("download config files", func(t *testing.T) {
 		viper.Set(src.ViperKeyNetworkName, src.DefaultNetworkID)

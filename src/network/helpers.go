@@ -2,7 +2,6 @@ package network
 
 import (
 	"fmt"
-	"github.com/joho/godotenv"
 	"github.com/spf13/viper"
 	"io/ioutil"
 	"net/http"
@@ -78,13 +77,4 @@ func getPublicIP() (string, error) {
 		return "", err
 	}
 	return fmt.Sprintf("%s", ip), nil
-}
-
-func getConfigPath() (string, error) {
-	envVariables, err := godotenv.Read(".env")
-	if err != nil {
-		return "", err
-	}
-
-	return envVariables["CONFIGS_VOLUME"], nil
 }
