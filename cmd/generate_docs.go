@@ -7,7 +7,7 @@ import (
 )
 
 func GenerateDocuments() {
-	fmt.Println("generating documents")
+	fmt.Println("generating docs")
 	err := doc.GenMarkdownTree(initCmd, "docs")
 	if err != nil {
 		cobra.CompError(err.Error())

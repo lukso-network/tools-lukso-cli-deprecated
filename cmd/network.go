@@ -11,7 +11,7 @@ import (
 // networkCmd represents the network command
 var networkCmd = &cobra.Command{
 	Use:   "network",
-	Short: "Parent command of LUKSO network",
+	Short: "subcommand \"network\" for LUKSO network related things",
 }
 
 func init() {
