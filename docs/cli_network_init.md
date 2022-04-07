@@ -29,7 +29,7 @@ lukso-cli network init --config ./node_config.yaml --chainId l16 --nodeName my_n
 ### Options inherited from parent commands
 
 ```
-      --config string   config file (default is $HOME/node_config.yaml)
+      --config string   config file to run lukso-cli
 ```
 
 ### SEE ALSO

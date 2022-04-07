@@ -44,7 +44,13 @@ func init() {
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
 
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/node_config.yaml)")
+	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file to run lukso-cli")
+	err := rootCmd.MarkPersistentFlagRequired("config")
+	if err != nil {
+		cobra.CompErrorln(err.Error())
+		os.Exit(1)
+		return
+	}
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
@@ -56,19 +62,16 @@ func initConfig() {
 		// Use config file from the flag.
 		viper.SetConfigFile(cfgFile)
 	} else {
-		// Find home directory.
-		home, err := os.UserHomeDir()
-		cobra.CheckErr(err)
-
-		// Search config in home directory with name ".cli" (without extension).
-		viper.AddConfigPath(home)
-		viper.SetConfigType("yaml")
-		viper.SetConfigName(".cli")
+		fmt.Println("no config file provided. Unable to run lukso-cli")
+		return
 	}
 
 	viper.AutomaticEnv()
 
 	if err := viper.ReadInConfig(); err == nil {
 		fmt.Println("Using config file:", viper.ConfigFileUsed())
+	} else {
+		cobra.CompErrorln(err.Error())
+		os.Exit(1)
 	}
 }

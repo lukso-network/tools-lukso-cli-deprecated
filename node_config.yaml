@@ -1,5 +1,3 @@
-#Volumes
-
 configs:
   volume: ./configs
 
