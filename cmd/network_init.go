@@ -40,7 +40,7 @@ from the github repository. It also updates node name and IP address in the .env
 func init() {
 	networkCmd.AddCommand(initCmd)
 
-	initCmd.Flags().String("chainId", src.DefaultNetworkID, "provide chain ID for LUKSO network")
+	initCmd.Flags().String("chainId", src.DefaultNetworkID, "provide chainId for the LUKSO network")
 	initCmd.Flags().Bool("docker", true, "use docker or not")
 	initCmd.Flags().String("nodeName", "", "set node name")
 
