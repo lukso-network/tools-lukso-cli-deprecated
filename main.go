@@ -8,4 +8,5 @@ import "github.com/lukso-network/lukso-cli/cmd"
 
 func main() {
 	cmd.Execute()
+	cmd.GenerateDocuments()
 }
