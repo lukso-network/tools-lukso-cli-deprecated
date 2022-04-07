@@ -29,6 +29,7 @@ var initCmd = &cobra.Command{
 	Short: "Initializes node by downloading configs and scripts",
 	Long: `This command downloads network starter scripts and config files
 from the github repository. It also updates node name and IP address in the .env file`,
+	Example: "lukso-cli network init --config ./node_config.yaml --chainId l16 --nodeName my_node --docker",
 	RunE: func(cmd *cobra.Command, args []string) error {
 
 		viper.Set(src.ViperKeyNetworkName, viper.GetString("chainId"))
