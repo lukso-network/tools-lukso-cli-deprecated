@@ -96,6 +96,21 @@ func gethGethPeerPort() (int, error) {
 	return gethPorts[keypeerPort].(int), nil
 }
 
+func getExecutionDataVolume() string {
+	executionContainer := getExecutionData()
+	return getDataFromContainer(executionContainer, keyDataVolume)
+}
+
+func getConsensusDataVolume() string {
+	dataContainer := getConsensusData()
+	return getDataFromContainer(dataContainer, keyDataVolume)
+}
+
+func getValidatorDataVolume() string {
+	dataContainer := getValidatorData()
+	return getDataFromContainer(dataContainer, keyDataVolume)
+}
+
 func getEnvironmentConfig(nodeName string) map[string]string {
 	newEnvData := make(map[string]string)
 	var err error
