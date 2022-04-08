@@ -78,3 +78,12 @@ func getPublicIP() (string, error) {
 	}
 	return fmt.Sprintf("%s", ip), nil
 }
+
+func GetLoadedNodeConfigs() (*NodeConfigs, error) {
+	var nodeConfig NodeConfigs
+	err := viper.Unmarshal(&nodeConfig)
+	if err != nil {
+		return nil, err
+	}
+	return &nodeConfig, nil
+}
