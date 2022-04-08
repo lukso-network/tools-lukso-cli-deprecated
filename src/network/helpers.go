@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"os"
 	"path"
 
 	"github.com/lukso-network/lukso-cli/src"
@@ -77,6 +78,14 @@ func getPublicIP() (string, error) {
 		return "", err
 	}
 	return fmt.Sprintf("%s", ip), nil
+}
+
+func FileExists(filePath string) bool {
+	_, err := os.Stat(filePath)
+	if os.IsNotExist(err) {
+		return false
+	}
+	return true
 }
 
 func GetLoadedNodeConfigs() (*NodeConfigs, error) {

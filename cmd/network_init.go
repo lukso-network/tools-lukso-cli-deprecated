@@ -65,7 +65,15 @@ func initConfig() {
 
 		configFilePath := path.Join(home, ".lukso_"+viper.GetString("chainId"))
 
-		//nodeConfigFileLocation := path.Join(configFilePath, "node_config.yaml")
+		nodeConfigFileLocation := path.Join(configFilePath, "node_config.yaml")
+		if !network.FileExists(nodeConfigFileLocation) {
+			fmt.Println("No node_config.yaml found for this network. Generating node_config.yaml")
+			err := network.GenerateDefaultNodeConfigs(viper.GetString("chainId"))
+			if err != nil {
+				cobra.CompErrorln(err.Error())
+				os.Exit(1)
+			}
+		}
 
 		// Search config in home directory with name ".cli" (without extension).
 		viper.AddConfigPath(configFilePath)

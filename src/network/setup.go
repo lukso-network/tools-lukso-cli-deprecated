@@ -83,7 +83,7 @@ func GenerateDefaultNodeConfigs(chainId string) error {
 	if err != nil {
 		return err
 	}
-	luksoConfigFile := path.Join(luksoConfigHomePath, "node_configs.yaml")
+	luksoConfigFile := path.Join(luksoConfigHomePath, "node_config.yaml")
 	yamlData, err := yaml.Marshal(nodeConfig)
 	if err != nil {
 		return err
