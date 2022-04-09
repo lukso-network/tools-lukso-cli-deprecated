@@ -12,7 +12,8 @@ func TestClear(t *testing.T) {
 	err := viper.ReadInConfig()
 	require.NoError(t, err)
 	t.Run("test clear data (where only one file existed)", func(t *testing.T) {
-		valDataPath := getValidatorDataVolume()
+		valDataPath, err := getValidatorDataVolume()
+		require.NoError(t, err)
 		err = os.MkdirAll(valDataPath, os.ModePerm)
 		require.NoError(t, err)
 
@@ -21,15 +22,21 @@ func TestClear(t *testing.T) {
 		require.NoFileExists(t, valDataPath)
 	})
 	t.Run("test clear data (where all files existed)", func(t *testing.T) {
-		valDataPath := getValidatorDataVolume()
+		valDataPath, err := getValidatorDataVolume()
+		require.NoError(t, err)
+
 		err = os.MkdirAll(valDataPath, os.ModePerm)
 		require.NoError(t, err)
 
-		consensusDataPath := getConsensusDataVolume()
+		consensusDataPath, err := getConsensusDataVolume()
+		require.NoError(t, err)
+
 		err = os.MkdirAll(consensusDataPath, os.ModePerm)
 		require.NoError(t, err)
 
-		executionDataPath := getExecutionDataVolume()
+		executionDataPath, err := getExecutionDataVolume()
+		require.NoError(t, err)
+
 		err = os.MkdirAll(executionDataPath, os.ModePerm)
 		require.NoError(t, err)
 

@@ -87,3 +87,12 @@ func FileExists(filePath string) bool {
 	}
 	return true
 }
+
+func GetLoadedNodeConfigs() (*NodeConfigs, error) {
+	var nodeConfig NodeConfigs
+	err := viper.Unmarshal(&nodeConfig)
+	if err != nil {
+		return nil, err
+	}
+	return &nodeConfig, nil
+}

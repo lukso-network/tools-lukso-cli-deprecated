@@ -1,20 +1,15 @@
-## cli network docsGenerate
+## cli network restart
 
-Generate documents for lukso-cli
-
-### Synopsis
-
-This command generates documents for all the available command of lukso-cli.
-You will find documentations inside "docs" directory
+Restart all running docker containers
 
 ```
-cli network docsGenerate [flags]
+cli network restart [flags]
 ```
 
 ### Options
 
 ```
-  -h, --help   help for docsGenerate
+  -h, --help   help for restart
 ```
 
 ### Options inherited from parent commands

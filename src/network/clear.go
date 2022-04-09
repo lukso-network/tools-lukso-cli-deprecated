@@ -3,15 +3,27 @@ package network
 import "os"
 
 func Clear() error {
-	err := os.RemoveAll(getExecutionDataVolume())
+	execVol, err := getExecutionDataVolume()
 	if err != nil {
 		return err
 	}
-	err = os.RemoveAll(getConsensusDataVolume())
+	err = os.RemoveAll(execVol)
 	if err != nil {
 		return err
 	}
-	err = os.RemoveAll(getValidatorDataVolume())
+	consVol, err := getConsensusDataVolume()
+	if err != nil {
+		return err
+	}
+	err = os.RemoveAll(consVol)
+	if err != nil {
+		return err
+	}
+	validatorVol, err := getValidatorDataVolume()
+	if err != nil {
+		return err
+	}
+	err = os.RemoveAll(validatorVol)
 	if err != nil {
 		return err
 	}
