@@ -17,13 +17,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
-	"fmt"
 	"github.com/lukso-network/lukso-cli/src"
 	"github.com/lukso-network/lukso-cli/src/network"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"os"
-	"path"
 )
 
 // initCmd represents the setup command
@@ -42,51 +39,11 @@ from the github repository. It also updates node name and IP address in the .env
 
 func init() {
 	networkCmd.AddCommand(initCmd)
-	cobra.OnInitialize(initConfig)
 
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "nodeconf", "", "config file (default is $HOME/.lukso_<chainID>/node_config.yaml)")
-	initCmd.Flags().String("chainId", src.DefaultNetworkID, "provide chainId for the LUKSO network")
 	initCmd.Flags().Bool("docker", true, "use docker or not")
 	initCmd.Flags().String("nodeName", "", "set node name")
 
-	viper.BindPFlag("chainId", initCmd.Flags().Lookup("chainId"))
 	viper.BindPFlag("docker", initCmd.Flags().Lookup("docker"))
 	viper.BindPFlag("nodeName", initCmd.Flags().Lookup("nodeName"))
 }
 
-func initConfig() {
-	if cfgFile != "" {
-		// Use config file from the flag.
-		viper.SetConfigFile(cfgFile)
-	} else {
-		// Find home directory.
-		home, err := os.UserHomeDir()
-		cobra.CheckErr(err)
-
-		configFilePath := path.Join(home, ".lukso_"+viper.GetString("chainId"))
-
-		nodeConfigFileLocation := path.Join(configFilePath, "node_config.yaml")
-		if !network.FileExists(nodeConfigFileLocation) {
-			fmt.Println("No node_config.yaml found for this network. Generating node_config.yaml")
-			err := network.GenerateDefaultNodeConfigs(viper.GetString("chainId"))
-			if err != nil {
-				cobra.CompErrorln(err.Error())
-				os.Exit(1)
-			}
-		}
-
-		// Search config in home directory with name ".cli" (without extension).
-		viper.AddConfigPath(configFilePath)
-		viper.SetConfigType("yaml")
-		viper.SetConfigName("node_config")
-	}
-
-	viper.AutomaticEnv()
-
-	if err := viper.ReadInConfig(); err == nil {
-		fmt.Println("Using config file:", viper.ConfigFileUsed())
-	} else {
-		cobra.CompErrorln(err.Error())
-		os.Exit(1)
-	}
-}

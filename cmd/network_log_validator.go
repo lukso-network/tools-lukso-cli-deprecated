@@ -10,8 +10,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// validatorCmd represents the validator command
-var validatorCmd = &cobra.Command{
+// validatorLogCmd represents the validator command
+var validatorLogCmd = &cobra.Command{
 	Use:   "validator",
 	Short: "Show logs for validator client",
 	Long:  `This command shows log for prysm-validator container where validator client is running`,
@@ -21,5 +21,5 @@ var validatorCmd = &cobra.Command{
 }
 
 func init() {
-	logCmd.AddCommand(validatorCmd)
+	logCmd.AddCommand(validatorLogCmd)
 }
