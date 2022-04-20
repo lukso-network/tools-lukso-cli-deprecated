@@ -82,6 +82,33 @@ func getDataFromContainer(dataContainer *ClientDetails, dataKey string) string {
 	}
 }
 
+func getExecutionDataVolume() (string, error) {
+	config, err := GetLoadedNodeConfigs()
+	if err != nil {
+		return "", err
+	}
+	executionContainer := config.getExecutionData()
+	return getDataFromContainer(executionContainer, keyDataVolume), nil
+}
+
+func getConsensusDataVolume() (string, error) {
+	config, err := GetLoadedNodeConfigs()
+	if err != nil {
+		return "", err
+	}
+	dataContainer := config.getConsensusData()
+	return getDataFromContainer(dataContainer, keyDataVolume), nil
+}
+
+func getValidatorDataVolume() (string, error) {
+	config, err := GetLoadedNodeConfigs()
+	if err != nil {
+		return "", err
+	}
+	dataContainer := config.getValidatorData()
+	return getDataFromContainer(dataContainer, keyDataVolume), nil
+}
+
 func (config *NodeConfigs) getGethHttpPort() (string, error) {
 	gethPorts := config.getPort("geth")
 	if gethPorts != nil {
