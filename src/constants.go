@@ -8,11 +8,14 @@ const (
 	GitUrl           = "https://raw.githubusercontent.com/lukso-network/"
 )
 
+// Supported ChainIDs
+const (
+	L16Network = "l16"
+)
+
 // Keys that are used in Viper
 const (
 	ViperKeyNetworkName = "NETWORK_NAME"
-	ViperKeyNodeName    = "NODE_NAME"
-	ViperKeyExternalIP  = "EXTERNAL_IP"
 )
 
 var (

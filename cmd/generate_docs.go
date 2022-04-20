@@ -6,9 +6,9 @@ import (
 	"github.com/spf13/cobra/doc"
 )
 
-func GenerateDocuments() {
+func generateDocuments() {
 	fmt.Println("generating docs")
-	err := doc.GenMarkdownTree(initCmd, "docs")
+	err := doc.GenMarkdownTree(networkCmd, "docs")
 	if err != nil {
 		cobra.CompError(err.Error())
 		return
