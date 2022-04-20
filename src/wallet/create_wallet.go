@@ -6,12 +6,12 @@ import (
 )
 
 const (
-	letters           = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
-	certificateLength = 32
+	letters        = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
+	passwordLength = 32
 )
 
 func CreateRandomPassword() string {
-	return randStringBytes(certificateLength)
+	return randStringBytes(passwordLength)
 }
 
 func randStringBytes(n int) string {
