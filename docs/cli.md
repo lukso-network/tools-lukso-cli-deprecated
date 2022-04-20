@@ -20,6 +20,7 @@ One can also create deposit data, validator credentials and submit deposit trans
 ### SEE ALSO
 
 * [cli completion](cli_completion.md)	 - Generate the autocompletion script for the specified shell
+* [cli docs](cli_docs.md)	 - Generate documents for lukso-cli
 * [cli network](cli_network.md)	 - subcommand "network" for LUKSO network related things
 * [cli wallet](cli_wallet.md)	 - subcommand "wallet" for creation, parsing and other related of wallets
 

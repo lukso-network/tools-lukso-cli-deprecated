@@ -15,7 +15,10 @@ cli wallet create [flags]
 ### Options
 
 ```
-  -h, --help   help for create
+  -d, --dir string        is the target directory of the wallet and password file
+  -h, --help              help for create
+  -l, --label string      indicates the name of the wallet and password file
+  -p, --password string   password of the wallet stored in password file
 ```
 
 ### Options inherited from parent commands
