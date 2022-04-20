@@ -82,22 +82,6 @@ func getDataFromContainer(dataContainer *ClientDetails, dataKey string) string {
 	}
 }
 
-func (config *NodeConfigs) getGethHttpPort() (string, error) {
-	gethPorts := config.getPort("geth")
-	if gethPorts != nil {
-		return gethPorts.getHttpPort(), nil
-	}
-	return "", errors.New("gethPorts are not available in config file")
-}
-
-func (config *NodeConfigs) gethGethPeerPort() (string, error) {
-	gethPorts := config.getPort("geth")
-	if gethPorts != nil {
-		return gethPorts.getPeerPort(), nil
-	}
-	return "", errors.New("gethPorts are not available in config   file")
-}
-
 func getExecutionDataVolume() (string, error) {
 	config, err := GetLoadedNodeConfigs()
 	if err != nil {
@@ -123,6 +107,22 @@ func getValidatorDataVolume() (string, error) {
 	}
 	dataContainer := config.getValidatorData()
 	return getDataFromContainer(dataContainer, keyDataVolume), nil
+}
+
+func (config *NodeConfigs) getGethHttpPort() (string, error) {
+	gethPorts := config.getPort("geth")
+	if gethPorts != nil {
+		return gethPorts.getHttpPort(), nil
+	}
+	return "", errors.New("gethPorts are not available in config file")
+}
+
+func (config *NodeConfigs) gethGethPeerPort() (string, error) {
+	gethPorts := config.getPort("geth")
+	if gethPorts != nil {
+		return gethPorts.getPeerPort(), nil
+	}
+	return "", errors.New("gethPorts are not available in config   file")
 }
 
 func getEnvironmentConfig(nodeName string) map[string]string {
