@@ -2,24 +2,18 @@ package network
 
 import (
 	"errors"
-	"fmt"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 	"os"
 	"path"
 )
 
-func getNodeInfo() map[string]interface{} {
-	return viper.GetStringMap(keyNode)
-}
-
-func getNodeName(proposedNodeName string) string {
+func (config *NodeConfigs) getNodeName(proposedNodeName string) string {
 	if proposedNodeName != "" {
 		return proposedNodeName
 	}
-	nodeInfo := getNodeInfo()
-	if nodeInfo[keyName] != nil {
-		configNodeName := nodeInfo[keyName].(string)
+	nodeInfo := config.getNode()
+	if nodeInfo != nil {
+		configNodeName := nodeInfo.getName()
 		if configNodeName != "" {
 			return configNodeName
 		}
@@ -28,83 +22,96 @@ func getNodeName(proposedNodeName string) string {
 	return hostName
 }
 
-func getVolume(key, defaultDir string) (string, error) {
-	configs := viper.GetStringMapString(key)
-	if configs == nil || configs[keyVolume] == "" {
+func (config *NodeConfigs) getConfigPath() (string, error) {
+	if config.Configs == nil || config.getConfigs().getVolume() == "" {
 		homedir, err := os.UserHomeDir()
 		if err != nil {
 			return "", err
 		}
-		defaultConfigPath := path.Join(homedir, defaultDir)
+		defaultConfigPath := path.Join(homedir, ".lukso_configs")
 		return defaultConfigPath, err
 	}
-	return configs[keyVolume], nil
+	return config.Configs.Volume, nil
 }
 
-func getConfigPath() (string, error) {
-	return getVolume(keyConfigs, ".lukso_config")
+func (config *NodeConfigs) getKeyStorePath() (string, error) {
+	if config.Configs == nil || config.getConfigs().getVolume() == "" {
+		homedir, err := os.UserHomeDir()
+		if err != nil {
+			return "", err
+		}
+		defaultConfigPath := path.Join(homedir, ".lukso_keystore")
+		return defaultConfigPath, err
+	}
+	return config.Keystore.Volume, nil
 }
 
-func getKeyStorePath() (string, error) {
-	return getVolume(keyKeystore, ".lukso_keystore")
+func (config *NodeConfigs) getExecutionData() *ClientDetails {
+	return config.Execution
 }
 
-func getExecutionData() map[string]string {
-	return viper.GetStringMapString(keyExecution)
+func (config *NodeConfigs) getConsensusData() *ClientDetails {
+	return config.Consensus
 }
 
-func getConsensusData() map[string]string {
-	return viper.GetStringMapString(keyConsensus)
+func (config *NodeConfigs) getValidatorData() *ClientDetails {
+	return config.Validator
 }
 
-func getValidatorData() map[string]string {
-	return viper.GetStringMapString(keyValidator)
-}
-
-func getDataFromContainer(dataContainer map[string]string, dataKey string) string {
+func getDataFromContainer(dataContainer *ClientDetails, dataKey string) string {
 	if dataContainer == nil {
 		return ""
 	}
-	return dataContainer[dataKey]
-}
-
-func getPorts() map[string]interface{} {
-	return viper.GetStringMap(keyPorts)
-}
-
-func getGethPorts() map[string]interface{} {
-	allPorts := getPorts()
-	if allPorts == nil || allPorts[keyGeth] == nil {
-		return nil
+	switch dataKey {
+	case keyStatsAddress:
+		return dataContainer.getStatAddress()
+	case keyVerbosity:
+		return dataContainer.getVerbosity()
+	case keyEtherBase:
+		return dataContainer.getEtherbase()
+	case keyDataVolume:
+		return dataContainer.getDataVolume()
+	case keyNetworkId:
+		return dataContainer.getNetworkID()
+	case keyBootNode:
+		return dataContainer.getBootnode()
+	case keyVersion:
+		return dataContainer.getVersion()
+	default:
+		return ""
 	}
-	return allPorts[keyGeth].(map[string]interface{})
 }
 
-func getGethHttpPort() (int, error) {
-	gethPorts := getGethPorts()
-	if gethPorts == nil || gethPorts[keyhttpPort] == nil {
-		return 0, errors.New("gethPorts are not available in config file")
+func (config *NodeConfigs) getGethHttpPort() (string, error) {
+	gethPorts := config.getPort("geth")
+	if gethPorts != nil {
+		return gethPorts.getHttpPort(), nil
 	}
-	return gethPorts[keyhttpPort].(int), nil
+	return "", errors.New("gethPorts are not available in config file")
 }
 
-func gethGethPeerPort() (int, error) {
-	gethPorts := getGethPorts()
-	if gethPorts == nil || gethPorts[keypeerPort] == nil {
-		return 0, errors.New("gethPorts are not available in config file")
+func (config *NodeConfigs) gethGethPeerPort() (string, error) {
+	gethPorts := config.getPort("geth")
+	if gethPorts != nil {
+		return gethPorts.getPeerPort(), nil
 	}
-	return gethPorts[keypeerPort].(int), nil
+	return "", errors.New("gethPorts are not available in config   file")
 }
 
 func getEnvironmentConfig(nodeName string) map[string]string {
-	newEnvData := make(map[string]string)
-	var err error
-	newEnvData["CONFIGS_VOLUME"], err = getConfigPath()
+
+	nodeConfig, err := GetLoadedNodeConfigs()
 	if err != nil {
 		cobra.CompError(err.Error())
 		return nil
 	}
-	newEnvData["KEYSTORE_VOLUME"], err = getKeyStorePath()
+	newEnvData := make(map[string]string)
+	newEnvData["CONFIGS_VOLUME"], err = nodeConfig.getConfigPath()
+	if err != nil {
+		cobra.CompError(err.Error())
+		return nil
+	}
+	newEnvData["KEYSTORE_VOLUME"], err = nodeConfig.getKeyStorePath()
 	if err != nil {
 		cobra.CompError(err.Error())
 		return nil
@@ -114,10 +121,10 @@ func getEnvironmentConfig(nodeName string) map[string]string {
 		cobra.CompError(err.Error())
 		return nil
 	}
-	newEnvData["NODE_NAME"] = getNodeName(nodeName)
-	executionContainer := getExecutionData()
-	consensusContainer := getConsensusData()
-	validatorContainer := getValidatorData()
+	newEnvData["NODE_NAME"] = nodeConfig.getNodeName(nodeName)
+	executionContainer := nodeConfig.getExecutionData()
+	consensusContainer := nodeConfig.getConsensusData()
+	validatorContainer := nodeConfig.getValidatorData()
 
 	newEnvData["EXECUTION_DATA_VOLUME"] = getDataFromContainer(executionContainer, keyDataVolume)
 	newEnvData["CONSENSUS_DATA_VOLUME"] = getDataFromContainer(consensusContainer, keyDataVolume)
@@ -136,18 +143,18 @@ func getEnvironmentConfig(nodeName string) map[string]string {
 	newEnvData["PRYSM_BOOTSTRAP_NODE"] = getDataFromContainer(consensusContainer, keyBootNode)
 	newEnvData["GETH_BOOTSTRAP_NODE"] = getDataFromContainer(executionContainer, keyBootNode)
 
-	gethHttpPort, err := getGethHttpPort()
+	gethHttpPort, err := nodeConfig.getGethHttpPort()
 	if err != nil {
 		cobra.CompError(err.Error())
 		return nil
 	}
-	gethPeerPort, err := gethGethPeerPort()
+	gethPeerPort, err := nodeConfig.gethGethPeerPort()
 	if err != nil {
 		cobra.CompError(err.Error())
 		return nil
 	}
 
-	newEnvData["GETH_HTTP_PORT"] = fmt.Sprintf("%d", gethHttpPort)
-	newEnvData["GETH_PEER_PORT"] = fmt.Sprintf("%d", gethPeerPort)
+	newEnvData["GETH_HTTP_PORT"] = gethHttpPort
+	newEnvData["GETH_PEER_PORT"] = gethPeerPort
 	return newEnvData
 }
