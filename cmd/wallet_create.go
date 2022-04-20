@@ -22,10 +22,9 @@ var createCmd = &cobra.Command{
 
 lukso wallet create -p [PASSWORD] -d [TARGET_DIRECTORY] -l [LABEL]`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("create called")
-		dir := ""
-		password := ""
-		label := ""
+		dir, _ := cmd.Flags().GetString("dir")
+		password, _ := cmd.Flags().GetString("password")
+		label, _ := cmd.Flags().GetString("label")
 
 		store := keystore.NewKeyStore(dir, keystore.StandardScryptN, keystore.StandardScryptP)
 
@@ -67,7 +66,7 @@ lukso wallet create -p [PASSWORD] -d [TARGET_DIRECTORY] -l [LABEL]`,
 			fmt.Println("error while writing password file", err.Error())
 		}
 
-		fmt.Println("Successfully created wallet!!!")
+		fmt.Println("Successfully created wallet...")
 		fmt.Print("Account", strings.ToLower(a.Address.String()))
 		fmt.Print("Location", filename)
 	},
@@ -75,14 +74,7 @@ lukso wallet create -p [PASSWORD] -d [TARGET_DIRECTORY] -l [LABEL]`,
 
 func init() {
 	walletCmd.AddCommand(createCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// createCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// createCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	createCmd.Flags().StringP("label", "l", "", "indicates the name of the wallet and password file")
+	createCmd.Flags().StringP("dir", "d", "", "is the target directory of the wallet and password file")
+	createCmd.Flags().StringP("password", "p", "", "password of the wallet stored in password file")
 }
