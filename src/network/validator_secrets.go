@@ -20,6 +20,10 @@ type Eth1Details struct {
 	RPCEndPoint   string `yaml:",omitempty"`
 }
 
+type Eth2Details struct {
+	GRPCEndPoint string `yaml:",omitempty"`
+}
+
 type ValidatorSecrets struct {
 	ValidatorMnemonic  string `yaml:",omitempty"`
 	WithdrawalMnemonic string `yaml:",omitempty"`
@@ -27,6 +31,7 @@ type ValidatorSecrets struct {
 
 	Deposit  *DepositDetails `yaml:",omitempty"`
 	Eth1Data *Eth1Details    `yaml:",omitempty"`
+	Eth2Data *Eth2Details    `yaml:",omitempty"`
 }
 
 func (valSec *ValidatorSecrets) WriteToFile(fileName string) error {

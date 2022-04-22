@@ -15,13 +15,8 @@ import (
 // validatorDescribeCmd represents the describe command
 var validatorDescribeCmd = &cobra.Command{
 	Use:   "describe",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "Show detailed status of the validators",
+	Long:  `It shows validator count, addresses and transaction status.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		valSecrets, err := network.GetValSecrets(viper.GetString("chainId"))
 		if err != nil {
@@ -35,11 +30,10 @@ to quickly create a Cobra application.`,
 		}
 		fmt.Println("Transaction wallet address:", valSecrets.Eth1Data.WalletAddress)
 		fmt.Println("Number of validators:", len(depositData))
-		if len(depositData) > 0 {
-			fmt.Println("Public keys for validators")
-		}
-		for _, valData := range depositData {
-			fmt.Println(valData.PubKey)
+		err = valSecrets.GetTxStatus()
+		if err != nil {
+			cobra.CompErrorln(err.Error())
+			return
 		}
 	},
 }
