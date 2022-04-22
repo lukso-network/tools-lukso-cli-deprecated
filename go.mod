@@ -3,6 +3,7 @@ module github.com/lukso-network/lukso-cli
 go 1.17
 
 require (
+	github.com/ethereum/go-ethereum v1.10.17
 	github.com/hashicorp/go-getter v1.5.11
 	github.com/joho/godotenv v1.4.0
 	github.com/manifoldco/promptui v0.9.0
@@ -13,7 +14,7 @@ require (
 )
 
 require (
-	github.com/ethereum/go-ethereum v1.10.13 // indirect
+	github.com/btcsuite/btcd v0.22.0-beta // indirect
 	github.com/ferranbt/fastssz v0.0.0-20210905181407-59cf6761a7d5 // indirect
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.0.1 // indirect
 	github.com/klauspost/cpuid/v2 v2.0.9 // indirect
@@ -32,12 +33,15 @@ require (
 	github.com/chzyer/readline v0.0.0-20180603132655-2972be24d48e // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.1 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
+	github.com/deckarep/golang-set v1.8.0 // indirect
 	github.com/docker/go-connections v0.4.0 // indirect
 	github.com/docker/go-units v0.4.0 // indirect
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
+	github.com/go-stack/stack v1.8.0 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
+	github.com/google/uuid v1.3.0 // indirect
 	github.com/googleapis/gax-go/v2 v2.0.5 // indirect
 	github.com/hashicorp/go-cleanhttp v0.5.2 // indirect
 	github.com/hashicorp/go-safetemp v1.0.0 // indirect
@@ -67,6 +71,7 @@ require (
 	github.com/subosito/gotenv v1.2.0 // indirect
 	github.com/ulikunitz/xz v0.5.8 // indirect
 	go.opencensus.io v0.23.0 // indirect
+	golang.org/x/crypto v0.0.0-20211117183948-ae814b36b871 // indirect
 	golang.org/x/lint v0.0.0-20210508222113-6edffad5e616 // indirect
 	golang.org/x/mod v0.5.1 // indirect
 	golang.org/x/net v0.0.0-20211216030914-fe4d6282115f // indirect
