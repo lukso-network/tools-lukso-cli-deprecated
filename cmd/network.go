@@ -5,7 +5,13 @@ Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
+	"fmt"
+	"github.com/lukso-network/lukso-cli/src"
+	"github.com/lukso-network/lukso-cli/src/network"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
+	"os"
+	"path"
 )
 
 // networkCmd represents the network command
@@ -16,14 +22,47 @@ var networkCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(networkCmd)
+	cobra.OnInitialize(initConfig)
 
-	// Here you will define your flags and configuration settings.
+	networkCmd.PersistentFlags().StringVar(&cfgFile, "nodeconf", "", "config file (default is $HOME/.lukso_<chainID>/node_config.yaml)")
+	networkCmd.PersistentFlags().String("chainId", src.DefaultNetworkID, "provide chainId for the LUKSO network")
 
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// networkCmd.PersistentFlags().String("foo", "", "A help for foo")
+	viper.BindPFlag("chainId", networkCmd.PersistentFlags().Lookup("chainId"))
+}
 
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// networkCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+func initConfig() {
+	if cfgFile != "" {
+		// Use config file from the flag.
+		viper.SetConfigFile(cfgFile)
+	} else {
+		// Find home directory.
+		home, err := os.UserHomeDir()
+		cobra.CheckErr(err)
+
+		configFilePath := path.Join(home, ".lukso_"+viper.GetString("chainId"))
+
+		nodeConfigFileLocation := path.Join(configFilePath, "node_config.yaml")
+		if !network.FileExists(nodeConfigFileLocation) {
+			fmt.Println("No node_config.yaml found for this network. Generating node_config.yaml")
+			err := network.GenerateDefaultNodeConfigs(viper.GetString("chainId"))
+			if err != nil {
+				cobra.CompErrorln(err.Error())
+				os.Exit(1)
+			}
+		}
+
+		// Search config in home directory with name ".cli" (without extension).
+		viper.AddConfigPath(configFilePath)
+		viper.SetConfigType("yaml")
+		viper.SetConfigName("node_config")
+	}
+
+	viper.AutomaticEnv()
+
+	if err := viper.ReadInConfig(); err == nil {
+		fmt.Println("Using config file:", viper.ConfigFileUsed())
+	} else {
+		cobra.CompErrorln(err.Error())
+		os.Exit(1)
+	}
 }
