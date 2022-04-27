@@ -16,8 +16,7 @@ Execute
 If it is a subcommand of **examplecmd** then rename the file to
 
     mv cmd/[command_name].go cmd/[examplecmd]_[command_name].go
-
-!!!Document the command in this README.md
+ 
     
 
 

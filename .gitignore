@@ -1,2 +1,7 @@
 .idea
 .DS_STORE
+configs
+docker-compose.yml
+.env
+Makefile
+beta_genesis_wallets
