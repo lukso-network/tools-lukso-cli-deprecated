@@ -1,7 +1,7 @@
 package network
 
 import (
-	"github.com/lukso-network/lukso-cli/src"
+	"github.com/lukso-network/lukso/src"
 	"github.com/spf13/viper"
 	"github.com/stretchr/testify/require"
 	"gopkg.in/yaml.v3"
@@ -28,7 +28,7 @@ func TestDownloadClient(t *testing.T) {
 	t.Run("generate node config", func(t *testing.T) {
 		err := GenerateDefaultNodeConfigs(src.DefaultNetworkID)
 		require.NoError(t, err)
-		
+
 		luksoConfigHomePath := "./node_config.yaml"
 
 		var actualConfig NodeConfigs

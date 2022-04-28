@@ -1,4 +1,4 @@
-module github.com/lukso-network/lukso-cli
+module github.com/lukso-network/lukso
 
 go 1.17
 

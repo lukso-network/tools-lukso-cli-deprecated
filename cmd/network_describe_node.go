@@ -6,8 +6,8 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/lukso-network/lukso-cli/utils"
-	"github.com/lukso-network/lukso-cli/utils/gethrpc"
+	"github.com/lukso-network/lukso/utils"
+	"github.com/lukso-network/lukso/utils/gethrpc"
 	"github.com/spf13/cobra"
 )
 

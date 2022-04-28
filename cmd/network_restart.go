@@ -6,7 +6,7 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/lukso-network/lukso-cli/src/network"
+	"github.com/lukso-network/lukso/src/network"
 	"os"
 	"time"
 

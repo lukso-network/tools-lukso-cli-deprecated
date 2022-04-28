@@ -5,7 +5,7 @@ Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"github.com/lukso-network/lukso-cli/src/network"
+	"github.com/lukso-network/lukso/src/network"
 	"github.com/spf13/cobra"
 	"os"
 )

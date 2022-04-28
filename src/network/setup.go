@@ -5,7 +5,7 @@ import (
 	"errors"
 	"github.com/hashicorp/go-getter"
 	"github.com/joho/godotenv"
-	"github.com/lukso-network/lukso-cli/src"
+	"github.com/lukso-network/lukso/src"
 	"path"
 )
 

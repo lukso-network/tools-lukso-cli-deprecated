@@ -9,7 +9,7 @@ import (
 	"os"
 	"path"
 
-	"github.com/lukso-network/lukso-cli/src"
+	"github.com/lukso-network/lukso/src"
 )
 
 func getRepoUrl() (*url.URL, error) {

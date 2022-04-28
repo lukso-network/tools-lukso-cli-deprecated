@@ -2,7 +2,7 @@ package network
 
 import (
 	"fmt"
-	"github.com/lukso-network/lukso-cli/utils/beacon_grpc"
+	"github.com/lukso-network/lukso/utils/beacon_grpc"
 )
 
 func (valSec *ValidatorSecrets) GetTxStatus() error {

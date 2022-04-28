@@ -17,8 +17,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
-	"github.com/lukso-network/lukso-cli/src"
-	"github.com/lukso-network/lukso-cli/src/network"
+	"github.com/lukso-network/lukso/src"
+	"github.com/lukso-network/lukso/src/network"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -46,4 +46,3 @@ func init() {
 	viper.BindPFlag("docker", initCmd.Flags().Lookup("docker"))
 	viper.BindPFlag("nodeName", initCmd.Flags().Lookup("nodeName"))
 }
-
