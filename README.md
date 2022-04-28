@@ -17,10 +17,33 @@ If it is a subcommand of **examplecmd** then rename the file to
 
     mv cmd/[command_name].go cmd/[examplecmd]_[command_name].go
 
-!!!Document the command in this README.md
-    
+Generate the doc with
 
+    go run main.go docs
+## Download
+Use the script to download the binary
+
+    ...
+
+or use
+
+    go install ...
 
 ##  Commands
 
-    lukso network describe -ip [xxx.xxx.xxx.xxx]   # shows peers and enode of a geth node (should show the enr of beacon)
+The cli distinguishes subcommands. You can always 
+
+### Network
+The network subcommand contains commands relevant for running a node or adding a validator. 
+
+    lukso network 
+
+### Wallet
+The wallet subcommand deals with the properties of a single wallet 
+
+    lukso wallet
+
+### UP
+The up subcommand deals with the universal profile smart contracts
+
+    lukso up
