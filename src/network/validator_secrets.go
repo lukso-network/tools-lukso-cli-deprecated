@@ -1,8 +1,6 @@
 package network
 
 import (
-	"errors"
-	"github.com/lukso-network/lukso-cli/src"
 	"gopkg.in/yaml.v3"
 	"os"
 )
@@ -40,29 +38,4 @@ func (valSec *ValidatorSecrets) WriteToFile(fileName string) error {
 		return err
 	}
 	return os.WriteFile(fileName, rawData, os.ModePerm)
-}
-
-func GetValSecretsFromFile(fileName string) (*ValidatorSecrets, error) {
-	rawData, err := os.ReadFile(fileName)
-	if err != nil {
-		return nil, err
-	}
-	var Data ValidatorSecrets
-	err = yaml.Unmarshal(rawData, &Data)
-	if err != nil {
-		return nil, err
-	}
-	return &Data, nil
-}
-
-func GetValSecrets(networkName string) (*ValidatorSecrets, error) {
-	if FileExists("./secrets.yaml") {
-		return GetValSecretsFromFile("./secrets.yaml")
-	}
-	switch networkName {
-	case src.DefaultNetworkID:
-		return BetaDefaultValSecrets, nil
-	default:
-		return nil, errors.New("invalid network selected")
-	}
 }

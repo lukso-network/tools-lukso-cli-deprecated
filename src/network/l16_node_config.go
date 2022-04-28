@@ -18,23 +18,25 @@ var DefaultL16NodeConfigs = &NodeConfigs{
 		Name: myHostName,
 	},
 	Execution: &ClientDetails{
-		StatsAddress: "ethstats.l16.d.lukso.dev",
+		StatsAddress: "34.90.5.14",
 		Verbosity:    "3",
+		Version:      "v0.2.0-dev",
 		Etherbase:    "0x7781121fd00A009670E31b76A2bf99b3A2D6878D",
 		DataVolume:   "./data/execution_data",
-		NetworkId:    "19051978",
-		Bootnode:     "enode://45f5c9d2bec9253f82f44a385692f22a69fdddb5bc5ada29176c3e5977d659529387770e77548dcaad668ce0ef0c74f994ca61a0d55bdfbdffb3813b98c3f7ea@34.91.62.48:30303",
+		NetworkId:    "83748374",
+		Bootnode:     "enode://c2bb19ce658cfdf1fecb45da599ee6c7bf36e5292efb3fb61303a0b2cd07f96c20ac9b376a464d687ac456675a2e4a44aec39a0509bcb4b6d8221eedec25aca2@35.204.5.43:30303",
 	},
 	Consensus: &ClientDetails{
-		StatsAddress: "35.202.229.165:9090",
+		StatsAddress: "34.90.85.72:9090",
 		Verbosity:    "info",
-		Version:      "v0.1.4-dev",
+		Version:      "v0.2.1-dev",
 		DataVolume:   "./data/consensus_data",
-		Bootnode:     "enr:-MK4QEkSFE8VA-mbzlHLCgyfpvfh7gFPs1AQNrLxNtHSMq58ChKNtwDz7hVkW8qYUGs71tmSeP1buAGJYYZvj_Hp_8yGAX8tWHtih2F0dG5ldHOIAAAAAAAAAACEZXRoMpC3QoawYgAAcf__________gmlkgnY0gmlwhCJ2PI-Jc2VjcDI1NmsxoQMOCac5xZmiy984EK04FgtH-ijxkjdvcXZZvayai71U94hzeW5jbmV0cwCDdGNwgjLIg3VkcIIu4A",
+		Bootnode:     "enr:-MK4QOoOAELWWC0dZ7hwZzDY3NhxbGJWB9JFBGsIswzF383NRPNh7vfI_K4gt5KMCFt6-NrMbUdizURmcKE5xjfRhBaGAYBwAjI7h2F0dG5ldHOIAAAAAAAAAACEZXRoMpAMEg0LYQAAcAMAAAAAAAAAgmlkgnY0gmlwhCPMBSuJc2VjcDI1NmsxoQO4XSsbls7lyhfqvcsgS8jmjFmBpC3dekXssvAEXkHtJYhzeW5jbmV0cwCDdGNwgjLIg3VkcIIu4A",
 	},
 	Validator: &ClientDetails{
 		DataVolume: "./data/validator_data",
 	},
+	ValidatorCredentials: BetaDefaultValSecrets,
 	Ports: map[string]PortDescription{
 		"geth": {
 			HttpPort: "8545",

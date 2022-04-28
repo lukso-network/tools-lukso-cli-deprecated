@@ -1,8 +1,8 @@
 package src
 
 const (
-	ConfigBranchName = "l16-dev"
-	NetworkVersion   = "17"
+	ConfigBranchName = "main"
+	NetworkVersion   = "19"
 	DefaultNetworkID = "l16"
 	ConfigRepoName   = "network-configs"
 	GitUrl           = "https://raw.githubusercontent.com/lukso-network/"
@@ -19,6 +19,10 @@ const (
 )
 
 var (
-	NetworkSetupFiles = []string{"docker-compose.yml", "secrets.env", "send_deposit.sh"}
+	NetworkSetupFiles = []string{"docker-compose.yml"}
 	ConfigFiles       = []string{"config.yaml", "genesis.json", "genesis.ssz"}
+)
+
+const (
+	ErrMsgValidatorSecretNotPresent = "validator secret not present"
 )
