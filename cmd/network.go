@@ -11,7 +11,6 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"os"
-	"path"
 )
 
 // networkCmd represents the network command
@@ -35,13 +34,7 @@ func initConfig() {
 		// Use config file from the flag.
 		viper.SetConfigFile(cfgFile)
 	} else {
-		// Find home directory.
-		home, err := os.UserHomeDir()
-		cobra.CheckErr(err)
-
-		configFilePath := path.Join(home, ".lukso_"+viper.GetString("chainId"))
-
-		nodeConfigFileLocation := path.Join(configFilePath, "node_config.yaml")
+		nodeConfigFileLocation := "./node_config.yaml"
 		if !network.FileExists(nodeConfigFileLocation) {
 			fmt.Println("No node_config.yaml found for this network. Generating node_config.yaml")
 			err := network.GenerateDefaultNodeConfigs(viper.GetString("chainId"))
@@ -52,7 +45,7 @@ func initConfig() {
 		}
 
 		// Search config in home directory with name ".cli" (without extension).
-		viper.AddConfigPath(configFilePath)
+		viper.AddConfigPath(".")
 		viper.SetConfigType("yaml")
 		viper.SetConfigName("node_config")
 	}

@@ -7,7 +7,6 @@ package cmd
 import (
 	"github.com/lukso-network/lukso-cli/src/network"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 // depositCmd represents the deposit command
@@ -19,9 +18,14 @@ address. Remember it will need your wallet address and private keys. Thus it wil
 
 This tool is necessary to activate new validators`,
 	Run: func(cmd *cobra.Command, args []string) {
-		valSecrets, err := network.GetValSecrets(viper.GetString("chainId"))
+		nodeConf, err := network.GetLoadedNodeConfigs()
 		if err != nil {
 			cobra.CompErrorln(err.Error())
+			return
+		}
+		valSecrets := nodeConf.GetValSecrets()
+		if valSecrets == nil {
+			cobra.CompErrorln("no validator credential is presented")
 			return
 		}
 		err = valSecrets.SendDepositTxn()
@@ -29,7 +33,7 @@ This tool is necessary to activate new validators`,
 			cobra.CompErrorln(err.Error())
 			return
 		}
-		err = valSecrets.WriteToFile("./secrets.yaml")
+		err = nodeConf.WriteOrUpdateNodeConfig()
 		if err != nil {
 			cobra.CompErrorln(err.Error())
 			return

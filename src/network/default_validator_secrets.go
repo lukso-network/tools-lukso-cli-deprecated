@@ -9,11 +9,11 @@ var BetaDefaultValSecrets = &ValidatorSecrets{
 		DepositFileLocation: "./deposit_data.json",
 	},
 	Eth1Data: &Eth1Details{
-		RPCEndPoint:   "http://35.204.232.169:8545",
+		RPCEndPoint:   "http://35.204.5.43:8545",
 		WalletAddress: "",
 		WalletPrivKey: "",
 	},
 	Eth2Data: &Eth2Details{
-		GRPCEndPoint: "35.204.232.169:4000",
+		GRPCEndPoint: "35.204.5.43:4000",
 	},
 }

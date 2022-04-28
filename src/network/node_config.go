@@ -1,5 +1,11 @@
 package network
 
+import (
+	"os"
+
+	"gopkg.in/yaml.v3"
+)
+
 type DataVolume struct {
 	Volume string `yaml:",omitempty"`
 }
@@ -25,12 +31,13 @@ type PortDescription struct {
 }
 
 type NodeConfigs struct {
-	Configs   *DataVolume    `yaml:",omitempty"`
-	Keystore  *DataVolume    `yaml:",omitempty"`
-	Node      *NodeDetails   `yaml:",omitempty"`
-	Execution *ClientDetails `yaml:",omitempty"`
-	Consensus *ClientDetails `yaml:",omitempty"`
-	Validator *ClientDetails `yaml:",omitempty"`
+	Configs              *DataVolume       `yaml:",omitempty"`
+	Keystore             *DataVolume       `yaml:",omitempty"`
+	Node                 *NodeDetails      `yaml:",omitempty"`
+	Execution            *ClientDetails    `yaml:",omitempty"`
+	Consensus            *ClientDetails    `yaml:",omitempty"`
+	Validator            *ClientDetails    `yaml:",omitempty"`
+	ValidatorCredentials *ValidatorSecrets `yaml:",omitempty"`
 
 	Ports map[string]PortDescription `yaml:",omitempty"`
 }
@@ -113,4 +120,16 @@ func (nc *NodeConfigs) getPort(portName string) *PortDescription {
 	}
 	portDesc := nc.Ports[portName]
 	return &portDesc
+}
+
+func (nc *NodeConfigs) GetValSecrets() *ValidatorSecrets {
+	return nc.ValidatorCredentials
+}
+
+func (nc *NodeConfigs) WriteOrUpdateNodeConfig() error {
+	yamlData, err := yaml.Marshal(nc)
+	if err != nil {
+		return err
+	}
+	return os.WriteFile("./node_config.yaml", yamlData, os.ModePerm)
 }

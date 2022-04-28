@@ -18,12 +18,9 @@ func TestValidatorSetup(t *testing.T) {
 	})
 	t.Run("test secrets loader", func(t *testing.T) {
 		expected := BetaDefaultValSecrets
-		require.NoError(t, expected.WriteToFile("./.secrets.yaml"))
-		receivedFromFile, err := GetValSecretsFromFile("./.secrets.yaml")
-		require.NoError(t, err)
+		nodeconf := DefaultL16NodeConfigs
+		receivedFromFile := nodeconf.GetValSecrets()
 		require.Equal(t, expected, receivedFromFile)
-		err = os.RemoveAll("./.secrets.yaml")
-		require.NoError(t, err)
 	})
 	t.Run("genereate deposit data", func(t *testing.T) {
 		mnemonic, err := getMnemonic()

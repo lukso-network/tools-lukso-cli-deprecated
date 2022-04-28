@@ -2,7 +2,6 @@ package network
 
 import (
 	"context"
-	"github.com/lukso-network/lukso-cli/src"
 	"github.com/stretchr/testify/require"
 	"testing"
 )
@@ -20,7 +19,8 @@ func TestDepositSend(t *testing.T) {
 		client, err := getDockerClient()
 		require.NoError(t, err)
 		ctx := context.Background()
-		valSec, err := GetValSecrets(src.DefaultNetworkID)
+		nodeConf := DefaultL16NodeConfigs
+		valSec := nodeConf.GetValSecrets()
 		valSec.Eth1Data.WalletAddress = "0x7cBf71e554c72bdec8BF31d74Be3a9229C0CaF83"
 		valSec.Eth1Data.WalletPrivKey = "f916f93513e14aa9cc9d2499515c28bbbcf788822c419869acdcc8923df13815"
 		data, err := ParseDepositDataFromFile("../../assets/deposit_data.json")

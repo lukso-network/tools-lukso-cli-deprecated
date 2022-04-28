@@ -6,9 +6,8 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/lukso-network/lukso-cli/src"
 	"github.com/lukso-network/lukso-cli/src/network"
-	"github.com/spf13/viper"
-
 	"github.com/spf13/cobra"
 )
 
@@ -18,9 +17,14 @@ var validatorDescribeCmd = &cobra.Command{
 	Short: "Show detailed status of the validators",
 	Long:  `It shows validator count, addresses and transaction status.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		valSecrets, err := network.GetValSecrets(viper.GetString("chainId"))
+		nodeConf, err := network.GetLoadedNodeConfigs()
 		if err != nil {
 			cobra.CompErrorln(err.Error())
+			return
+		}
+		valSecrets := nodeConf.GetValSecrets()
+		if valSecrets == nil {
+			cobra.CompErrorln(src.ErrMsgValidatorSecretNotPresent)
 			return
 		}
 		depositData, err := network.ParseDepositDataFromFile(valSecrets.Deposit.DepositFileLocation)
