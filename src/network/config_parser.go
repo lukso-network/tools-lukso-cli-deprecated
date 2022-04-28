@@ -164,6 +164,7 @@ func getEnvironmentConfig(nodeName string) map[string]string {
 	newEnvData["PRYSM_VERBOSITY"] = getDataFromContainer(consensusContainer, keyVerbosity)
 
 	newEnvData["PRYSM_BEACON_VERSION"] = getDataFromContainer(consensusContainer, keyVersion)
+	newEnvData["GETH_VERSION"] = getDataFromContainer(executionContainer, keyVersion)
 	newEnvData["GETH_ETHERBASE"] = getDataFromContainer(executionContainer, keyEtherBase)
 
 	newEnvData["GETH_NETWORK_ID"] = getDataFromContainer(executionContainer, keyNetworkId)

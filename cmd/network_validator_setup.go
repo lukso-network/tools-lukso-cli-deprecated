@@ -6,9 +6,9 @@ package cmd
 
 import (
 	"errors"
+	"github.com/lukso-network/lukso-cli/src"
 	"github.com/lukso-network/lukso-cli/src/network"
 	"github.com/manifoldco/promptui"
-	"github.com/spf13/viper"
 	"strconv"
 
 	"github.com/spf13/cobra"
@@ -44,9 +44,14 @@ activate validators`,
 			cobra.CompErrorln(err.Error())
 			return
 		}
-		valSecrets, err := network.GetValSecrets(viper.GetString("chainId"))
+		nodeConf, err := network.GetLoadedNodeConfigs()
 		if err != nil {
 			cobra.CompErrorln(err.Error())
+			return
+		}
+		valSecrets := nodeConf.GetValSecrets()
+		if valSecrets == nil {
+			cobra.CompErrorln(src.ErrMsgValidatorSecretNotPresent)
 			return
 		}
 		err = valSecrets.GenerateMnemonic()
@@ -69,7 +74,7 @@ activate validators`,
 			cobra.CompErrorln(err.Error())
 			return
 		}
-		err = valSecrets.WriteToFile("./secrets.yaml")
+		err = nodeConf.WriteOrUpdateNodeConfig()
 		if err != nil {
 			cobra.CompErrorln(err.Error())
 			return

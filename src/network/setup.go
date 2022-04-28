@@ -3,12 +3,9 @@ package network
 import (
 	"context"
 	"errors"
-	"fmt"
 	"github.com/hashicorp/go-getter"
 	"github.com/joho/godotenv"
 	"github.com/lukso-network/lukso-cli/src"
-	"gopkg.in/yaml.v3"
-	"os"
 	"path"
 )
 
@@ -74,21 +71,7 @@ func GenerateDefaultNodeConfigs(chainId string) error {
 	default:
 		return errors.New("invalid chainId selected")
 	}
-	userHomeDir, err := os.UserHomeDir()
-	if err != nil {
-		return err
-	}
-	luksoConfigHomePath := path.Join(userHomeDir, fmt.Sprintf(".lukso_%s", chainId))
-	err = os.MkdirAll(luksoConfigHomePath, 0777)
-	if err != nil {
-		return err
-	}
-	luksoConfigFile := path.Join(luksoConfigHomePath, "node_config.yaml")
-	yamlData, err := yaml.Marshal(nodeConfig)
-	if err != nil {
-		return err
-	}
-	return os.WriteFile(luksoConfigFile, yamlData, os.ModePerm)
+	return nodeConfig.WriteOrUpdateNodeConfig()
 }
 
 func SetupNetwork(nodeName string) error {
