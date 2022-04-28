@@ -1,9 +1,6 @@
 #!/usr/bin/env bash
 
 
-NETWORK="l16-dev"
-PLATFORM="unknown";
-
 # for Apple M1s
 if [ "$(uname -s)" == "Darwin" ] && [ "$(uname -m)" == "arm64" ]
 then
@@ -52,11 +49,11 @@ download() {
 
 # download lukso and give exec permission
 download https://github.com/lukso-network/lukso-cli/releases/download/v0.0.1-dev/lukso-cli-${PLATFORM}-${ARCHITECTURE} ./lukso
-chmod +x ./lukso-cli
+chmod +x ./lukso
 
 
 echo ""
-echo "#################### Please Read Carefully ####################"
-echo "use \"lukso-cli --help\" to check available options"
+echo "#################### LUKSO CLI ####################"
+echo "use \"lukso --help\" to check available options"
 echo "###############################################################"
 
