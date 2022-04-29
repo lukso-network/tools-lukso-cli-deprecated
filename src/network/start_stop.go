@@ -11,15 +11,16 @@ func runDockerServices(serviceList ...string) error {
 	dockerCommand = append(dockerCommand, serviceList...)
 	fmt.Println("You may need to provide super user (sudo) password to run docker (if needed)")
 	command := exec.Command("sudo", dockerCommand...)
-	if err := command.Run(); err != nil {
-		return fmt.Errorf("found error while running docker. Make sure your docker is running. %s", err)
+	if commandOutput, err := command.CombinedOutput(); err != nil {
+		return fmt.Errorf("error code: %s. %s", err, string(commandOutput))
 	}
 	return nil
 }
 
 func DownDockerServices() error {
 	command := exec.Command("sudo", "docker-compose", "down")
-	if err := command.Run(); err != nil {
+	if cmdOutput, err := command.CombinedOutput(); err != nil {
+		fmt.Println(string(cmdOutput))
 		return err
 	}
 	return nil
