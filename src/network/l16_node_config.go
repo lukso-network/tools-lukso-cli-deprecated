@@ -27,7 +27,7 @@ var DefaultL16NodeConfigs = &NodeConfigs{
 		Bootnode:     "enode://c2bb19ce658cfdf1fecb45da599ee6c7bf36e5292efb3fb61303a0b2cd07f96c20ac9b376a464d687ac456675a2e4a44aec39a0509bcb4b6d8221eedec25aca2@35.204.5.43:30303",
 	},
 	Consensus: &ClientDetails{
-		StatsAddress: "34.90.85.72:9090",
+		StatsAddress: "34.141.143.70:9090",
 		Verbosity:    "info",
 		Version:      "v0.2.1-dev",
 		DataVolume:   "./data/consensus_data",
