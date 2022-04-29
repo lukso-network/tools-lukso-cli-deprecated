@@ -7,6 +7,7 @@ package cmd
 import (
 	"github.com/lukso-network/lukso-cli/src/network"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 	"os"
 )
 
@@ -27,4 +28,16 @@ consensus engine, execution engine and eth2-stats containers.`,
 
 func init() {
 	networkCmd.AddCommand(startCmd)
+	cobra.OnInitialize(updateEnv)
+
+	startCmd.Flags().String("nodeName", "", "set node name")
+	viper.BindPFlag("nodeName", startCmd.Flags().Lookup("nodeName"))
+}
+
+func updateEnv() {
+	err := network.GenerateEnvFile(viper.GetString("nodeName"))
+	if err != nil {
+		cobra.CompErrorln(err.Error())
+		return
+	}
 }

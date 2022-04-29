@@ -58,7 +58,7 @@ func downloadConfigFiles() error {
 	return nil
 }
 
-func generateEnvFile(hostName string) error {
+func GenerateEnvFile(hostName string) error {
 
 	return godotenv.Write(getEnvironmentConfig(hostName), ".env")
 }
@@ -80,7 +80,7 @@ func SetupNetwork(nodeName string) error {
 		return err
 	}
 
-	err = generateEnvFile(nodeName)
+	err = GenerateEnvFile(nodeName)
 	if err != nil {
 		return err
 	}
