@@ -3,10 +3,13 @@ package network
 import (
 	"context"
 	"errors"
+	"fmt"
 	"github.com/hashicorp/go-getter"
 	"github.com/joho/godotenv"
 	"github.com/lukso-network/lukso-cli/src"
+	"os/exec"
 	"path"
+	"runtime"
 )
 
 func downloadFile(src, dest string) error {
@@ -60,7 +63,23 @@ func downloadConfigFiles() error {
 
 func GenerateEnvFile(hostName string) error {
 
-	return godotenv.Write(getEnvironmentConfig(hostName), ".env")
+	err := godotenv.Write(getEnvironmentConfig(hostName), ".env")
+	if err != nil {
+		return err
+	}
+	return removeQuoteFromFile(".env")
+}
+
+func removeQuoteFromFile(fileName string) error {
+	cmd := exec.Command("sed", "-i", "s/\\\"//g", fileName)
+	if runtime.GOOS == "darwin" {
+		cmd = exec.Command("sed", "-i", "", "s/\\\"//g", fileName)
+	}
+	output, err := cmd.CombinedOutput()
+	if err != nil {
+		return fmt.Errorf("error code %s. %s", err, string(output))
+	}
+	return nil
 }
 
 func GenerateDefaultNodeConfigs(chainId string) error {
