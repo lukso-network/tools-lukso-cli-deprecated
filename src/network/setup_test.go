@@ -19,7 +19,7 @@ func TestDownloadClient(t *testing.T) {
 		err := viper.ReadInConfig()
 		require.NoError(t, err)
 
-		require.NoError(t, generateEnvFile("test-host"))
+		require.NoError(t, GenerateEnvFile("test-host"))
 	})
 	t.Run("download config files", func(t *testing.T) {
 		viper.Set(src.ViperKeyNetworkName, src.DefaultNetworkID)
@@ -28,7 +28,7 @@ func TestDownloadClient(t *testing.T) {
 	t.Run("generate node config", func(t *testing.T) {
 		err := GenerateDefaultNodeConfigs(src.DefaultNetworkID)
 		require.NoError(t, err)
-		
+
 		luksoConfigHomePath := "./node_config.yaml"
 
 		var actualConfig NodeConfigs
