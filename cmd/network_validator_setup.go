@@ -6,10 +6,14 @@ package cmd
 
 import (
 	"errors"
+	"fmt"
 	"github.com/lukso-network/lukso-cli/src"
 	"github.com/lukso-network/lukso-cli/src/network"
+	"github.com/lukso-network/lukso-cli/src/utils"
+	"github.com/lukso-network/lukso-cli/src/wallet"
 	"github.com/manifoldco/promptui"
 	"strconv"
+	"strings"
 
 	"github.com/spf13/cobra"
 )
@@ -21,8 +25,41 @@ var setupCmd = &cobra.Command{
 	Long: `This command prepares wallet, deposit_data and creates a secret.yaml file. These files are necessary to
 activate validators`,
 	Run: func(cmd *cobra.Command, args []string) {
+		// Checks
+		// load node config
+		nodeConf, err := network.GetLoadedNodeConfigs()
+		if err != nil {
+			cobra.CompErrorln(err.Error())
+			return
+		}
+
+		// check if keystore is empty
+		keystorePath, err := nodeConf.GetKeyStorePath()
+		if err != nil {
+			cobra.CompErrorln(err.Error())
+			return
+		}
+
+		isKeystoreEmpty, err := utils.IsDirectoryEmpty(keystorePath)
+		if err != nil {
+			// if directory doesn't exist, ignore it
+			if strings.Contains(err.Error(), "no such file or directory") {
+				//if err := os.Mkdir(keystorePath, os.ModePerm); err != nil {
+				//	continue
+				//}
+			} else {
+				cobra.CompErrorln(err.Error())
+				return
+			}
+		}
+		if !isKeystoreEmpty {
+			cobra.CompError("The keystore directory is not empty. In order to setup the validator yuu need an empty keystore directory. \nConsider setting up the node in a different location.\n")
+			return
+		}
+
+		// choose password
 		prompt := promptui.Prompt{
-			Label: "Keystore password",
+			Label: "Choose A Password For Your Keystore",
 			Validate: func(s string) error {
 				if len(s) < 6 {
 					return errors.New("password must have more than 6 characters")
@@ -36,49 +73,72 @@ activate validators`,
 			cobra.CompErrorln(err.Error())
 			return
 		}
+
+		// set number of validators
 		prompt = promptui.Prompt{
-			Label: "Number of Validators",
+			Label: "How Many Validators Do You Want To Run",
 		}
-		validatorNumber, err := prompt.Run()
+
+		numOfValString, err := prompt.Run()
 		if err != nil {
 			cobra.CompErrorln(err.Error())
 			return
 		}
-		nodeConf, err := network.GetLoadedNodeConfigs()
+		numOfVal, err := strconv.Atoi(numOfValString)
 		if err != nil {
 			cobra.CompErrorln(err.Error())
 			return
 		}
+
+		// create secrets
 		valSecrets := nodeConf.GetValSecrets()
 		if valSecrets == nil {
 			cobra.CompErrorln(src.ErrMsgValidatorSecretNotPresent)
 			return
 		}
+
+		// generate mnemonic
 		err = valSecrets.GenerateMnemonic()
 		if err != nil {
 			cobra.CompErrorln(err.Error())
 			return
 		}
-		numOfVal, err := strconv.Atoi(validatorNumber)
-		if err != nil {
-			cobra.CompErrorln(err.Error())
-			return
-		}
+
+		// generate deposit data
 		err = valSecrets.GenerateDepositData(numOfVal)
 		if err != nil {
 			cobra.CompErrorln(err.Error())
 			return
 		}
+
+		// generate wallet
 		err = valSecrets.GenerateWallet(numOfVal, password)
 		if err != nil {
 			cobra.CompErrorln(err.Error())
 			return
 		}
+
+		walletInfo, err := wallet.CreateWallet("transaction_wallet", "", "transaction_wallet")
+		if err != nil {
+			cobra.CompErrorln(err.Error())
+			return
+		}
+
+		valSecrets.Eth1Data.WalletAddress = walletInfo.PubKey
+		valSecrets.Eth1Data.WalletPrivKey = walletInfo.PrivKey
+
+		// push node config
 		err = nodeConf.WriteOrUpdateNodeConfig()
 		if err != nil {
 			cobra.CompErrorln(err.Error())
 			return
 		}
+		fmt.Println("Validator wallet was successfully created. Type")
+		fmt.Println(utils.ConsoleInBlue("        lukso network validator describe"))
+		fmt.Println("to see data related to the validator setup. ")
+		fmt.Println("A transaction wallet will be used to pay for the deposit transaction. ")
+		fmt.Println("The transaction wallet needs at least [staking amount] + [gas costs] LyX before you can create a deposit transaction!")
+
 	},
 }
 

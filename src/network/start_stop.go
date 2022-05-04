@@ -50,7 +50,7 @@ func StartValidatorNode() error {
 	if err != nil {
 		return err
 	}
-	keystorePath, err := config.getKeyStorePath()
+	keystorePath, err := config.GetKeyStorePath()
 	if err != nil {
 		return err
 	}
