@@ -45,7 +45,7 @@ func TestValidatorSetup(t *testing.T) {
 		require.NoError(t, err)
 		configs, err := GetLoadedNodeConfigs()
 		require.NoError(t, err)
-		keyLocation, err := configs.getKeyStorePath()
+		keyLocation, err := configs.GetKeyStorePath()
 		require.NoError(t, err)
 		err = os.RemoveAll(keyLocation)
 		require.NoError(t, err)

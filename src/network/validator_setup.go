@@ -96,7 +96,7 @@ func (valSec *ValidatorSecrets) GenerateDepositData(numberOfValidators int) erro
 	}
 	return nil
 }
-
+ 
 func (valSec *ValidatorSecrets) GenerateWallet(numberOfValidators int, password string) error {
 	err := checkAndDownloadValTool()
 	if err != nil {
@@ -106,7 +106,7 @@ func (valSec *ValidatorSecrets) GenerateWallet(numberOfValidators int, password 
 	if err != nil {
 		return err
 	}
-	keyStoreLocation, err := nodeConfigs.getKeyStorePath()
+	keyStoreLocation, err := nodeConfigs.GetKeyStorePath()
 	if err != nil {
 		return err
 	}
