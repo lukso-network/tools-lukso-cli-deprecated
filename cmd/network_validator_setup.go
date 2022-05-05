@@ -53,7 +53,7 @@ activate validators`,
 			}
 		}
 		if !isKeystoreEmpty {
-			cobra.CompError("The keystore directory is not empty. In order to setup the validator yuu need an empty keystore directory. \nConsider setting up the node in a different location.\n")
+			cobra.CompError("The keystore directory is not empty. In order to setup the validator you need an empty keystore directory. \nConsider setting up the node in a different location.\n")
 			return
 		}
 
