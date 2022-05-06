@@ -31,7 +31,6 @@ var initCmd = &cobra.Command{
 from the github repository. It also updates node name and IP address in the .env file`,
 	Example: "lukso-cli network init --nodeconf ./node_config.yaml --chainId l16 --nodeName my_node --docker",
 	RunE: func(cmd *cobra.Command, args []string) error {
-
 		viper.Set(src.ViperKeyNetworkName, viper.GetString("chainId"))
 		return network.SetupNetwork(viper.GetString("nodeName"))
 	},
@@ -46,4 +45,3 @@ func init() {
 	viper.BindPFlag("docker", initCmd.Flags().Lookup("docker"))
 	viper.BindPFlag("nodeName", initCmd.Flags().Lookup("nodeName"))
 }
-
