@@ -53,13 +53,13 @@ func ConsoleWriteLabeledValueI(label string, value interface{}) string {
 	bb := &bytes.Buffer{}
 
 	bb.WriteString(ConsoleColorPrefixFirst)
-	bb.WriteString("34")
+	bb.WriteString(ConsoleColorBlue)
 	bb.WriteString(ConsoleColorPrefixSecond)
 	bb.WriteString(label)
 	bb.WriteString(": ")
 	bb.WriteString(ConsoleColorSuffix)
 	bb.WriteString(ConsoleColorPrefixFirst)
-	bb.WriteString("91")
+	bb.WriteString(ConsoleColorBrightBlue)
 	bb.WriteString(ConsoleColorPrefixSecond)
 	bb.WriteString(fmt.Sprintf("%v", value))
 	bb.WriteString(ConsoleColorSuffix)
@@ -124,7 +124,6 @@ func ConsoleTestColors() {
 	}
 }
 
-
-func PrintColoredln(label string, value interface{}) {
+func ColoredPrintln(label string, value interface{}) {
 	fmt.Print(ConsoleWriteLabeledValueI(label, value))
 }

@@ -1,0 +1,42 @@
+configs:
+    volume: ./configs
+keystore:
+    volume: ./keystore
+node:
+    ip: 89.204.138.24
+    name: Leonards-MacBook-Pro-2.local
+execution:
+    statsaddress: 34.90.5.14
+    verbosity: "3"
+    etherbase: 0x7781121fd00A009670E31b76A2bf99b3A2D6878D
+    datavolume: ./data/execution_data
+    networkid: "83748374"
+    bootnode: enode://c2bb19ce658cfdf1fecb45da599ee6c7bf36e5292efb3fb61303a0b2cd07f96c20ac9b376a464d687ac456675a2e4a44aec39a0509bcb4b6d8221eedec25aca2@35.204.5.43:30303
+    version: v0.2.0-dev
+consensus:
+    statsaddress: 34.141.143.70:9090
+    verbosity: info
+    datavolume: ./data/consensus_data
+    bootnode: enr:-MK4QOoOAELWWC0dZ7hwZzDY3NhxbGJWB9JFBGsIswzF383NRPNh7vfI_K4gt5KMCFt6-NrMbUdizURmcKE5xjfRhBaGAYBwAjI7h2F0dG5ldHOIAAAAAAAAAACEZXRoMpAMEg0LYQAAcAMAAAAAAAAAgmlkgnY0gmlwhCPMBSuJc2VjcDI1NmsxoQO4XSsbls7lyhfqvcsgS8jmjFmBpC3dekXssvAEXkHtJYhzeW5jbmV0cwCDdGNwgjLIg3VkcIIu4A
+    version: v0.2.1-dev
+validator:
+    datavolume: ./data/validator_data
+validatorcredentials:
+    validatormnemonic: round pyramid dune buffalo panther mad tent gold skull game jeans powder glow extra follow spread depth flock armed between mail orbit december control
+    withdrawalmnemonic: round pyramid dune buffalo panther mad tent gold skull game jeans powder glow extra follow spread depth flock armed between mail orbit december control
+    forkversion: "0x60000069"
+    deposit:
+        amount: "32000000000"
+        contractaddress: 0x4242424242424242424242424242424242424242
+        depositfilelocation: ./deposit_data.json
+        force: true
+    eth1data:
+        walletaddress: 0xdacbf893629adb767bd4857b6462fb8fb1db24fa
+        walletprivkey: f5ea67502f59f527af80f75bb641739d4226dd75ae2bf3c3ee999c35761d371f
+        rpcendpoint: http://35.204.5.43:8545
+    eth2data:
+        grpcendpoint: 35.204.5.43:4000
+ports:
+    geth:
+        httpport: "8545"
+        peerport: "30303"
