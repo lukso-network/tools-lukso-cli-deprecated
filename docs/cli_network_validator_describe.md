@@ -13,7 +13,10 @@ cli network validator describe [flags]
 ### Options
 
 ```
-  -h, --help   help for describe
+  -b, --beaconapi string   endpoint of beacon api
+  -e, --epoch int          epoch to be described - if left out it is the head epoch (default -1)
+  -h, --help               help for describe
+  -k, --key string         validator key to be described - keep empty to describe your validators defined in keystore
 ```
 
 ### Options inherited from parent commands
