@@ -5,6 +5,7 @@ Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
+	"github.com/lukso-network/lukso-cli/api/beaconapi"
 	"github.com/lukso-network/lukso-cli/src/network"
 	"github.com/spf13/cobra"
 )
@@ -22,7 +23,7 @@ Leaving out the epoch number gives the latest status.
 		baseUrl, _ := cmd.Flags().GetString("beaconapi")
 		if baseUrl == "" {
 			// TODO Needs to point to load balanced bootnode endpoint
-			baseUrl = "34.90.85.198:3500"
+			baseUrl = beaconapi.DefaultBeaconAPIEndpoint
 		}
 		epoch, _ := cmd.Flags().GetInt64("epoch")
 
