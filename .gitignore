@@ -2,3 +2,4 @@
 .DS_STORE
 Makefile
 notes.txt
+bin/*

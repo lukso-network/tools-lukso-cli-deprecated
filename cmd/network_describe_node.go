@@ -6,8 +6,8 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/lukso-network/lukso-cli/utils"
-	"github.com/lukso-network/lukso-cli/utils/gethrpc"
+	"github.com/lukso-network/lukso-cli/api"
+	"github.com/lukso-network/lukso-cli/api/gethrpc"
 	"github.com/spf13/cobra"
 )
 
@@ -27,22 +27,22 @@ to quickly create a Cobra application.`,
 			fmt.Println("Error: ip is empty")
 		}
 
-		i := utils.NewIP(ip)
+		i := api.NewIP(ip)
 
 		c := gethrpc.NewRPCClient(i.RPCAddress())
 
-		nodeInfo, err := utils.AdminNodeInfoRequest(c)
+		nodeInfo, err := api.AdminNodeInfoRequest(c)
 
 		if err != nil {
 			fmt.Println("Error: ", err.Error())
 		}
 
-		peers, err := utils.AdminPeersRequest(c)
+		peers, err := api.AdminPeersRequest(c)
 		if err != nil {
 			fmt.Println("Error: ", err.Error())
 		}
 
-		blocknumber, err := utils.BlockNumber(c)
+		blocknumber, err := api.BlockNumber(c)
 		if err != nil {
 			fmt.Println("Error: ", err.Error())
 		}
@@ -64,7 +64,7 @@ to quickly create a Cobra application.`,
 func init() {
 	describeCmd.AddCommand(nodeCmd)
 
-	nodeCmd.Flags().StringP("ip", "i", "", "Help message for toggle")
+	nodeCmd.Flags().StringP("ip", "i", "", "set ip")
 	_ = nodeCmd.MarkFlagRequired("ip")
 
 }

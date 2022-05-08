@@ -13,6 +13,8 @@ import (
 	"os"
 )
 
+var cfgFile string
+
 // networkCmd represents the network command
 var networkCmd = &cobra.Command{
 	Use:   "network",

@@ -6,6 +6,7 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/lukso-network/lukso-cli/src/wallet"
 	"io/ioutil"
 	"os"
 	"strings"
@@ -25,6 +26,10 @@ lukso wallet create -p [PASSWORD] -d [TARGET_DIRECTORY] -l [LABEL]`,
 		dir, _ := cmd.Flags().GetString("dir")
 		password, _ := cmd.Flags().GetString("password")
 		label, _ := cmd.Flags().GetString("label")
+
+		if password == "" {
+			password = wallet.CreateRandomPassword()
+		}
 
 		store := keystore.NewKeyStore(dir, keystore.StandardScryptN, keystore.StandardScryptP)
 

@@ -1,8 +1,8 @@
-package utils
+package api
 
 import (
 	"encoding/json"
-	"github.com/lukso-network/lukso-cli/utils/gethrpc"
+	"github.com/lukso-network/lukso-cli/api/gethrpc"
 )
 
 type AdminPeersResponse = []Peer

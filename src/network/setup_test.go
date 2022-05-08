@@ -10,20 +10,12 @@ import (
 )
 
 func TestDownloadClient(t *testing.T) {
-	t.Run("download makefile", func(t *testing.T) {
-		viper.Set(src.ViperKeyNetworkName, src.DefaultNetworkID)
-		require.NoError(t, downloadNetworkSetupFiles())
-	})
 	t.Run("modify env file", func(t *testing.T) {
 		viper.SetConfigFile("../../node_config.yaml")
 		err := viper.ReadInConfig()
 		require.NoError(t, err)
 
 		require.NoError(t, GenerateEnvFile("test-host"))
-	})
-	t.Run("download config files", func(t *testing.T) {
-		viper.Set(src.ViperKeyNetworkName, src.DefaultNetworkID)
-		require.NoError(t, downloadConfigFiles())
 	})
 	t.Run("generate node config", func(t *testing.T) {
 		err := GenerateDefaultNodeConfigs(src.DefaultNetworkID)

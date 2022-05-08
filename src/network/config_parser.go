@@ -34,7 +34,7 @@ func (config *NodeConfigs) getConfigPath() (string, error) {
 	return config.Configs.Volume, nil
 }
 
-func (config *NodeConfigs) getKeyStorePath() (string, error) {
+func (config *NodeConfigs) GetKeyStorePath() (string, error) {
 	if config.Configs == nil || config.getConfigs().getVolume() == "" {
 		homedir, err := os.UserHomeDir()
 		if err != nil {
@@ -138,7 +138,7 @@ func getEnvironmentConfig(nodeName string) map[string]string {
 		cobra.CompError(err.Error())
 		return nil
 	}
-	newEnvData["KEYSTORE_VOLUME"], err = nodeConfig.getKeyStorePath()
+	newEnvData["KEYSTORE_VOLUME"], err = nodeConfig.GetKeyStorePath()
 	if err != nil {
 		cobra.CompError(err.Error())
 		return nil
