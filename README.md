@@ -2,9 +2,9 @@
 
 
 ## Download
-Use the following command to download `lukso`
+Use the following command to download `lukso` inside `/usr/local/bin` directory.
 ```bash
-curl https://raw.githubusercontent.com/lukso-network/lukso-cli/main/cli_downloader.sh | bash
+sudo curl https://raw.githubusercontent.com/lukso-network/lukso-cli/main/cli_downloader.sh | sudo bash
 ```
 
 Or use go installer to install `lukso-cli` into your GOPATH
