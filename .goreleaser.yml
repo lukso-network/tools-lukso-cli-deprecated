@@ -2,8 +2,6 @@ builds:
   - goos:
       - linux
       - darwin
-    env:
-      - GIT_TOKEN=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
     goarch:
       - amd64
       - arm64
@@ -13,4 +11,3 @@ brews:
     tap:
       owner: meta-bot
       name: homebrew-tools
-      token: ${{ .Env.GIT_TOKEN }}
