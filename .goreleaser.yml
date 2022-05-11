@@ -2,7 +2,7 @@ builds:
   - goos:
       - linux
       - darwin
-  - goarch:
+    goarch:
       - amd64
       - arm64
 brews:
