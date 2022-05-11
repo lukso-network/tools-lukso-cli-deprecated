@@ -11,4 +11,5 @@ brews:
     tap:
       owner: meta-bot
       name: homebrew-tools
+      branch: main
       token: "{{ .Env.TAP_TOKEN }}"
