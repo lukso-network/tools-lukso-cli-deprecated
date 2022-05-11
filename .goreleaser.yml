@@ -1,0 +1,7 @@
+brews:
+  - name: lukso-cli
+    homepage: https://github.com/meta-bot/homebrew-tools
+    tap:
+      owner: meta-bot
+      name: homebrew-tools
+      token: "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"
