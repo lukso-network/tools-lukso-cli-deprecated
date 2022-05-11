@@ -25,6 +25,8 @@ func TestDepositSend(t *testing.T) {
 		valSec.Eth1Data.WalletPrivKey = "f916f93513e14aa9cc9d2499515c28bbbcf788822c419869acdcc8923df13815"
 		data, err := ParseDepositDataFromFile("../../assets/deposit_data.json")
 		require.NoError(t, err)
+		err = valSec.downloadEthereal(ctx, client)
+		require.NoError(t, err)
 		for _, x := range data {
 			err = valSec.doDeposit(ctx, x, client)
 			require.NoError(t, err)
