@@ -25,3 +25,4 @@ jobs:
           args: release --rm-dist
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAP_TOKEN: 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
