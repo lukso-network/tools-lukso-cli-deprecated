@@ -4,7 +4,7 @@
 ## Download
 Use the following command to download `lukso` inside `/usr/local/bin` directory.
 ```bash
-curl https://raw.githubusercontent.com/lukso-network/lukso-cli/main/cli_downloader.sh | sudo bash
+sudo curl https://raw.githubusercontent.com/lukso-network/lukso-cli/main/cli_downloader.sh | bash
 ```
 
 Or use go installer to install `lukso-cli` into your GOPATH
@@ -55,3 +55,11 @@ If it is a subcommand of **examplecmd** then rename the file to
 Generate the doc with
 
     go run main.go docs 
+
+## Release
+
+Release are created by creating a Git release. Make sure to 
+
+1. modify **cli_downloader.sh** with the desired version 
+2. add updates to CHANGELOG.md
+
