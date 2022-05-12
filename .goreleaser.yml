@@ -7,9 +7,8 @@ builds:
       - arm64
 brews:
   - name: lukso-cli
-    homepage: https://github.com/meta-bot/homebrew-tools
+    homepage: https://github.com/lukso-network/homebrew-tools
     tap:
-      owner: meta-bot
+      owner: lukso-network
       name: homebrew-tools
       branch: main
-      token: "{{ .Env.TAP_TOKEN }}"
