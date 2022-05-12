@@ -3,3 +3,8 @@
 Makefile
 notes.txt
 bin/*
+
+
+.env
+node_config.yaml
+lukso-cli
