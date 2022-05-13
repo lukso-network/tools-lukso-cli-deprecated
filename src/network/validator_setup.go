@@ -96,7 +96,7 @@ func (valSec *ValidatorSecrets) GenerateDepositData(numberOfValidators int) erro
 	}
 	return nil
 }
- 
+
 func (valSec *ValidatorSecrets) GenerateWallet(numberOfValidators int, password string) error {
 	err := checkAndDownloadValTool()
 	if err != nil {
@@ -135,6 +135,17 @@ func pullEtherealImage(ctx context.Context, client *client.Client) error {
 	defer reader.Close()
 	_, err = io.Copy(os.Stdout, reader)
 	return err
+}
+
+func (valSec *ValidatorSecrets) downloadEthereal(ctx context.Context, cli *client.Client) error {
+	reader, err := cli.ImagePull(ctx, "docker.io/wealdtech/ethereal", types.ImagePullOptions{})
+	if err != nil {
+		return err
+	}
+
+	defer reader.Close()
+	io.Copy(os.Stdout, reader)
+	return nil
 }
 
 func (valSec *ValidatorSecrets) doDeposit(ctx context.Context, data *DepositData, cli *client.Client) error {
@@ -209,6 +220,10 @@ func (valSec *ValidatorSecrets) SendDepositTxn() error {
 		return err
 	}
 	dockerClient, err := getDockerClient()
+	if err != nil {
+		return err
+	}
+	err = valSec.downloadEthereal(context.Background(), dockerClient)
 	if err != nil {
 		return err
 	}
