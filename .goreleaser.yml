@@ -12,3 +12,4 @@ brews:
       owner: lukso-network
       name: homebrew-tools
       branch: main
+      token: "{{ .ENV.TAP_GITHUB_TOKEN }}"
