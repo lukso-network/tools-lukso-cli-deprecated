@@ -43,4 +43,8 @@ var DefaultL16NodeConfigs = &NodeConfigs{
 			PeerPort: "30303",
 		},
 	},
+	ApiEndpoints: &NodeApi{
+		ConsensusApi: "https://beacon.beta.l16.lukso.network",
+		ExecutionApi: "https://rpc.beta.l16.lukso.network",
+	},
 }
