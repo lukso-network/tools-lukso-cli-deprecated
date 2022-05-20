@@ -3,7 +3,6 @@ package src
 const (
 	ConfigBranchName = "main"
 	NetworkVersion   = "19"
-	DefaultNetworkID = "l16"
 	ConfigRepoName   = "network-configs"
 	GitUrl           = "https://raw.githubusercontent.com/lukso-network/"
 )

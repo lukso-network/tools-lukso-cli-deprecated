@@ -8,6 +8,8 @@ const (
 	MainNet Chain = iota
 	L16
 	L16Beta
+
+	DefaultNetworkID = "l16"
 )
 
 func GetChainByString(chainId string) Chain {

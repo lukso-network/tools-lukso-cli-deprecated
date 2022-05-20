@@ -7,5 +7,6 @@ const (
 	ChainL16     = "l16"
 	ChainMainNet = "mainnet"
 
-	CommandOptionChainID = "chainId"
+	CommandOptionChainID  = "chainId"
+	CommandOptionNodeConf = "nodeconf"
 )
