@@ -93,7 +93,7 @@ func createSingleWallet(dir string, mnemonic string, chunk WalletChunk) error {
 		name := fmt.Sprintf("beta_%d", i-chunk.Start+1)
 		fmt.Println("Creating", name)
 		directory := fmt.Sprintf("%s/%s/%s", dir, chunk.Name, name)
-		err := executeCommand(directory, chunk.Start+1, chunk.Start, mnemonic)
+		err := executeCommand(directory, i+1, i, mnemonic)
 		if err != nil {
 			return err
 		}

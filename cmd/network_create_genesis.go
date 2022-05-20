@@ -29,7 +29,7 @@ The configuration defines the validator set from 1...n that can be consumed by a
 
 func init() {
 	networkCmd.AddCommand(createGenesisCmd)
-	createGenesisCmd.Flags().StringP("mnemonic", "m", "", "all wallets are dereived from this wallet")
+	createGenesisCmd.Flags().StringP("mnemonic", "m", "", "all wallets are derived from this wallet")
 	createGenesisCmd.MarkFlagRequired("mnemonic")
 	createGenesisCmd.Flags().StringP("configType", "c", "", "indicates the way the wallets are chunked")
 	createGenesisCmd.MarkFlagRequired("configType")
