@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"strings"
 	"time"
 )
 
@@ -17,17 +18,22 @@ type HttpClient struct {
 
 func NewHttpClient(baseUrl string) HttpClient {
 	client := &http.Client{
-		Timeout: time.Duration(5 * time.Second),
+		Timeout: 5 * time.Second,
+	}
+
+	base := baseUrl
+	if !strings.Contains(baseUrl, "http") {
+		base = fmt.Sprintf("http://%s", baseUrl)
 	}
 
 	return HttpClient{
-		BaseUrl: baseUrl,
+		BaseUrl: base,
 		Client:  client,
 	}
 }
 
 func (c *HttpClient) getUrl(path string) string {
-	return fmt.Sprintf("http://%v/%v", c.BaseUrl, path)
+	return fmt.Sprintf("%v/%v", c.BaseUrl, path)
 }
 
 func (c *HttpClient) Post(body interface{}, response interface{}, token string, path string) (int, error) {

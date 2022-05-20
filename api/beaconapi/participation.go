@@ -3,7 +3,7 @@ package beaconapi
 import "fmt"
 
 const (
-	ParticipationPath = "/eth/v1alpha1/validators/participation?epoch=%d"
+	ParticipationPath = "eth/v1alpha1/validators/participation?epoch=%d"
 )
 
 type ParticipationResponse struct {
