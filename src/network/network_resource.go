@@ -7,9 +7,6 @@ import (
 )
 
 const (
-	L16Beta = "l16beta"
-	L16     = "l16"
-
 	BeaconClientPrysm = "prysm"
 
 	DockerComposeDefaultName = "docker-compose.yml"
@@ -25,7 +22,7 @@ type NetworkResourceConfig struct {
 
 func NewResourceConfig(networkVersion string, clientVersion string) (NetworkResourceConfig, error) {
 	c := NetworkResourceConfig{}
-	if networkVersion != L16Beta && networkVersion != L16 {
+	if networkVersion != ChainL16Beta && networkVersion != ChainL16 {
 		return c, fmt.Errorf("unknown network version %s", networkVersion)
 	}
 	c.DockerLocation = fmt.Sprintf(DockerGitLocation, networkVersion, clientVersion)

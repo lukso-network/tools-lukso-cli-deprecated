@@ -29,6 +29,6 @@ func TestDownloadClient(t *testing.T) {
 
 		err = yaml.Unmarshal(rawData, &actualConfig)
 		require.NoError(t, err)
-		require.Equal(t, DefaultL16NodeConfigs, &actualConfig)
+		require.Equal(t, DefaultL16BetaNodeConfigs, &actualConfig)
 	})
 }

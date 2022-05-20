@@ -6,6 +6,19 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+func GetDefaultNodeConfigByOptionParam(chain string) *NodeConfigs {
+	return GetDefaultNodeConfig(GetChainByString(chain))
+}
+
+func GetDefaultNodeConfig(chain Chain) *NodeConfigs {
+	switch chain {
+	case L16Beta:
+		return DefaultL16BetaNodeConfigs
+	default:
+		return DefaultL16BetaNodeConfigs
+	}
+}
+
 type DataVolume struct {
 	Volume string `yaml:",omitempty"`
 }

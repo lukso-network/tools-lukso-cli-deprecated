@@ -18,7 +18,7 @@ func TestValidatorSetup(t *testing.T) {
 	})
 	t.Run("test secrets loader", func(t *testing.T) {
 		expected := BetaDefaultValSecrets
-		nodeconf := DefaultL16NodeConfigs
+		nodeconf := DefaultL16BetaNodeConfigs
 		receivedFromFile := nodeconf.GetValSecrets()
 		require.Equal(t, expected, receivedFromFile)
 	})

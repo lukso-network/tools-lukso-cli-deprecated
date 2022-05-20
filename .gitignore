@@ -8,3 +8,5 @@ bin/*
 .env
 node_config.yaml
 lukso-cli
+docker-compose.yml
+configs

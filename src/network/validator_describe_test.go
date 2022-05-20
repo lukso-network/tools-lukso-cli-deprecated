@@ -7,7 +7,7 @@ import (
 
 func TestValidatorTxStatus(t *testing.T) {
 	t.Run("check validator txStatus", func(t *testing.T) {
-		nodeConf := DefaultL16NodeConfigs
+		nodeConf := DefaultL16BetaNodeConfigs
 		secrets := nodeConf.GetValSecrets()
 		secrets.Deposit.DepositFileLocation = "../../assets/deposit_data.json"
 		err := secrets.GetTxStatus()

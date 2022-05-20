@@ -30,7 +30,7 @@ func GenerateDefaultNodeConfigs(chainId string) error {
 	var nodeConfig *NodeConfigs
 	switch chainId {
 	case src.L16Network:
-		nodeConfig = DefaultL16NodeConfigs
+		nodeConfig = DefaultL16BetaNodeConfigs
 	default:
 		return errors.New("invalid chainId selected")
 	}
@@ -39,7 +39,7 @@ func GenerateDefaultNodeConfigs(chainId string) error {
 
 func SetupNetwork(nodeName string) error {
 	// TODO When a second network arrives needs to modifable
-	networkVersion := L16Beta
+	networkVersion := ChainL16Beta
 	clientVersion := BeaconClientPrysm
 
 	config, err := NewResourceConfig(networkVersion, clientVersion)

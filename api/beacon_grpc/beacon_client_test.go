@@ -7,7 +7,7 @@ import (
 )
 
 func TestBeaconClient_GetValidatorStatus(t *testing.T) {
-	nodeconf := network.DefaultL16NodeConfigs
+	nodeconf := network.DefaultL16BetaNodeConfigs
 	valSec := nodeconf.GetValSecrets()
 	valClient, err := NewBeaconClient(valSec.Eth2Data.GRPCEndPoint)
 	require.NoError(t, err)
