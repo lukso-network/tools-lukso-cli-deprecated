@@ -30,6 +30,11 @@ type PortDescription struct {
 	PeerPort string `yaml:",omitempty"`
 }
 
+type NodeApi struct {
+	ConsensusApi string `yaml:",omitempty"`
+	ExecutionApi string `yaml:",omitempty"`
+}
+
 type NodeConfigs struct {
 	Configs              *DataVolume       `yaml:",omitempty"`
 	Keystore             *DataVolume       `yaml:",omitempty"`
@@ -38,6 +43,7 @@ type NodeConfigs struct {
 	Consensus            *ClientDetails    `yaml:",omitempty"`
 	Validator            *ClientDetails    `yaml:",omitempty"`
 	ValidatorCredentials *ValidatorSecrets `yaml:",omitempty"`
+	ApiEndpoints         *NodeApi          `yaml:",omitempty"`
 
 	Ports map[string]PortDescription `yaml:",omitempty"`
 }
