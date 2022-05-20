@@ -10,7 +10,7 @@ import (
 
 func TestParser(t *testing.T) {
 	t.Parallel()
-	viper.SetConfigFile("../../node_config.yaml")
+	viper.SetConfigFile("../../test_data/node_config.yaml")
 	require.NoError(t, viper.ReadInConfig())
 
 	config, err := GetLoadedNodeConfigs()

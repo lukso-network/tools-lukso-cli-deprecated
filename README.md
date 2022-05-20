@@ -42,6 +42,10 @@ The up subcommand deals with the universal profile smart contracts
 
     cobra init --pkg-name luksocli
 
+## Test
+
+    
+
 ### Add A New Command
 
 Execute

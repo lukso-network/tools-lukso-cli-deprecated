@@ -14,7 +14,7 @@ import (
 
 var reader io.ReadCloser
 
-func getDockerClient() (*client.Client, error) {
+func GetDockerClient() (*client.Client, error) {
 	opts, err := client.NewClientWithOpts()
 	if err != nil {
 		return nil, err
@@ -23,7 +23,7 @@ func getDockerClient() (*client.Client, error) {
 }
 
 func retrieveLogStream(containerName, tail string, follow bool) (io.ReadCloser, error) {
-	docClient, err := getDockerClient()
+	docClient, err := GetDockerClient()
 	if err != nil {
 		return nil, err
 	}

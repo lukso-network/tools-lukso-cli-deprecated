@@ -17,8 +17,8 @@ import (
 	"strconv"
 )
 
-// checkAndDownloadValTool checks if validator tool is present or not. If not then download the validator tool according to platform (linux / darwin)
-func checkAndDownloadValTool() error {
+// CheckAndDownloadValTool checks if validator tool is present or not. If not then download the validator tool according to platform (linux / darwin)
+func CheckAndDownloadValTool() error {
 	if !FileExists("./bin/network-validator-tool") {
 		fmt.Println("downloading network-validator-tool for your system")
 		valToolLocation := fmt.Sprintf("https://github.com/lukso-network/network-validator-tools/releases/download/v1.0.0/network-validator-tools-v1.0.0-%s-%s", runtime.GOOS, runtime.GOARCH)
@@ -31,7 +31,7 @@ func checkAndDownloadValTool() error {
 	return nil
 }
 
-func getMnemonic() (string, error) {
+func GetMnemonic() (string, error) {
 	output, err := exec.Command("./bin/network-validator-tool", "mnemonic").Output()
 	if err != nil {
 		return "", err
@@ -40,14 +40,14 @@ func getMnemonic() (string, error) {
 }
 
 func (valSec *ValidatorSecrets) GenerateMnemonic() error {
-	err := checkAndDownloadValTool()
+	err := CheckAndDownloadValTool()
 	if err != nil {
 		return err
 	}
 
 	fmt.Println("Generating mnemonic")
 
-	output, err := getMnemonic()
+	output, err := GetMnemonic()
 	if err != nil {
 		return err
 	}
@@ -63,7 +63,7 @@ func (valSec *ValidatorSecrets) GenerateMnemonic() error {
 		return err
 	}
 	if generateVal == "Yes" {
-		valSec.WithdrawalMnemonic, err = getMnemonic()
+		valSec.WithdrawalMnemonic, err = GetMnemonic()
 		if err != nil {
 			return err
 		}
@@ -73,7 +73,7 @@ func (valSec *ValidatorSecrets) GenerateMnemonic() error {
 
 func (valSec *ValidatorSecrets) GenerateDepositData(numberOfValidators int) error {
 
-	err := checkAndDownloadValTool()
+	err := CheckAndDownloadValTool()
 	if err != nil {
 		return err
 	}
@@ -98,7 +98,7 @@ func (valSec *ValidatorSecrets) GenerateDepositData(numberOfValidators int) erro
 }
 
 func (valSec *ValidatorSecrets) GenerateWallet(numberOfValidators int, password string) error {
-	err := checkAndDownloadValTool()
+	err := CheckAndDownloadValTool()
 	if err != nil {
 		return err
 	}
@@ -126,7 +126,7 @@ func (valSec *ValidatorSecrets) GenerateWallet(numberOfValidators int, password 
 	return os.WriteFile(passwdFile, []byte(password), os.ModePerm)
 }
 
-func pullEtherealImage(ctx context.Context, client *client.Client) error {
+func PullEtherealImage(ctx context.Context, client *client.Client) error {
 	reader, err := client.ImagePull(ctx, "wealdtech/ethereal", types.ImagePullOptions{})
 	if err != nil {
 		return err
@@ -137,7 +137,7 @@ func pullEtherealImage(ctx context.Context, client *client.Client) error {
 	return err
 }
 
-func (valSec *ValidatorSecrets) downloadEthereal(ctx context.Context, cli *client.Client) error {
+func (valSec *ValidatorSecrets) DownloadEthereal(ctx context.Context, cli *client.Client) error {
 	reader, err := cli.ImagePull(ctx, "docker.io/wealdtech/ethereal", types.ImagePullOptions{})
 	if err != nil {
 		return err
@@ -148,7 +148,7 @@ func (valSec *ValidatorSecrets) downloadEthereal(ctx context.Context, cli *clien
 	return nil
 }
 
-func (valSec *ValidatorSecrets) doDeposit(ctx context.Context, data *DepositData, cli *client.Client) error {
+func (valSec *ValidatorSecrets) DoDeposit(ctx context.Context, data *DepositData, cli *client.Client) error {
 	depData, err := json.Marshal(data)
 	if err != nil {
 		return err
@@ -219,16 +219,16 @@ func (valSec *ValidatorSecrets) SendDepositTxn() error {
 	if err != nil {
 		return err
 	}
-	dockerClient, err := getDockerClient()
+	dockerClient, err := GetDockerClient()
 	if err != nil {
 		return err
 	}
-	err = valSec.downloadEthereal(context.Background(), dockerClient)
+	err = valSec.DownloadEthereal(context.Background(), dockerClient)
 	if err != nil {
 		return err
 	}
 	for _, data := range depositData {
-		err = valSec.doDeposit(context.Background(), data, dockerClient)
+		err = valSec.DoDeposit(context.Background(), data, dockerClient)
 		if err != nil {
 			return err
 		}

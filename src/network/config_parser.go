@@ -98,7 +98,7 @@ func (config *NodeConfigs) gethGethPeerPort() (string, error) {
 	return "", errors.New("gethPorts are not available in config   file")
 }
 
-func getExecutionDataVolume() (string, error) {
+func GetExecutionDataVolume() (string, error) {
 	config, err := GetLoadedNodeConfigs()
 	if err != nil {
 		return "", err
@@ -107,7 +107,7 @@ func getExecutionDataVolume() (string, error) {
 	return getDataFromContainer(executionContainer, keyDataVolume), nil
 }
 
-func getConsensusDataVolume() (string, error) {
+func GetConsensusDataVolume() (string, error) {
 	config, err := GetLoadedNodeConfigs()
 	if err != nil {
 		return "", err
@@ -116,7 +116,7 @@ func getConsensusDataVolume() (string, error) {
 	return getDataFromContainer(dataContainer, keyDataVolume), nil
 }
 
-func getValidatorDataVolume() (string, error) {
+func GetValidatorDataVolume() (string, error) {
 	config, err := GetLoadedNodeConfigs()
 	if err != nil {
 		return "", err
@@ -125,7 +125,7 @@ func getValidatorDataVolume() (string, error) {
 	return getDataFromContainer(dataContainer, keyDataVolume), nil
 }
 
-func getEnvironmentConfig(nodeName string) map[string]string {
+func GetEnvironmentConfig(nodeName string) map[string]string {
 
 	nodeConfig, err := GetLoadedNodeConfigs()
 	if err != nil {

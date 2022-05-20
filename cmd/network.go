@@ -38,7 +38,8 @@ func initConfig() {
 		nodeConfigFileLocation := "./node_config.yaml"
 		if !network.FileExists(nodeConfigFileLocation) {
 			fmt.Println("No node_config.yaml found for this network. Generating node_config.yaml")
-			err := network.GenerateDefaultNodeConfigs(viper.GetString("chainId"))
+			chain := network.GetChainByString(viper.GetString(network.CommandOptionChainID))
+			err := network.GenerateDefaultNodeConfigs(chain)
 			if err != nil {
 				cobra.CompErrorln(err.Error())
 				os.Exit(1)

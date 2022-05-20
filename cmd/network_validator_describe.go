@@ -7,7 +7,6 @@ package cmd
 import (
 	"fmt"
 	"github.com/lukso-network/lukso-cli/api/beaconapi"
-	"github.com/lukso-network/lukso-cli/src"
 	"github.com/lukso-network/lukso-cli/src/network"
 	"github.com/lukso-network/lukso-cli/src/utils"
 	"github.com/spf13/cobra"
@@ -45,7 +44,7 @@ var validatorDescribeCmd = &cobra.Command{
 
 		valSecrets := nodeConf.GetValSecrets()
 		if valSecrets == nil {
-			cobra.CompErrorln(src.ErrMsgValidatorSecretNotPresent)
+			cobra.CompErrorln(network.ErrMsgValidatorSecretNotPresent)
 			return
 		}
 		depositData, err := network.ParseDepositDataFromFile(valSecrets.Deposit.DepositFileLocation)
