@@ -15,8 +15,9 @@ import (
 
 // restartCmd represents the restart command
 var restartCmd = &cobra.Command{
-	Use:   "restart",
-	Short: "Restart all running docker containers",
+	Use:     "restart",
+	Short:   "Restart all running docker containers",
+	Example: "lukso network restart",
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("stopping running containers")
 		err := network.DownDockerServices()

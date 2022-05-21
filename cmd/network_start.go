@@ -17,6 +17,7 @@ var startCmd = &cobra.Command{
 	Short: "Spin up consensus, execution and eth2-stats docker container",
 	Long: `start command spins up LUKSO node using .env and docker-compose file. It spins up
 consensus engine, execution engine and eth2-stats containers.`,
+	Example: "lukso network start",
 	Run: func(cmd *cobra.Command, args []string) {
 		err := network.StartArchNode()
 		if err != nil {

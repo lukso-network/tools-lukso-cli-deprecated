@@ -11,8 +11,9 @@ import (
 
 // validatorStartCmd represents the validator command
 var validatorStartCmd = &cobra.Command{
-	Use:   "validator",
-	Short: "This subcommand starts a validator client",
+	Use:     "validator",
+	Short:   "This subcommand starts a validator client",
+	Example: "lukso network start validator",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		return network.StartValidatorNode()
 	},

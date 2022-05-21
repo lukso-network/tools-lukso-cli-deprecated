@@ -16,6 +16,7 @@ var clearCmd = &cobra.Command{
 	Short: "Remove logs and data directory for all clients",
 	Long: `This command is responsible to remove data directory and logs for all the running clients (e.g. consensus
 engine, execution engine and validator client)`,
+	Example: "lukso network clear",
 	Run: func(cmd *cobra.Command, args []string) {
 		err := network.Clear()
 		if err != nil {

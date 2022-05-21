@@ -18,7 +18,7 @@ var describeCmd = &cobra.Command{
 Leaving out the epoch number gives the latest status.
 
 	
-`,
+`, Example: "lukso network describe",
 	Run: func(cmd *cobra.Command, args []string) {
 		baseUrl, _ := cmd.Flags().GetString("beaconapi")
 		if baseUrl == "" {

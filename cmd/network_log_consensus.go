@@ -14,7 +14,7 @@ var consensusCmd = &cobra.Command{
 	Use:     "consensus",
 	Short:   "Show logs for consensus engine",
 	Long:    `This command shows log for prysm-beacon container where consensus engine is running`,
-	Example: "lukso-cli network log consensus --tail 30 -f",
+	Example: "lukso network log consensus --tail 30 -f",
 	Run: func(cmd *cobra.Command, args []string) {
 		network.ReadLog("prysm_beacon", tail, follow)
 	},
