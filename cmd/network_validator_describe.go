@@ -15,9 +15,10 @@ import (
 
 // validatorDescribeCmd represents the describe command
 var validatorDescribeCmd = &cobra.Command{
-	Use:   "describe",
-	Short: "Show detailed status of the validators",
-	Long:  `It shows validator count, addresses and transaction status.`,
+	Use:     "describe",
+	Short:   "Show detailed status of the validators",
+	Long:    `It shows validator count, addresses and transaction status.`,
+	Example: "lukso network validator describe",
 	Run: func(cmd *cobra.Command, args []string) {
 		key, _ := cmd.Flags().GetString("key")
 		baseUrl, _ := cmd.Flags().GetString("beaconapi")

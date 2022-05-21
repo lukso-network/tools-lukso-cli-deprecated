@@ -23,6 +23,7 @@ var setupCmd = &cobra.Command{
 	Short: "Prepare a validator to join the network",
 	Long: `This command prepares wallet, deposit_data and creates a secret.yaml file. These files are necessary to
 activate validators`,
+	Example: "lukso network validator setup",
 	Run: func(cmd *cobra.Command, args []string) {
 		// Checks
 		// load node config

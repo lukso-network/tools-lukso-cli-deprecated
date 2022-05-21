@@ -13,14 +13,10 @@ import (
 
 // nodeCmd represents the node command
 var nodeCmd = &cobra.Command{
-	Use:   "node",
-	Short: "gets a description of peers",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Use:     "node",
+	Short:   "gets a description of peers",
+	Long:    `shows the peers of this node`,
+	Example: "lukso network describe node",
 	Run: func(cmd *cobra.Command, args []string) {
 		ip, _ := cmd.Flags().GetString("ip")
 		if ip == "" {

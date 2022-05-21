@@ -17,11 +17,10 @@ import (
 
 // createCmd represents the create command
 var createCmd = &cobra.Command{
-	Use:   "create",
-	Short: "Creates a wallet and a password file ",
-	Long: `This command will create a wallet and password file in a target directory. Optionally a password and a label for the filenames can be given:
-
-lukso wallet create -p [PASSWORD] -d [TARGET_DIRECTORY] -l [LABEL]`,
+	Use:     "create",
+	Short:   "Creates a wallet and a password file ",
+	Long:    "This command will create a wallet and password file in a target directory. Optionally a password and a label for the filenames can be given.",
+	Example: "lukso wallet create -p [PASSWORD] -d [TARGET_DIRECTORY] -l [LABEL]",
 	Run: func(cmd *cobra.Command, args []string) {
 		dir, _ := cmd.Flags().GetString("dir")
 		password, _ := cmd.Flags().GetString("password")

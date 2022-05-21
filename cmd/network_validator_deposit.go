@@ -17,6 +17,7 @@ var depositCmd = &cobra.Command{
 address. Remember it will need your wallet address and private keys. Thus it will deduct balance from your wallet.
 
 This tool is necessary to activate new validators`,
+	Example: "lukso network validator deposit",
 	Run: func(cmd *cobra.Command, args []string) {
 		nodeConf, err := network.GetLoadedNodeConfigs()
 		if err != nil {

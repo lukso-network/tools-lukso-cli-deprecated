@@ -12,9 +12,10 @@ import (
 
 // validatorLogCmd represents the validator command
 var validatorLogCmd = &cobra.Command{
-	Use:   "validator",
-	Short: "Show logs for validator client",
-	Long:  `This command shows log for prysm-validator container where validator client is running`,
+	Use:     "validator",
+	Short:   "Show logs for validator client",
+	Long:    `This command shows log for prysm-validator container where validator client is running`,
+	Example: "lukso network log validator --tail 30 -f",
 	Run: func(cmd *cobra.Command, args []string) {
 		network.ReadLog("prysm_validator", tail, follow)
 	},
