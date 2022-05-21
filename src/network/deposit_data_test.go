@@ -7,7 +7,7 @@ import (
 )
 
 func TestParseDepositDataFromFile(t *testing.T) {
-	data, err := ParseDepositDataFromFile("../../assets/deposit_data.json")
+	data, err := ParseDepositDataFromFile("../../test_data/deposit_data.json")
 	for _, myData := range data {
 		rawData, _ := json.Marshal(myData)
 		//t.Log(fmt.Sprintf("%+v", *myData))

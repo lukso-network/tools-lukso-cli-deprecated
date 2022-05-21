@@ -6,7 +6,7 @@ import "os"
 var myPublicIP, _ = getPublicIP()
 var myHostName, _ = os.Hostname()
 
-var DefaultL16NodeConfigs = &NodeConfigs{
+var DefaultL16BetaNodeConfigs = &NodeConfigs{
 	Configs: &DataVolume{
 		Volume: "./configs",
 	},
@@ -29,7 +29,7 @@ var DefaultL16NodeConfigs = &NodeConfigs{
 	Consensus: &ClientDetails{
 		StatsAddress: "34.141.143.70:9090",
 		Verbosity:    "info",
-		Version:      "v0.2.2-dev",
+		Version:      "v0.2.3-dev",
 		DataVolume:   "./data/consensus_data",
 		Bootnode:     "enr:-MK4QDjZAzD165YMiCM6WrCdRN3EGDViJqP_v1fyOE-YuOYAQ102NnF8GjTJG_-yUUMwWKuEzRMJMIoObbgDB3jtZA6GAYCJeizfh2F0dG5ldHOIAAAAAAAAAACEZXRoMpCBQMXLYgAAcf__________gmlkgnY0gmlwhCJbpv2Jc2VjcDI1NmsxoQOGOP29TdRKCr40kT-ZgsvrMYIs6EIwuYGEq11txAj_VohzeW5jbmV0cwCDdGNwgjLIg3VkcIIu4A",
 	},

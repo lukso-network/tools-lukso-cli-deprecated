@@ -7,7 +7,6 @@ package cmd
 import (
 	"errors"
 	"fmt"
-	"github.com/lukso-network/lukso-cli/src"
 	"github.com/lukso-network/lukso-cli/src/network"
 	"github.com/lukso-network/lukso-cli/src/utils"
 	"github.com/lukso-network/lukso-cli/src/wallet"
@@ -93,7 +92,7 @@ activate validators`,
 		// create secrets
 		valSecrets := nodeConf.GetValSecrets()
 		if valSecrets == nil {
-			cobra.CompErrorln(src.ErrMsgValidatorSecretNotPresent)
+			cobra.CompErrorln(network.ErrMsgValidatorSecretNotPresent)
 			return
 		}
 

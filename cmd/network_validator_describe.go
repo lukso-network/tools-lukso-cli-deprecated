@@ -7,10 +7,10 @@ package cmd
 import (
 	"fmt"
 	"github.com/lukso-network/lukso-cli/api/beaconapi"
-	"github.com/lukso-network/lukso-cli/src"
 	"github.com/lukso-network/lukso-cli/src/network"
 	"github.com/lukso-network/lukso-cli/src/utils"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 // validatorDescribeCmd represents the describe command
@@ -22,8 +22,7 @@ var validatorDescribeCmd = &cobra.Command{
 		key, _ := cmd.Flags().GetString("key")
 		baseUrl, _ := cmd.Flags().GetString("beaconapi")
 		if baseUrl == "" {
-			// TODO Needs to point to load balanced bootnode endpoint
-			baseUrl = beaconapi.DefaultBeaconAPIEndpoint
+			baseUrl = network.GetDefaultNodeConfigByOptionParam(viper.GetString(network.CommandOptionChainID)).ApiEndpoints.ConsensusApi
 		}
 		epoch, _ := cmd.Flags().GetInt64("epoch")
 
@@ -40,9 +39,12 @@ var validatorDescribeCmd = &cobra.Command{
 			cobra.CompErrorln(err.Error())
 			return
 		}
+
+		baseUrl = nodeConf.ApiEndpoints.ConsensusApi
+
 		valSecrets := nodeConf.GetValSecrets()
 		if valSecrets == nil {
-			cobra.CompErrorln(src.ErrMsgValidatorSecretNotPresent)
+			cobra.CompErrorln(network.ErrMsgValidatorSecretNotPresent)
 			return
 		}
 		depositData, err := network.ParseDepositDataFromFile(valSecrets.Deposit.DepositFileLocation)
@@ -59,7 +61,7 @@ var validatorDescribeCmd = &cobra.Command{
 			pubKeys[k] = d.PubKey
 		}
 
-		err = describe([]string{key}, baseUrl, epoch)
+		err = describe(pubKeys, baseUrl, epoch)
 		if err != nil {
 			cobra.CompErrorln(err.Error())
 		}

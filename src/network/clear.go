@@ -3,7 +3,7 @@ package network
 import "os"
 
 func Clear() error {
-	execVol, err := getExecutionDataVolume()
+	execVol, err := GetExecutionDataVolume()
 	if err != nil {
 		return err
 	}
@@ -11,7 +11,7 @@ func Clear() error {
 	if err != nil {
 		return err
 	}
-	consVol, err := getConsensusDataVolume()
+	consVol, err := GetConsensusDataVolume()
 	if err != nil {
 		return err
 	}
@@ -19,7 +19,7 @@ func Clear() error {
 	if err != nil {
 		return err
 	}
-	validatorVol, err := getValidatorDataVolume()
+	validatorVol, err := GetValidatorDataVolume()
 	if err != nil {
 		return err
 	}

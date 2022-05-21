@@ -3,7 +3,7 @@ package beaconapi
 import "fmt"
 
 const (
-	ChainHeadPath = "/eth/v1alpha1/beacon/chainhead"
+	ChainHeadPath = "eth/v1alpha1/beacon/chainhead"
 )
 
 type ChainHeadResponse struct {

@@ -5,9 +5,9 @@ Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"github.com/lukso-network/lukso-cli/api/beaconapi"
 	"github.com/lukso-network/lukso-cli/src/network"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 // describeCmd represents the describe command
@@ -22,8 +22,7 @@ Leaving out the epoch number gives the latest status.
 	Run: func(cmd *cobra.Command, args []string) {
 		baseUrl, _ := cmd.Flags().GetString("beaconapi")
 		if baseUrl == "" {
-			// TODO Needs to point to load balanced bootnode endpoint
-			baseUrl = beaconapi.DefaultBeaconAPIEndpoint
+			baseUrl = network.GetDefaultNodeConfigByOptionParam(viper.GetString(network.CommandOptionChainID)).ApiEndpoints.ConsensusApi
 		}
 		epoch, _ := cmd.Flags().GetInt64("epoch")
 

@@ -6,7 +6,6 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/lukso-network/lukso-cli/src"
 	"github.com/lukso-network/lukso-cli/src/network"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -25,10 +24,10 @@ func init() {
 	rootCmd.AddCommand(networkCmd)
 	cobra.OnInitialize(initConfig)
 
-	networkCmd.PersistentFlags().StringVar(&cfgFile, "nodeconf", "", "config file (default is $HOME/.lukso_<chainID>/node_config.yaml)")
-	networkCmd.PersistentFlags().String("chainId", src.DefaultNetworkID, "provide chainId for the LUKSO network")
+	networkCmd.PersistentFlags().StringVar(&cfgFile, network.CommandOptionNodeConf, "", "config file (default is MY_NODE_DIRECTORY/node_config.yaml)")
+	networkCmd.PersistentFlags().String(network.CommandOptionChainID, network.DefaultNetworkID, "provide chain you want to target [l16,...]")
 
-	viper.BindPFlag("chainId", networkCmd.PersistentFlags().Lookup("chainId"))
+	viper.BindPFlag("chainId", networkCmd.PersistentFlags().Lookup(network.CommandOptionChainID))
 }
 
 func initConfig() {
@@ -39,7 +38,8 @@ func initConfig() {
 		nodeConfigFileLocation := "./node_config.yaml"
 		if !network.FileExists(nodeConfigFileLocation) {
 			fmt.Println("No node_config.yaml found for this network. Generating node_config.yaml")
-			err := network.GenerateDefaultNodeConfigs(viper.GetString("chainId"))
+			chain := network.GetChainByString(viper.GetString(network.CommandOptionChainID))
+			err := network.GenerateDefaultNodeConfigs(chain)
 			if err != nil {
 				cobra.CompErrorln(err.Error())
 				os.Exit(1)

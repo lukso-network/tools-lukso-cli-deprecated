@@ -2,10 +2,9 @@ package network
 
 import (
 	"context"
-	"errors"
+	"fmt"
 	"github.com/hashicorp/go-getter"
 	"github.com/joho/godotenv"
-	"github.com/lukso-network/lukso-cli/src"
 )
 
 func downloadFile(src, dest string) error {
@@ -23,29 +22,21 @@ func downloadFile(src, dest string) error {
 }
 
 func GenerateEnvFile(hostName string) error {
-	return godotenv.Write(getEnvironmentConfig(hostName), ".env")
+	return godotenv.Write(GetEnvironmentConfig(hostName), ".env")
 }
 
-func GenerateDefaultNodeConfigs(chainId string) error {
-	var nodeConfig *NodeConfigs
-	switch chainId {
-	case src.L16Network:
-		nodeConfig = DefaultL16NodeConfigs
-	default:
-		return errors.New("invalid chainId selected")
-	}
+func GenerateDefaultNodeConfigs(chain Chain) error {
+	var nodeConfig = GetDefaultNodeConfig(chain)
 	return nodeConfig.WriteOrUpdateNodeConfig()
 }
 
-func SetupNetwork(nodeName string) error {
-	// TODO When a second network arrives needs to modifable
-	networkVersion := L16Beta
+func SetupNetwork(chain Chain, nodeName string) error {
+	fmt.Printf("Setting up network for chain %s.\n", chain.String())
 	clientVersion := BeaconClientPrysm
 
-	config, err := NewResourceConfig(networkVersion, clientVersion)
-	if err != nil {
-		return err
+	if !IsChainSupported(chain) {
+		return fmt.Errorf("the network %s does not exist or is not supported\n", chain.String())
 	}
 
-	return NewNetworkResourceDownloader(config).DownloadAll(nodeName)
+	return NewResourceDownloader(chain, clientVersion).DownloadAll(nodeName)
 }
