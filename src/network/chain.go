@@ -8,16 +8,16 @@ const (
 	MainNet Chain = iota
 	L16
 	L16Beta
+	Local
 
 	DefaultNetworkID = "l16beta"
 )
 
-
 /*
 	Currently Supported Networks
- */
+*/
 func IsChainSupported(chain Chain) bool {
-	return chain == L16Beta
+	return chain == L16Beta || chain == Local
 }
 
 func (c Chain) String() string {
@@ -28,6 +28,8 @@ func (c Chain) String() string {
 		return ChainL16
 	case L16Beta:
 		return ChainL16Beta
+	case Local:
+		return ChainLocal
 	default:
 		return "unknown chain"
 	}
@@ -42,6 +44,8 @@ func GetChainByString(chainId string) Chain {
 		return L16Beta
 	case "mainnet":
 		return MainNet
+	case "local":
+		return Local
 	default:
 		return L16Beta
 	}

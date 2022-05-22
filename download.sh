@@ -46,11 +46,9 @@ download() {
 }
 
 
-# create binary location if not exists
-mkdir -p /usr/local/bin/
 # download lukso and give exec permission
 download https://github.com/lukso-network/lukso-cli/releases/download/v0.0.4/lukso-cli-${PLATFORM}-${ARCHITECTURE} lukso
-chmod +x /usr/local/bin/lukso
+chmod +x lukso
 
 
 echo ""

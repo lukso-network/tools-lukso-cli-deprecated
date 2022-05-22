@@ -32,6 +32,7 @@ from the github repository. It also updates node name and IP address in the .env
 	Example: "lukso-cli network init --nodeconf ./node_config.yaml --chain l16 --nodeName my_node --docker",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		viper.Set(src.ViperKeyNetworkName, viper.GetString(network.CommandOptionChain))
+
 		err := network.SetupNetwork(network.GetChainByString(viper.GetString(network.CommandOptionChain)), viper.GetString(network.CommandOptionNodeName))
 		if err != nil {
 			cobra.CompError(err.Error())

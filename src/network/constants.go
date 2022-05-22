@@ -6,6 +6,7 @@ const (
 	ChainL16Beta = "l16beta"
 	ChainL16     = "l16"
 	ChainMainNet = "mainnet"
+	ChainLocal   = "local"
 
 	CommandOptionChain              = "chain"
 	CommandOptionNodeConf           = "nodeconf"
