@@ -6,13 +6,13 @@
 ### Install
 Use the following command to download `lukso` inside `/usr/local/bin` directory.
 ```bash
-curl https://raw.githubusercontent.com/lukso-network/lukso-cli/main/cli_downloader.sh | sudo bash
+sudo curl https://raw.githubusercontent.com/lukso-network/lukso-cli/main/cli_downloader.sh | sh
 ```
 
 or
 
 ```
-curl https://raw.githubusercontent.com/lukso-network/lukso-cli/main/install.sh | sudo sh
+sudo curl https://raw.githubusercontent.com/lukso-network/lukso-cli/main/install.sh | sh
 ```
 
 ### Download
@@ -21,7 +21,7 @@ to only download the binary use
 
 
 ```
-curl https://raw.githubusercontent.com/lukso-network/lukso-cli/main/download.sh | sudo bash
+sudo curl https://raw.githubusercontent.com/lukso-network/lukso-cli/main/download.sh | sh
 ```
 
 Or use go installer to install `lukso-cli` into your GOPATH
