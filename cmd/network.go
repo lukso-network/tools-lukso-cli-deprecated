@@ -27,7 +27,7 @@ func init() {
 	networkCmd.PersistentFlags().StringVar(&cfgFile, network.CommandOptionNodeConf, "", "config file (default is MY_NODE_DIRECTORY/node_config.yaml)")
 	networkCmd.PersistentFlags().String(network.CommandOptionChain, network.DefaultNetworkID, "provide chain you want to target [l16,...]")
 
-	viper.BindPFlag("chainId", networkCmd.PersistentFlags().Lookup(network.CommandOptionChain))
+	viper.BindPFlag(network.CommandOptionChain, networkCmd.PersistentFlags().Lookup(network.CommandOptionChain))
 }
 
 func initConfig() {
