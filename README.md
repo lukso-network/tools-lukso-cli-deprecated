@@ -6,7 +6,7 @@
 ### Install
 Use the following command to download `lukso` inside `/usr/local/bin` directory.
 ```bash
-sudo curl https://raw.githubusercontent.com/lukso-network/lukso-cli/main/cli_downloader.sh | sudo sh
+sudo curl https://raw.githubusercontent.com/lukso-network/lukso-cli/main/cli_downloader.sh | sh
 ```
 
 or
