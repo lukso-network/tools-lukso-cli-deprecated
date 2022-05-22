@@ -23,7 +23,7 @@ var validatorDescribeCmd = &cobra.Command{
 		key, _ := cmd.Flags().GetString("key")
 		baseUrl, _ := cmd.Flags().GetString("beaconapi")
 		if baseUrl == "" {
-			baseUrl = network.GetDefaultNodeConfigByOptionParam(viper.GetString(network.CommandOptionChainID)).ApiEndpoints.ConsensusApi
+			baseUrl = network.GetDefaultNodeConfigByOptionParam(viper.GetString(network.CommandOptionChain)).ApiEndpoints.ConsensusApi
 		}
 		epoch, _ := cmd.Flags().GetInt64("epoch")
 

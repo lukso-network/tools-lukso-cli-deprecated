@@ -7,7 +7,7 @@ const (
 	ChainL16     = "l16"
 	ChainMainNet = "mainnet"
 
-	CommandOptionChainID            = "chain"
+	CommandOptionChain              = "chain"
 	CommandOptionNodeConf           = "nodeconf"
 	CommandOptionNodeName           = "nodeName"
 	ErrMsgValidatorSecretNotPresent = "validator secret not present"
