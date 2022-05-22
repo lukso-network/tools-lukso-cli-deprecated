@@ -62,3 +62,12 @@ func StartValidatorNode() error {
 	}
 	return runDockerServices("prysm_validator")
 }
+
+func StopValidatorNode() error {
+	command := exec.Command("sudo", "docker-compose", "stop", "prysm_validator")
+	if cmdOutput, err := command.CombinedOutput(); err != nil {
+		fmt.Println(string(cmdOutput))
+		return err
+	}
+	return nil
+}

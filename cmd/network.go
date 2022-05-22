@@ -25,9 +25,9 @@ func init() {
 	cobra.OnInitialize(initConfig)
 
 	networkCmd.PersistentFlags().StringVar(&cfgFile, network.CommandOptionNodeConf, "", "config file (default is MY_NODE_DIRECTORY/node_config.yaml)")
-	networkCmd.PersistentFlags().String(network.CommandOptionChainID, network.DefaultNetworkID, "provide chain you want to target [l16,...]")
+	networkCmd.PersistentFlags().String(network.CommandOptionChain, network.DefaultNetworkID, "provide chain you want to target [l16,...]")
 
-	viper.BindPFlag("chainId", networkCmd.PersistentFlags().Lookup(network.CommandOptionChainID))
+	viper.BindPFlag("chainId", networkCmd.PersistentFlags().Lookup(network.CommandOptionChain))
 }
 
 func initConfig() {
@@ -38,7 +38,7 @@ func initConfig() {
 		nodeConfigFileLocation := "./node_config.yaml"
 		if !network.FileExists(nodeConfigFileLocation) {
 			fmt.Println("No node_config.yaml found for this network. Generating node_config.yaml")
-			chain := network.GetChainByString(viper.GetString(network.CommandOptionChainID))
+			chain := network.GetChainByString(viper.GetString(network.CommandOptionChain))
 			err := network.GenerateDefaultNodeConfigs(chain)
 			if err != nil {
 				cobra.CompErrorln(err.Error())
