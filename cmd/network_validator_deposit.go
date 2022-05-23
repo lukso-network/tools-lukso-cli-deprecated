@@ -29,7 +29,7 @@ This tool is necessary to activate new validators`,
 			cobra.CompErrorln("no validator credential is presented")
 			return
 		}
-		err = valSecrets.SendDepositTxn()
+		err = valSecrets.SendDepositTxn(nodeConf.ApiEndpoints.ExecutionApi)
 		if err != nil {
 			cobra.CompErrorln(err.Error())
 			return

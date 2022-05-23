@@ -138,7 +138,7 @@ func PullEtherealImage(ctx context.Context, client *client.Client) error {
 }
 
 func (valSec *ValidatorSecrets) DownloadEthereal(ctx context.Context, cli *client.Client) error {
-	reader, err := cli.ImagePull(ctx, "docker.io/wealdtech/ethereal", types.ImagePullOptions{})
+	reader, err := cli.ImagePull(ctx, "docker.io/wealdtech/ethereal:2.7.4", types.ImagePullOptions{})
 	if err != nil {
 		return err
 	}
@@ -148,7 +148,7 @@ func (valSec *ValidatorSecrets) DownloadEthereal(ctx context.Context, cli *clien
 	return nil
 }
 
-func (valSec *ValidatorSecrets) DoDeposit(ctx context.Context, data *DepositData, cli *client.Client) error {
+func (valSec *ValidatorSecrets) DoDeposit(ctx context.Context, data *DepositData, cli *client.Client, rpcEndpoint string) error {
 	depData, err := json.Marshal(data)
 	if err != nil {
 		return err
@@ -159,7 +159,7 @@ func (valSec *ValidatorSecrets) DoDeposit(ctx context.Context, data *DepositData
 		Cmd: []string{"beacon", "deposit",
 			"--allow-unknown-contract", strconv.FormatBool(valSec.Deposit.Force),
 			"--address", valSec.Deposit.ContractAddress,
-			"--connection", valSec.Eth1Data.RPCEndPoint,
+			"--connection", rpcEndpoint,
 			"--value", valSec.Deposit.Amount,
 			"--from", valSec.Eth1Data.WalletAddress,
 			"--privatekey", valSec.Eth1Data.WalletPrivKey,
@@ -193,7 +193,7 @@ func (valSec *ValidatorSecrets) DoDeposit(ctx context.Context, data *DepositData
 	return err
 }
 
-func (valSec *ValidatorSecrets) SendDepositTxn() error {
+func (valSec *ValidatorSecrets) SendDepositTxn(rpcEndpoint string) error {
 	if valSec.Eth1Data.WalletAddress == "" {
 		prompt := promptui.Prompt{
 			Label: "Enter valid wallet address",
@@ -228,7 +228,7 @@ func (valSec *ValidatorSecrets) SendDepositTxn() error {
 		return err
 	}
 	for _, data := range depositData {
-		err = valSec.DoDeposit(context.Background(), data, dockerClient)
+		err = valSec.DoDeposit(context.Background(), data, dockerClient, rpcEndpoint)
 		if err != nil {
 			return err
 		}

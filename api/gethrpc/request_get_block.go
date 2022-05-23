@@ -35,10 +35,15 @@ func toBlock(response map[string]interface{}) (*Block, error) {
 	}
 	b.Number = numberHS.Int64()
 
+	transactionsRaw := response["transactions"].([]interface{})
+
+	b.NumberOfTransactions = len(transactionsRaw)
+
 	return b, nil
 }
 
 type Block struct {
-	Hash   string `json:"hash"`
-	Number int64  `json:"number"`
+	Hash                 string `json:"hash"`
+	Number               int64  `json:"number"`
+	NumberOfTransactions int    `json:"number_of_transactions"`
 }

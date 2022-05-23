@@ -2,7 +2,7 @@
 
 
 
-## [0.1.1-rc] - 2022-05-23
+## [0.1.2-rc] - 2022-05-23
 
 This update prepares the cli for multi chains.
 
@@ -12,6 +12,7 @@ This update prepares the cli for multi chains.
 - command **lukso network validator start** that will start a validator
 - command **lukso network validator stop** that will stop a validator
 - new chain env **local**. A network can be setup with **lukso network init --chain local**
+- command **lukso network balance -a 0x...** to call balance of validator
 
 ### Changed
 
