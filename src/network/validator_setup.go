@@ -138,7 +138,7 @@ func PullEtherealImage(ctx context.Context, client *client.Client) error {
 }
 
 func (valSec *ValidatorSecrets) DownloadEthereal(ctx context.Context, cli *client.Client) error {
-	reader, err := cli.ImagePull(ctx, "docker.io/wealdtech/ethereal", types.ImagePullOptions{})
+	reader, err := cli.ImagePull(ctx, "docker.io/wealdtech/ethereal:2.7.4", types.ImagePullOptions{})
 	if err != nil {
 		return err
 	}
@@ -155,7 +155,7 @@ func (valSec *ValidatorSecrets) DoDeposit(ctx context.Context, data *DepositData
 	}
 
 	resp, err := cli.ContainerCreate(ctx, &container.Config{
-		Image: "wealdtech/ethereal",
+		Image: "wealdtech/ethereal:2.7.4",
 		Cmd: []string{"beacon", "deposit",
 			"--allow-unknown-contract", strconv.FormatBool(valSec.Deposit.Force),
 			"--address", valSec.Deposit.ContractAddress,
