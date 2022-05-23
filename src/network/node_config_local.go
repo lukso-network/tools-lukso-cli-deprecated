@@ -17,7 +17,7 @@ var DefaultLocalNodeConfigs = &NodeConfigs{
 		Version:      "v0.2.0-dev",
 		Etherbase:    "0x7781121fd00A009670E31b76A2bf99b3A2D6878D",
 		DataVolume:   "./data/execution_data",
-		NetworkId:    "19191919",
+		NetworkId:    "190578",
 		Bootnode:     "",
 	},
 	Consensus: &ClientDetails{

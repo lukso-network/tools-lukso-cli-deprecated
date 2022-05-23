@@ -154,6 +154,8 @@ func (valSec *ValidatorSecrets) DoDeposit(ctx context.Context, data *DepositData
 		return err
 	}
 
+	// sudo docker run --network=host wealdtech/ethereal beacon deposit --allow-unknown-contract true --address 0x4242424242424242424242424242424242424242 --connection http://127.0.0.1:8545 --value :32000000000 --from 0xd7a83bc67d2aa1b3034bbc67aa7778a2a5714c3b --privatekey f068cd3c04feeb5cba2ae33fddd661adefe81a6a14a918e7e0a068467c519816 --data deposit_data.json
+
 	resp, err := cli.ContainerCreate(ctx, &container.Config{
 		Image: "wealdtech/ethereal",
 		Cmd: []string{"beacon", "deposit",
