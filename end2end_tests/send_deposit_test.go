@@ -31,7 +31,7 @@ func TestDepositSend(t *testing.T) {
 		err = valSec.DownloadEthereal(ctx, client)
 		require.NoError(t, err)
 		for _, x := range data {
-			err = valSec.DoDeposit(ctx, x, client)
+			err = valSec.DoDeposit(ctx, x, client, "")
 			require.NoError(t, err)
 		}
 	})

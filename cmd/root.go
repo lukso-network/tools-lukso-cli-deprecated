@@ -18,7 +18,7 @@ var rootCmd = &cobra.Command{
 is helpful to spin up a full node as well as it monitors log for all the components (e.g. execution engine, consensus engine, eth2stats client and validator client).
 One can also create deposit data, validator credentials and submit deposit transactions to the LUKSO network.
 `,
-	Version: "v0.1.2-rc",
+	Version: "v0.1.3-rc",
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
