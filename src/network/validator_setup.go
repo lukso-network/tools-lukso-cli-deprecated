@@ -155,7 +155,7 @@ func (valSec *ValidatorSecrets) DoDeposit(ctx context.Context, data *DepositData
 	}
 
 	resp, err := cli.ContainerCreate(ctx, &container.Config{
-		Image: "wealdtech/ethereal",
+		Image: "wealdtech/ethereal:2.7.4",
 		Cmd: []string{"beacon", "deposit",
 			"--allow-unknown-contract", strconv.FormatBool(valSec.Deposit.Force),
 			"--address", valSec.Deposit.ContractAddress,
