@@ -7,10 +7,12 @@ package cmd
 import (
 	"fmt"
 	"github.com/lukso-network/lukso-cli/api/beaconapi"
+	"github.com/lukso-network/lukso-cli/api/gethrpc"
 	"github.com/lukso-network/lukso-cli/src/network"
 	"github.com/lukso-network/lukso-cli/src/utils"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"strings"
 )
 
 // validatorDescribeCmd represents the describe command
@@ -48,13 +50,21 @@ var validatorDescribeCmd = &cobra.Command{
 			cobra.CompErrorln(network.ErrMsgValidatorSecretNotPresent)
 			return
 		}
+
+		utils.ColoredPrintln("Transaction wallet address:", valSecrets.Eth1Data.WalletAddress)
+		client := gethrpc.NewRPCClient(nodeConf.ApiEndpoints.ExecutionApi)
+		balance, err := client.GetBalance(valSecrets.Eth1Data.WalletAddress)
+		if err != nil {
+			cobra.CompErrorln(err.Error())
+		}
+		utils.ColoredPrintln("Transaction wallet balance:", balance)
+
 		depositData, err := network.ParseDepositDataFromFile(valSecrets.Deposit.DepositFileLocation)
 		if err != nil {
 			cobra.CompErrorln(err.Error())
 			return
 		}
 
-		utils.ColoredPrintln("Transaction wallet address:", valSecrets.Eth1Data.WalletAddress)
 		utils.ColoredPrintln("Number of validators:", len(depositData))
 
 		pubKeys := make([]string, len(depositData))
@@ -69,15 +79,24 @@ var validatorDescribeCmd = &cobra.Command{
 	},
 }
 
+func maybeAddHexPrefix(address string) string {
+	if strings.Contains(address, "0x") {
+		return address
+	}
+
+	return fmt.Sprintf("0x%s", address)
+}
+
 func describe(pubKeys []string, baseUrl string, epoch int64) error {
 	beaconClient := beaconapi.NewBeaconClient(baseUrl)
 	for _, d := range pubKeys {
+		pubKey := maybeAddHexPrefix(d)
 		fmt.Println("....................................................................................")
-		state, err := beaconClient.ValidatorState(d, epoch)
+		state, err := beaconClient.ValidatorState(pubKey, epoch)
 		if err != nil {
 			return err
 		}
-		utils.ColoredPrintln("ValidatorKey", d)
+		utils.ColoredPrintln("ValidatorKey", state.Data.Validator.Pubkey)
 		utils.ColoredPrintln("Index:", state.Data.Index)
 		utils.ColoredPrintln("Status:", state.Data.Status)
 		utils.ColoredPrintln("Balance:", state.Data.Balance)

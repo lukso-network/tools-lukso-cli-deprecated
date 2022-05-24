@@ -10,3 +10,6 @@ node_config.yaml
 lukso-cli
 docker-compose.yml
 configs
+deposit_data.json
+transaction_wallet
+keystore

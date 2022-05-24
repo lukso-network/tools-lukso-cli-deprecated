@@ -10,18 +10,20 @@ import (
 	"github.com/lukso-network/lukso-cli/src/network"
 	"github.com/lukso-network/lukso-cli/src/utils"
 	"github.com/spf13/cobra"
-	"os"
 )
 
-// blockCmd represents the block command
-var blockCmd = &cobra.Command{
-	Use:     "block",
-	Short:   "returns a block at number",
-	Long:    `This command will return the execution block at the given position`,
-	Example: "lukso network block -n 100",
+// balanceCmd represents the balance command
+var balanceCmd = &cobra.Command{
+	Use:     "balance",
+	Short:   "returns the balance of a given address",
+	Long:    `This command will return the balance of a given address`,
+	Example: "lukso network balance -a 0x....",
 	Run: func(cmd *cobra.Command, args []string) {
-		number, _ := cmd.Flags().GetInt64("number")
-
+		address, _ := cmd.Flags().GetString("address")
+		if address == "" {
+			cobra.CompError("address must be given")
+			return
+		}
 		nodeConf, err := network.GetLoadedNodeConfigs()
 		if err != nil {
 			cobra.CompErrorln(err.Error())
@@ -31,20 +33,18 @@ var blockCmd = &cobra.Command{
 		client := gethrpc.NewRPCClient(nodeConf.ApiEndpoints.ExecutionApi)
 
 		fmt.Println("Calling ", nodeConf.ApiEndpoints.ExecutionApi)
-		block, err := client.GetBlock(number)
+		balance, err := client.GetBalance(address)
 
 		if err != nil {
 			cobra.CompErrorln(err.Error())
-			os.Exit(1)
+			return
 		}
 
-		utils.ColoredPrintln("Block:", block.Number)
-		utils.ColoredPrintln("Hash:", block.Hash)
-		utils.ColoredPrintln("#Transactions:", block.NumberOfTransactions)
+		utils.ColoredPrintln("Balance:", balance)
 	},
 }
 
 func init() {
-	networkCmd.AddCommand(blockCmd)
-	blockCmd.Flags().Int64P("number", "n", 0, "block number of geth block")
+	networkCmd.AddCommand(balanceCmd)
+	balanceCmd.Flags().StringP("address", "a", "", "ethereum address")
 }

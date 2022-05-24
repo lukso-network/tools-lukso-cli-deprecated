@@ -15,7 +15,6 @@ type DepositDetails struct {
 type Eth1Details struct {
 	WalletAddress string `yaml:",omitempty"`
 	WalletPrivKey string `yaml:",omitempty"`
-	RPCEndPoint   string `yaml:",omitempty"`
 }
 
 type Eth2Details struct {

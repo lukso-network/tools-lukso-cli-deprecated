@@ -124,8 +124,12 @@ activate validators`,
 			return
 		}
 
-		valSecrets.Eth1Data.WalletAddress = walletInfo.PubKey
-		valSecrets.Eth1Data.WalletPrivKey = walletInfo.PrivKey
+		fmt.Println(valSecrets.Eth1Data)
+
+		valSecrets.Eth1Data = &network.Eth1Details{
+			walletInfo.PubKey,
+			walletInfo.PrivKey,
+		}
 
 		// push node config
 		err = nodeConf.WriteOrUpdateNodeConfig()
