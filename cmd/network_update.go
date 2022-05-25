@@ -20,11 +20,7 @@ var updateCmd = &cobra.Command{
 	
 `, Example: "lukso network update",
 	Run: func(cmd *cobra.Command, args []string) {
-		config, err := network.GetLoadedNodeConfigs()
-		if err != nil {
-			cobra.CompError(err.Error())
-			return
-		}
+		config := network.MustGetNodeConfig()
 
 		// trying to "repair node conf" to make it downwards compatible
 		if config.Chain == nil {
@@ -37,7 +33,7 @@ var updateCmd = &cobra.Command{
 				return
 			}
 		}
-		err = config.UpdateBootnodes()
+		err := config.UpdateBootnodes()
 		if err != nil {
 			fmt.Printf("couldn't update bootnodes reason: %s\n", err.Error())
 		} else {

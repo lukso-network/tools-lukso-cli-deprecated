@@ -14,6 +14,7 @@ This update prepares the cli for multi chains.
 - command **lukso network balance -a 0x...** to call balance of validator
 - new chain env **local**. A network can be setup with **lukso network init --chain local**
 - command **lukso network update** to update the bootnodes 
+- command **lukso network config** to only create a config file
 
 ### Changed
 

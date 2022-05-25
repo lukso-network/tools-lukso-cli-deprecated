@@ -2,6 +2,8 @@ package network
 
 import (
 	"fmt"
+	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 	"os"
 
 	"gopkg.in/yaml.v3"
@@ -159,11 +161,10 @@ func (nc *NodeConfigs) WriteOrUpdateNodeConfig() error {
 	if err != nil {
 		return err
 	}
-	return os.WriteFile("./node_config.yaml", yamlData, os.ModePerm)
+	return os.WriteFile(NodeConfigLocation, yamlData, os.ModePerm)
 }
 
 func (nc *NodeConfigs) UpdateBootnodes() error {
-
 	chain := GetChainByString(nc.Chain.Name)
 	GetChainByString(nc.Chain.Name)
 	bootnodes, err := NewBootnodeUpdater(chain).DownloadLatestBootnodes()
@@ -196,4 +197,41 @@ func (nc *NodeConfigs) UpdateBootnodes() error {
 		}
 	}
 	return nil
+}
+
+func MustGetNodeConfig() *NodeConfigs {
+	if !FileExists(NodeConfigLocation) {
+		cobra.CompErrorln("The node was not initialised yet. Call \n   lukso network init --nodeName NAME_OF_YOUR_NODE [--chain CHAIN_NAME] \n to setup a node.")
+		os.Exit(1)
+	}
+
+	// Search config in home directory with name ".cli" (without extension).
+	viper.AddConfigPath(".")
+	viper.SetConfigType("yaml")
+	viper.SetConfigName("node_config")
+
+	viper.AutomaticEnv()
+
+	if err := viper.ReadInConfig(); err == nil {
+		fmt.Println("config file:", viper.ConfigFileUsed())
+	} else {
+		cobra.CompErrorln(err.Error())
+		os.Exit(1)
+	}
+
+	config, err := getLoadedNodeConfigs()
+	if err != nil {
+		cobra.CompErrorln(err.Error())
+		os.Exit(1)
+	}
+	return config
+}
+
+func getLoadedNodeConfigs() (*NodeConfigs, error) {
+	var nodeConfig NodeConfigs
+	err := viper.Unmarshal(&nodeConfig)
+	if err != nil {
+		return nil, err
+	}
+	return &nodeConfig, nil
 }

@@ -18,9 +18,9 @@ const (
 	ConfigRepoName                  = "network-configs"
 	BootnodeJSONName                = "bootnodes.json"
 	GitUrl                          = "https://raw.githubusercontent.com/lukso-network/"
+	NodeConfigLocation              = "./node_config.yaml"
 )
 
 var (
-	NetworkSetupFiles = []string{"docker-compose.yml"}
-	ConfigFiles       = []string{"config.yaml", "genesis.json", "genesis.ssz"}
+	ConfigFiles = []string{"config.yaml", "genesis.json", "genesis.ssz"}
 )

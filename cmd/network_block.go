@@ -22,12 +22,7 @@ var blockCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		number, _ := cmd.Flags().GetInt64("number")
 
-		nodeConf, err := network.GetLoadedNodeConfigs()
-		if err != nil {
-			cobra.CompErrorln(err.Error())
-			return
-		}
-
+		nodeConf := network.MustGetNodeConfig()
 		client := gethrpc.NewRPCClient(nodeConf.ApiEndpoints.ExecutionApi)
 
 		fmt.Println("Calling ", nodeConf.ApiEndpoints.ExecutionApi)

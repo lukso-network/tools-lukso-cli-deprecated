@@ -36,12 +36,31 @@ func downloadFileOverHttp(url string) ([]byte, error) {
 }
 
 func GenerateEnvFile(hostName string) error {
-	return godotenv.Write(GetEnvironmentConfig(hostName), ".env")
+	fmt.Printf("Generating .env file...")
+	err := godotenv.Write(GetEnvironmentConfig(hostName), ".env")
+	if err != nil {
+		return err
+	}
+	fmt.Println(" success")
+	return nil
 }
 
 func GenerateDefaultNodeConfigs(chain Chain) error {
 	var nodeConfig = GetDefaultNodeConfig(chain)
 	return nodeConfig.WriteOrUpdateNodeConfig()
+}
+
+func GenerateDefaultNodeConfigsIfDoesntExist(chain Chain) (isGenerated bool, err error) {
+	if !FileExists(NodeConfigLocation) {
+		var nodeConfig = GetDefaultNodeConfig(chain)
+		err := nodeConfig.WriteOrUpdateNodeConfig()
+		if err != nil {
+			return false, err
+		} else {
+			return true, nil
+		}
+	}
+	return false, nil
 }
 
 func SetupNetwork(chain Chain, nodeName string) error {

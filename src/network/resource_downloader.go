@@ -47,7 +47,7 @@ func (d ResourceDownloader) DownloadAll(nodeName string) error {
 }
 
 func (d ResourceDownloader) downloadDocker() error {
-	fmt.Printf("fetching docker-compose from %s..... ", d.DockerLocation)
+	fmt.Printf("Fetching docker-compose from %s..... ", d.DockerLocation)
 	if err := downloadFile(d.DockerLocation, DockerComposeDefaultName); err != nil {
 		return err
 	}
@@ -61,7 +61,7 @@ func (d ResourceDownloader) downloadConfig() error {
 		if err != nil {
 			return err
 		}
-		fmt.Printf("fetching %s from %s..... ", fileName, fileUrl)
+		fmt.Printf("Fetching %s from %s..... ", fileName, fileUrl)
 		destLocation := path.Join(ConfigDirectory, fileName)
 		if err = downloadFile(fileUrl.String(), destLocation); err != nil {
 			return err
