@@ -28,11 +28,12 @@ This tool is necessary to activate new validators`,
 			return
 		}
 
-		if err := network.Deposit(valSecrets.Deposit.DepositFileLocation, valSecrets.Deposit.ContractAddress, valSecrets.Eth1Data.WalletPrivKey, nodeConf.ApiEndpoints.ExecutionApi); err != nil {
+		totalDeposits, err := network.Deposit(valSecrets.Deposit.DepositFileLocation, valSecrets.Deposit.ContractAddress, valSecrets.Eth1Data.WalletPrivKey, nodeConf.ApiEndpoints.ExecutionApi)
+		if err != nil {
 			cobra.CompErrorln(err.Error())
 			return
 		}
-		fmt.Println("You successfully deposited your key(s)! Your keys need to be activated which takes around 8h. You can check the status by calling:")
+		fmt.Printf("You successfully deposited %d key(s)! Your keys need to be activated which takes around 8h. You can check the status by calling:\n", totalDeposits)
 		fmt.Println(utils.ConsoleInBlue("        lukso network validator describe"))
 	},
 }
