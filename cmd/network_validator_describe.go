@@ -5,13 +5,16 @@ Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
+	"context"
 	"fmt"
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/lukso-network/lukso-cli/api/beaconapi"
-	"github.com/lukso-network/lukso-cli/api/gethrpc"
 	"github.com/lukso-network/lukso-cli/src/network"
 	"github.com/lukso-network/lukso-cli/src/utils"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"github.com/wealdtech/go-string2eth"
 	"strings"
 )
 
@@ -52,12 +55,14 @@ var validatorDescribeCmd = &cobra.Command{
 		}
 
 		utils.ColoredPrintln("Transaction wallet address:", valSecrets.Eth1Data.WalletAddress)
-		client := gethrpc.NewRPCClient(nodeConf.ApiEndpoints.ExecutionApi)
-		balance, err := client.GetBalance(valSecrets.Eth1Data.WalletAddress)
+		client, err := ethclient.Dial(nodeConf.ApiEndpoints.ExecutionApi)
+
+		balance, err := client.BalanceAt(context.Background(), common.HexToAddress(valSecrets.Eth1Data.WalletAddress), nil)
 		if err != nil {
 			cobra.CompErrorln(err.Error())
+		} else {
+			utils.ColoredPrintln("Transaction wallet balance:", string2eth.WeiToString(balance, true))
 		}
-		utils.ColoredPrintln("Transaction wallet balance:", balance)
 
 		depositData, err := network.ParseDepositDataFromFile(valSecrets.Deposit.DepositFileLocation)
 		if err != nil {
