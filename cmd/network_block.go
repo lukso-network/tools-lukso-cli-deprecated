@@ -5,12 +5,12 @@ Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"fmt"
-	"github.com/lukso-network/lukso-cli/api/gethrpc"
+	"context"
+	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/lukso-network/lukso-cli/src/network"
 	"github.com/lukso-network/lukso-cli/src/utils"
 	"github.com/spf13/cobra"
-	"os"
+	"math/big"
 )
 
 // blockCmd represents the block command
@@ -23,19 +23,22 @@ var blockCmd = &cobra.Command{
 		number, _ := cmd.Flags().GetInt64("number")
 
 		nodeConf := network.MustGetNodeConfig()
-		client := gethrpc.NewRPCClient(nodeConf.ApiEndpoints.ExecutionApi)
 
-		fmt.Println("Calling ", nodeConf.ApiEndpoints.ExecutionApi)
-		block, err := client.GetBlock(number)
-
+		client, err := ethclient.Dial(nodeConf.ApiEndpoints.ExecutionApi)
 		if err != nil {
 			cobra.CompErrorln(err.Error())
-			os.Exit(1)
+			return
+		}
+
+		block, err := client.BlockByNumber(context.Background(), big.NewInt(number))
+		if err != nil {
+			cobra.CompErrorln(err.Error())
+			return
 		}
 
 		utils.ColoredPrintln("Block:", block.Number)
 		utils.ColoredPrintln("Hash:", block.Hash)
-		utils.ColoredPrintln("#Transactions:", block.NumberOfTransactions)
+		utils.ColoredPrintln("#Transactions:", block.Transactions().Len())
 	},
 }
 

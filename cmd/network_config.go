@@ -41,7 +41,7 @@ var configCmd = &cobra.Command{
 		if isGenerated {
 			fmt.Println("Successfully created config file node_config.yaml...")
 		} else {
-			fmt.Println("node_config.yaml already exists")
+			fmt.Println("./node_config.yaml already exists")
 		}
 
 		return nil
