@@ -36,12 +36,11 @@ func downloadFileOverHttp(url string) ([]byte, error) {
 }
 
 func GenerateEnvFile(hostName string) error {
-	fmt.Printf("Generating .env file...")
+	fmt.Printf("Generating .env file from ")
 	err := godotenv.Write(GetEnvironmentConfig(hostName), ".env")
 	if err != nil {
 		return err
 	}
-	fmt.Println(" success")
 	return nil
 }
 
