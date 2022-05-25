@@ -1,26 +1,28 @@
-## cli network stop
+## cli network update
 
-Stops running docker containers
+updates the node with the latest params
 
 ### Synopsis
 
-This command stops consensus engine, execution engine, validator client and eth2-stats.
-It uses docker-compose file to stop these containers
+Updates the with the latest params [bootnodes, client versions,...]. You need to restart the nodes to make the changes become effective.
+
+	
+
 
 ```
-cli network stop [flags]
+cli network update [flags]
 ```
 
 ### Examples
 
 ```
-lukso network stop
+lukso network update
 ```
 
 ### Options
 
 ```
-  -h, --help   help for stop
+  -h, --help   help for update
 ```
 
 ### Options inherited from parent commands

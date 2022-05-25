@@ -5,8 +5,9 @@ Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"fmt"
-	"github.com/lukso-network/lukso-cli/api/gethrpc"
+	"context"
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/lukso-network/lukso-cli/src/network"
 	"github.com/lukso-network/lukso-cli/src/utils"
 	"github.com/spf13/cobra"
@@ -30,11 +31,13 @@ var balanceCmd = &cobra.Command{
 			return
 		}
 
-		client := gethrpc.NewRPCClient(nodeConf.ApiEndpoints.ExecutionApi)
+		client, err := ethclient.Dial(nodeConf.ApiEndpoints.ExecutionApi)
+		if err != nil {
+			cobra.CompErrorln(err.Error())
+			return
+		}
 
-		fmt.Println("Calling ", nodeConf.ApiEndpoints.ExecutionApi)
-		balance, err := client.GetBalance(address)
-
+		balance, err := client.BalanceAt(context.Background(), common.HexToAddress(address), nil)
 		if err != nil {
 			cobra.CompErrorln(err.Error())
 			return

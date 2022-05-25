@@ -1,26 +1,26 @@
-## cli network stop
+## cli network block
 
-Stops running docker containers
+returns a block at number
 
 ### Synopsis
 
-This command stops consensus engine, execution engine, validator client and eth2-stats.
-It uses docker-compose file to stop these containers
+This command will return the execution block at the given position
 
 ```
-cli network stop [flags]
+cli network block [flags]
 ```
 
 ### Examples
 
 ```
-lukso network stop
+lukso network block -n 100
 ```
 
 ### Options
 
 ```
-  -h, --help   help for stop
+  -h, --help         help for block
+  -n, --number int   block number of geth block
 ```
 
 ### Options inherited from parent commands

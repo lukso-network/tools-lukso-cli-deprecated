@@ -50,7 +50,13 @@ type NodeApi struct {
 	ExecutionApi string `yaml:",omitempty"`
 }
 
+type ChainConfig struct {
+	Name string `yaml:",omitempty"`
+	ID   string `yaml:",omitempty"`
+}
+
 type NodeConfigs struct {
+	Chain                *ChainConfig      `yaml:",omitempty"`
 	Configs              *DataVolume       `yaml:",omitempty"`
 	Keystore             *DataVolume       `yaml:",omitempty"`
 	Node                 *NodeDetails      `yaml:",omitempty"`
