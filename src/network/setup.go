@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"github.com/hashicorp/go-getter"
 	"github.com/joho/godotenv"
+	"io/ioutil"
+	"net/http"
 )
 
 func downloadFile(src, dest string) error {
@@ -19,6 +21,18 @@ func downloadFile(src, dest string) error {
 		return err
 	}
 	return nil
+}
+
+func downloadFileOverHttp(url string) ([]byte, error) {
+	fmt.Println("Fetching bootnodes from", url)
+	// Get the data
+	resp, err := http.Get(url)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	return ioutil.ReadAll(resp.Body)
 }
 
 func GenerateEnvFile(hostName string) error {

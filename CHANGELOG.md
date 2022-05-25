@@ -11,8 +11,9 @@ This update prepares the cli for multi chains.
 - command **lukso network block -n N** that will return the N-th execution block
 - command **lukso network validator start** that will start a validator
 - command **lukso network validator stop** that will stop a validator
-- new chain env **local**. A network can be setup with **lukso network init --chain local**
 - command **lukso network balance -a 0x...** to call balance of validator
+- new chain env **local**. A network can be setup with **lukso network init --chain local**
+- command **lukso network update** to update the bootnodes 
 
 ### Changed
 

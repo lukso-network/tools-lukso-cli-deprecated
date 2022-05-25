@@ -7,6 +7,10 @@ var myPublicIP, _ = getPublicIP()
 var myHostName, _ = os.Hostname()
 
 var DefaultL16BetaNodeConfigs = &NodeConfigs{
+	Chain: &ChainConfig{
+		Name: ChainL16Beta,
+		ID:   "83748374",
+	},
 	Configs: &DataVolume{
 		Volume: "./configs",
 	},

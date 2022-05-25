@@ -1,6 +1,10 @@
 package network
 
 var DefaultLocalNodeConfigs = &NodeConfigs{
+	Chain: &ChainConfig{
+		Name: ChainLocal,
+		ID:   "190578",
+	},
 	Configs: &DataVolume{
 		Volume: "./configs",
 	},

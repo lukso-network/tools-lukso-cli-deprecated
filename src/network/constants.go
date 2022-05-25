@@ -13,8 +13,10 @@ const (
 	CommandOptionNodeName           = "nodeName"
 	ErrMsgValidatorSecretNotPresent = "validator secret not present"
 	ConfigDirectory                 = "configs"
+	BootnodesDirectory              = "bootnode"
 	ConfigBranchName                = "main"
 	ConfigRepoName                  = "network-configs"
+	BootnodeJSONName                = "bootnodes.json"
 	GitUrl                          = "https://raw.githubusercontent.com/lukso-network/"
 )
 

@@ -56,6 +56,10 @@ var validatorDescribeCmd = &cobra.Command{
 
 		utils.ColoredPrintln("Transaction wallet address:", valSecrets.Eth1Data.WalletAddress)
 		client, err := ethclient.Dial(nodeConf.ApiEndpoints.ExecutionApi)
+		if err != nil {
+			cobra.CompErrorln(err.Error())
+			return
+		}
 
 		balance, err := client.BalanceAt(context.Background(), common.HexToAddress(valSecrets.Eth1Data.WalletAddress), nil)
 		if err != nil {

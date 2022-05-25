@@ -28,6 +28,15 @@ func getNetworkConfigUrl(chain Chain) (*url.URL, error) {
 	return urlWithNetworkName, nil
 }
 
+func getBootnodeUrl(chain Chain) (*url.URL, error) {
+	urlWithNetworkName, err := getNetworkDataLocation(chain)
+	if err != nil {
+		return nil, err
+	}
+	urlWithNetworkName.Path = path.Join(urlWithNetworkName.Path, BootnodesDirectory, BootnodeJSONName)
+	return urlWithNetworkName, nil
+}
+
 func getConfigFileUrl(chain Chain, fileName string) (*url.URL, error) {
 	urlWithNetworkName, err := getNetworkConfigUrl(chain)
 	if err != nil {
