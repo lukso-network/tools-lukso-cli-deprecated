@@ -2,7 +2,7 @@
 
 
 
-## [0.1.3-rc] - 2022-05-23
+## [0.1.0-rc] - 2022-05-26
 
 This update prepares the cli for multi chains.
 
