@@ -1,26 +1,21 @@
-## cli network validator setup
+## cli network validator stop
 
-Prepare a validator to join the network
-
-### Synopsis
-
-This command prepares wallet, deposit_data and creates a secret.yaml file. These files are necessary to
-activate validators
+This subcommand stops the validator client
 
 ```
-cli network validator setup [flags]
+cli network validator stop [flags]
 ```
 
 ### Examples
 
 ```
-lukso network validator setup
+lukso network validator start
 ```
 
 ### Options
 
 ```
-  -h, --help   help for setup
+  -h, --help   help for stop
 ```
 
 ### Options inherited from parent commands

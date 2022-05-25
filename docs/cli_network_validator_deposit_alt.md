@@ -1,4 +1,4 @@
-## cli network validator deposit
+## cli network validator deposit_alt
 
 Send Deposit transactions to activate validator
 
@@ -10,19 +10,19 @@ address. Remember it will need your wallet address and private keys. Thus it wil
 This tool is necessary to activate new validators
 
 ```
-cli network validator deposit [flags]
+cli network validator deposit_alt [flags]
 ```
 
 ### Examples
 
 ```
-lukso network validator deposit
+lukso network validator deposit_alt
 ```
 
 ### Options
 
 ```
-  -h, --help   help for deposit
+  -h, --help   help for deposit_alt
 ```
 
 ### Options inherited from parent commands

@@ -1,26 +1,26 @@
-## cli network stop
+## cli network balance
 
-Stops running docker containers
+returns the balance of a given address
 
 ### Synopsis
 
-This command stops consensus engine, execution engine, validator client and eth2-stats.
-It uses docker-compose file to stop these containers
+This command will return the balance of a given address
 
 ```
-cli network stop [flags]
+cli network balance [flags]
 ```
 
 ### Examples
 
 ```
-lukso network stop
+lukso network balance -a 0x....
 ```
 
 ### Options
 
 ```
-  -h, --help   help for stop
+  -a, --address string   ethereum address
+  -h, --help             help for balance
 ```
 
 ### Options inherited from parent commands
