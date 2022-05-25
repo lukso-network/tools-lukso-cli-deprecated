@@ -1,6 +1,7 @@
 package network
 
 import (
+	"fmt"
 	"os"
 
 	"gopkg.in/yaml.v3"
@@ -159,4 +160,40 @@ func (nc *NodeConfigs) WriteOrUpdateNodeConfig() error {
 		return err
 	}
 	return os.WriteFile("./node_config.yaml", yamlData, os.ModePerm)
+}
+
+func (nc *NodeConfigs) UpdateBootnodes() error {
+
+	chain := GetChainByString(nc.Chain.Name)
+	GetChainByString(nc.Chain.Name)
+	bootnodes, err := NewBootnodeUpdater(chain).DownloadLatestBootnodes()
+	if err != nil {
+		return err
+	}
+
+	if len(bootnodes) == 0 {
+		fmt.Println("No bootnodes available for this chain ", chain.String())
+	}
+
+	hasUpdates := false
+	if nc.Consensus.Bootnode != bootnodes[0].Consensus {
+		fmt.Println("Updating bootnode for the consensus chain...")
+		hasUpdates = true
+		nc.Consensus.Bootnode = bootnodes[0].Consensus
+	}
+	if nc.Execution.Bootnode != bootnodes[0].Execution {
+		fmt.Println("Updating bootnode for the execution chain...")
+		hasUpdates = true
+		nc.Execution.Bootnode = bootnodes[0].Execution
+	}
+
+	if !hasUpdates {
+		fmt.Println("everything up to date")
+	} else {
+		err := nc.WriteOrUpdateNodeConfig()
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }

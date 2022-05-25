@@ -17,6 +17,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"fmt"
 	"github.com/lukso-network/lukso-cli/src"
 	"github.com/lukso-network/lukso-cli/src/network"
 	"github.com/spf13/cobra"
@@ -36,6 +37,16 @@ from the github repository. It also updates node name and IP address in the .env
 		err := network.SetupNetwork(network.GetChainByString(viper.GetString(network.CommandOptionChain)), viper.GetString(network.CommandOptionNodeName))
 		if err != nil {
 			cobra.CompError(err.Error())
+		}
+
+		config, err := network.GetLoadedNodeConfigs()
+		if err != nil {
+			fmt.Println("couldn't update bootnodes, reason:", err.Error())
+		}
+
+		err = config.UpdateBootnodes()
+		if err != nil {
+			fmt.Println("couldn't update bootnodes, reason:", err.Error())
 		}
 
 		return nil

@@ -37,38 +37,10 @@ var updateCmd = &cobra.Command{
 				return
 			}
 		}
-
-		chain := network.GetChainByString(config.Chain.Name)
-		bootnodes, err := network.NewBootnodeUpdater(chain).DownloadLatestBootnodes()
+		err = config.UpdateBootnodes()
 		if err != nil {
-			cobra.CompError(err.Error())
-			return
-		}
-
-		if len(bootnodes) == 0 {
-			fmt.Println("No bootnodes available for this chain ", chain.String())
-		}
-
-		hasUpdates := false
-		if config.Consensus.Bootnode != bootnodes[0].Consensus {
-			fmt.Println("Updating bootnode for the consensus chain...")
-			hasUpdates = true
-			config.Consensus.Bootnode = bootnodes[0].Consensus
-		}
-		if config.Execution.Bootnode != bootnodes[0].Execution {
-			fmt.Println("Updating bootnode for the execution chain...")
-			hasUpdates = true
-			config.Execution.Bootnode = bootnodes[0].Execution
-		}
-
-		if !hasUpdates {
-			fmt.Println("everything up to date")
+			fmt.Printf("couldn't update bootnodes reason: %s\n", err.Error())
 		} else {
-			err = config.WriteOrUpdateNodeConfig()
-			if err != nil {
-				cobra.CompError(fmt.Sprintf("Couldn't update bootnodes reason: %s", err.Error()))
-				return
-			}
 			fmt.Println("Successfully updated bootnodes -> restart your nodes to make the changes effective")
 		}
 	},
