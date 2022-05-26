@@ -4,7 +4,8 @@
 
 ## [0.1.0-rc] - 2022-05-26
 
-This update prepares the cli for multi chains.
+This update prepares the cli for multi chains, has a lot of improvements in std output and 
+offers a new deposit functionality.
 
 ### Added
 
