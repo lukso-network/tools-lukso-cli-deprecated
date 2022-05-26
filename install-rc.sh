@@ -35,6 +35,7 @@ fi
 
 download() {
   URL="$1";
+  echo $URL
   LOCATION="$2";
   if [[ $PLATFORM == "linux" ]]; then
     wget -O $LOCATION $URL;
@@ -49,7 +50,7 @@ download() {
 # create binary location if not exists
 mkdir -p /usr/local/bin/
 # download lukso and give exec permission
-download https://github.com/lukso-network/lukso-cli/releases/download/v0.1.5-rc/lukso-cli-${PLATFORM}-${ARCHITECTURE} /usr/local/bin/lukso
+download https://github.com/lukso-network/lukso-cli/releases/download/v0.1.5/lukso-cli-${PLATFORM}-${ARCHITECTURE} /usr/local/bin/lukso
 chmod +x /usr/local/bin/lukso
 
 
