@@ -22,7 +22,7 @@ var DefaultL16BetaNodeConfigs = &NodeConfigs{
 		Name: myHostName,
 	},
 	Execution: &ClientDetails{
-		StatsAddress: "34.90.5.14",
+		StatsAddress: "35.204.4.181",
 		Verbosity:    "3",
 		Version:      "v0.2.0-dev",
 		Etherbase:    "0x7781121fd00A009670E31b76A2bf99b3A2D6878D",

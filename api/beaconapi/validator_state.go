@@ -25,7 +25,7 @@ type ValidatorStateResponse struct {
 	} `json:"data"`
 }
 
-func (c BeaconClient) ValidatorState(pubKey string, epoch int64) (ValidatorStateResponse, error) {
+func (c BeaconClient) ValidatorState(pubKey string, epoch int64) (ValidatorStateResponse, int, error) {
 	response := ValidatorStateResponse{}
 
 	state := "head"
@@ -35,8 +35,8 @@ func (c BeaconClient) ValidatorState(pubKey string, epoch int64) (ValidatorState
 
 	status, err := c.client.Get(&response, "", fmt.Sprintf(ValidatorStatePath, state, pubKey))
 	if err != nil {
-		return response, fmt.Errorf("StatusCode: %d, Error: %s", status, err.Error())
+		return response, status, fmt.Errorf("StatusCode: %d, Error: %s", status, err.Error())
 	}
 
-	return response, nil
+	return response, status, nil
 }

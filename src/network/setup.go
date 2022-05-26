@@ -63,7 +63,7 @@ func GenerateDefaultNodeConfigsIfDoesntExist(chain Chain) (isGenerated bool, err
 }
 
 func SetupNetwork(chain Chain, nodeName string) error {
-	fmt.Printf("Setting up network for chain %s.\n", chain.String())
+	fmt.Printf("Setting up node for chain %s.\n", chain.String())
 	clientVersion := BeaconClientPrysm
 
 	if !IsChainSupported(chain) {

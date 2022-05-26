@@ -31,9 +31,6 @@ consensus engine, execution engine and eth2-stats containers.`,
 
 func init() {
 	networkCmd.AddCommand(startCmd)
-
-	startCmd.Flags().String("nodeName", "", "set node name")
-	viper.BindPFlag("nodeName", startCmd.Flags().Lookup("nodeName"))
 }
 
 func updateEnv() {

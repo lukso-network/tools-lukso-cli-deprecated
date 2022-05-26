@@ -11,9 +11,11 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const CommandOptionGasPrice = "gasPrice"
+
 // depositCmd represents the deposit command
 var depositCmd = &cobra.Command{
-	Use:   "deposit_alt",
+	Use:   "deposit",
 	Short: "Send Deposit transactions to activate validator",
 	Long: `After preparing wallets and deposit data, this command prepares deposit transactions to the deposit contract
 address. Remember it will need your wallet address and private keys. Thus it will deduct balance from your wallet.
@@ -24,11 +26,16 @@ This tool is necessary to activate new validators`,
 		nodeConf := network.MustGetNodeConfig()
 		valSecrets := nodeConf.GetValSecrets()
 		if valSecrets == nil {
-			cobra.CompErrorln("no validator credential is presented")
+			cobra.CompErrorln("no validator credentials exist")
 			return
 		}
 
-		totalDeposits, err := network.Deposit(valSecrets.Deposit.DepositFileLocation, valSecrets.Deposit.ContractAddress, valSecrets.Eth1Data.WalletPrivKey, nodeConf.ApiEndpoints.ExecutionApi)
+		gasPrice, err := cmd.Flags().GetInt64(CommandOptionGasPrice)
+		if err != nil {
+			cobra.CompErrorln(err.Error())
+			return
+		}
+		totalDeposits, err := network.Deposit(valSecrets.Deposit.DepositFileLocation, valSecrets.Deposit.ContractAddress, valSecrets.Eth1Data.WalletPrivKey, nodeConf.ApiEndpoints.ExecutionApi, gasPrice)
 		if err != nil {
 			cobra.CompErrorln(err.Error())
 			return
@@ -40,4 +47,6 @@ This tool is necessary to activate new validators`,
 
 func init() {
 	validatorCmd.AddCommand(depositCmd)
+
+	depositCmd.Flags().Int64P(CommandOptionGasPrice, "g", 1000000, "set the gas price for transactions")
 }

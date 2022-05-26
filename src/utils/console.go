@@ -127,3 +127,7 @@ func ConsoleTestColors() {
 func ColoredPrintln(label string, value interface{}) {
 	fmt.Print(ConsoleWriteLabeledValueI(label, value))
 }
+
+func PrintColoredError(msg string) {
+	fmt.Println(ConsoleInColor(ConsoleColorRed, fmt.Sprintf("error: %s", msg)))
+}
