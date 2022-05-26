@@ -8,15 +8,15 @@ import (
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/lukso-network/lukso-cli/src/network/contracts"
 	"github.com/lukso-network/lukso-cli/src/network/types"
+	"github.com/lukso-network/lukso-cli/src/utils"
 	"github.com/lukso-network/lukso-cli/src/wallet"
 	"github.com/pkg/errors"
-	"github.com/wealdtech/go-string2eth"
 	"io/ioutil"
 	"math/big"
 	"strings"
 )
 
-func Deposit(depositData string, contractAddress string, privateKey string, rpcEndpoint string) (int, error) {
+func Deposit(depositData string, contractAddress string, privateKey string, rpcEndpoint string, gasPrice int64) (int, error) {
 	di, err := loadDepositInfo(depositData)
 	if err != nil {
 		return -1, err
@@ -43,7 +43,7 @@ func Deposit(depositData string, contractAddress string, privateKey string, rpcE
 	if err != nil {
 		return -1, err
 	}
-	fmt.Printf("Balance of transaction_key(%s): %s\n", tk.PublicKey, string2eth.WeiToString(balance, true))
+	fmt.Printf("Balance of transaction_key(%s): %s\n", tk.PublicKey, utils.WeiToString(balance, true))
 	contract, err := contracts.NewEth2Deposit(common.HexToAddress(contractAddress), client)
 	if err != nil {
 		return -1, err
@@ -51,11 +51,15 @@ func Deposit(depositData string, contractAddress string, privateKey string, rpcE
 
 	totalDeposited := 0
 	for k, d := range di {
-		opts := createTransactionOpts(client, &tk)
-		opts.Value = new(big.Int).Mul(new(big.Int).SetUint64(d.Amount), big.NewInt(1000000000))
+		amount := new(big.Int).Mul(new(big.Int).SetUint64(d.Amount), big.NewInt(1000000000))
+		fmt.Printf("Creating %s deposit for key: %d\n (GasPrice %d)", utils.WeiToString(amount, true), common.Bytes2Hex(d.PublicKey), gasPrice)
+		opts, err := createTransactionOpts(client, &tk, gasPrice)
+		if err != nil {
+			fmt.Println("The transaction failed, reason: ", err.Error())
+			continue
+		}
+		opts.Value = amount
 		opts.Context = context.Background()
-
-		fmt.Printf("Creating %s deposit for key: %d\n", string2eth.WeiToString(opts.Value, true), d.PublicKey)
 
 		var depositDataRoot [32]byte
 		copy(depositDataRoot[:], d.DepositDataRoot)
@@ -142,15 +146,15 @@ func verifyDepositInfo(depositInfo []*types.DepositInfo) error {
 	return nil
 }
 
-func createTransactionOpts(client *ethclient.Client, tk *wallet.TransactionKeys) *bind.TransactOpts {
+func createTransactionOpts(client *ethclient.Client, tk *wallet.TransactionKeys, gasPrice int64) (*bind.TransactOpts, error) {
 	//fetch the last use nonce of account
 	nonce, err := client.PendingNonceAt(context.Background(), tk.PublicKey)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 	chainID, err := client.ChainID(context.Background())
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 
 	auth, err := bind.NewKeyedTransactorWithChainID(tk.PrivateKey, chainID)
@@ -160,7 +164,7 @@ func createTransactionOpts(client *ethclient.Client, tk *wallet.TransactionKeys)
 	auth.Nonce = big.NewInt(int64(nonce))
 	auth.Value = big.NewInt(0)     // in wei
 	auth.GasLimit = uint64(160000) // in units
-	auth.GasPrice = big.NewInt(1000000)
+	auth.GasPrice = big.NewInt(gasPrice)
 
-	return auth
+	return auth, err
 }

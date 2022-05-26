@@ -14,7 +14,7 @@ import (
 	"github.com/lukso-network/lukso-cli/src/utils"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"github.com/wealdtech/go-string2eth"
+	"net/http"
 	"strings"
 )
 
@@ -61,7 +61,7 @@ var validatorDescribeCmd = &cobra.Command{
 		if err != nil {
 			cobra.CompErrorln(err.Error())
 		} else {
-			utils.ColoredPrintln("Transaction wallet balance:", string2eth.WeiToString(balance, true))
+			utils.ColoredPrintln("Transaction wallet balance:", utils.WeiToString(balance, true))
 		}
 
 		depositData, err := network.ParseDepositDataFromFile(valSecrets.Deposit.DepositFileLocation)
@@ -97,7 +97,11 @@ func describe(pubKeys []string, baseUrl string, epoch int64) error {
 	for _, d := range pubKeys {
 		pubKey := maybeAddHexPrefix(d)
 		fmt.Println("....................................................................................")
-		state, err := beaconClient.ValidatorState(pubKey, epoch)
+		state, status, err := beaconClient.ValidatorState(pubKey, epoch)
+		if status == http.StatusNotFound {
+			utils.PrintColoredError(fmt.Sprintf("validator %s not found on consensus node", pubKey))
+			continue
+		}
 		if err != nil {
 			return err
 		}
