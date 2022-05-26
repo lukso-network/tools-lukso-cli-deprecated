@@ -27,10 +27,7 @@ func DownDockerServices() error {
 }
 
 func StartArchNode() error {
-	config, err := GetLoadedNodeConfigs()
-	if err != nil {
-		return err
-	}
+	config := MustGetNodeConfig()
 	configDirName, err := config.getConfigPath()
 	if err != nil {
 		return err
@@ -42,10 +39,7 @@ func StartArchNode() error {
 }
 
 func StartValidatorNode() error {
-	config, err := GetLoadedNodeConfigs()
-	if err != nil {
-		return err
-	}
+	config := MustGetNodeConfig()
 	configDirName, err := config.getConfigPath()
 	if err != nil {
 		return err

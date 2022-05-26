@@ -19,17 +19,13 @@ address. Remember it will need your wallet address and private keys. Thus it wil
 This tool is necessary to activate new validators`,
 	Example: "lukso network validator deposit",
 	Run: func(cmd *cobra.Command, args []string) {
-		nodeConf, err := network.GetLoadedNodeConfigs()
-		if err != nil {
-			cobra.CompErrorln(err.Error())
-			return
-		}
+		nodeConf := network.MustGetNodeConfig()
 		valSecrets := nodeConf.GetValSecrets()
 		if valSecrets == nil {
 			cobra.CompErrorln("no validator credential is presented")
 			return
 		}
-		err = valSecrets.SendDepositTxn(nodeConf.ApiEndpoints.ExecutionApi)
+		err := valSecrets.SendDepositTxn(nodeConf.ApiEndpoints.ExecutionApi)
 		if err != nil {
 			cobra.CompErrorln(err.Error())
 			return

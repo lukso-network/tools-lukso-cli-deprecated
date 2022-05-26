@@ -5,6 +5,7 @@ Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
+	"fmt"
 	"github.com/lukso-network/lukso-cli/src/network"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -19,6 +20,7 @@ var startCmd = &cobra.Command{
 consensus engine, execution engine and eth2-stats containers.`,
 	Example: "lukso network start",
 	Run: func(cmd *cobra.Command, args []string) {
+		updateEnv()
 		err := network.StartArchNode()
 		if err != nil {
 			cobra.CompErrorln(err.Error())
@@ -29,13 +31,13 @@ consensus engine, execution engine and eth2-stats containers.`,
 
 func init() {
 	networkCmd.AddCommand(startCmd)
-	cobra.OnInitialize(updateEnv)
 
 	startCmd.Flags().String("nodeName", "", "set node name")
 	viper.BindPFlag("nodeName", startCmd.Flags().Lookup("nodeName"))
 }
 
 func updateEnv() {
+	fmt.Println("update env")
 	err := network.GenerateEnvFile(viper.GetString("nodeName"))
 	if err != nil {
 		cobra.CompErrorln(err.Error())

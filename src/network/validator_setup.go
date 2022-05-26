@@ -102,10 +102,7 @@ func (valSec *ValidatorSecrets) GenerateWallet(numberOfValidators int, password 
 	if err != nil {
 		return err
 	}
-	nodeConfigs, err := GetLoadedNodeConfigs()
-	if err != nil {
-		return err
-	}
+	nodeConfigs := MustGetNodeConfig()
 	keyStoreLocation, err := nodeConfigs.GetKeyStorePath()
 	if err != nil {
 		return err

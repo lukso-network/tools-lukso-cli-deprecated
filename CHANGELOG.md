@@ -2,7 +2,7 @@
 
 
 
-## [0.1.3-rc] - 2022-05-23
+## [0.1.0-rc] - 2022-05-26
 
 This update prepares the cli for multi chains.
 
@@ -14,11 +14,14 @@ This update prepares the cli for multi chains.
 - command **lukso network balance -a 0x...** to call balance of validator
 - new chain env **local**. A network can be setup with **lukso network init --chain local**
 - command **lukso network update** to update the bootnodes 
+- new chain env **local**. A network can be setup with **lukso network init --chain local**
+- command **lukso network update** to update the bootnodes  
 
 ### Changed
 
 - command **lukso network start validator** became deprecated
 - 2 new scripts installer script **install.sh** & **download.sh** to give more control on how to get the CLI binary
+- the way node_conf.yaml is handled. It will not be auto-generated but **lukso network init** must be called to generate the file.
 
 ### Fixed
 

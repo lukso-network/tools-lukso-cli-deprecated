@@ -99,39 +99,26 @@ func (config *NodeConfigs) gethGethPeerPort() (string, error) {
 }
 
 func GetExecutionDataVolume() (string, error) {
-	config, err := GetLoadedNodeConfigs()
-	if err != nil {
-		return "", err
-	}
+	config := MustGetNodeConfig()
 	executionContainer := config.getExecutionData()
 	return getDataFromContainer(executionContainer, keyDataVolume), nil
 }
 
 func GetConsensusDataVolume() (string, error) {
-	config, err := GetLoadedNodeConfigs()
-	if err != nil {
-		return "", err
-	}
+	config := MustGetNodeConfig()
 	dataContainer := config.getConsensusData()
 	return getDataFromContainer(dataContainer, keyDataVolume), nil
 }
 
 func GetValidatorDataVolume() (string, error) {
-	config, err := GetLoadedNodeConfigs()
-	if err != nil {
-		return "", err
-	}
+	config := MustGetNodeConfig()
 	dataContainer := config.getValidatorData()
 	return getDataFromContainer(dataContainer, keyDataVolume), nil
 }
 
 func GetEnvironmentConfig(nodeName string) map[string]string {
-
-	nodeConfig, err := GetLoadedNodeConfigs()
-	if err != nil {
-		cobra.CompError(err.Error())
-		return nil
-	}
+	nodeConfig := MustGetNodeConfig()
+	var err error
 	newEnvData := make(map[string]string)
 	newEnvData["CONFIGS_VOLUME"], err = nodeConfig.getConfigPath()
 	if err != nil {

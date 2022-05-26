@@ -27,11 +27,7 @@ activate validators`,
 	Run: func(cmd *cobra.Command, args []string) {
 		// Checks
 		// load node config
-		nodeConf, err := network.GetLoadedNodeConfigs()
-		if err != nil {
-			cobra.CompErrorln(err.Error())
-			return
-		}
+		nodeConf := network.MustGetNodeConfig()
 
 		// check if keystore is empty
 		keystorePath, err := nodeConf.GetKeyStorePath()

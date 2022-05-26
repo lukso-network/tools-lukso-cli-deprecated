@@ -27,10 +27,7 @@ func Clear() error {
 	if err != nil {
 		return err
 	}
-	nodeconf, err := GetLoadedNodeConfigs()
-	if err != nil {
-		return err
-	}
+	nodeconf := MustGetNodeConfig()
 	configLocation, err := nodeconf.getConfigPath()
 	if err != nil {
 		return err

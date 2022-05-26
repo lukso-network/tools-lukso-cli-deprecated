@@ -17,7 +17,7 @@ import (
 var balanceCmd = &cobra.Command{
 	Use:     "balance",
 	Short:   "returns the balance of a given address",
-	Long:    `This command will return the balance of a given address`,
+	Long:    `This command will return the balance of a given address based on the network given.`,
 	Example: "lukso network balance -a 0x....",
 	Run: func(cmd *cobra.Command, args []string) {
 		address, _ := cmd.Flags().GetString("address")
@@ -25,11 +25,7 @@ var balanceCmd = &cobra.Command{
 			cobra.CompError("address must be given")
 			return
 		}
-		nodeConf, err := network.GetLoadedNodeConfigs()
-		if err != nil {
-			cobra.CompErrorln(err.Error())
-			return
-		}
+		nodeConf := network.MustGetNodeConfig()
 
 		client, err := ethclient.Dial(nodeConf.ApiEndpoints.ExecutionApi)
 		if err != nil {

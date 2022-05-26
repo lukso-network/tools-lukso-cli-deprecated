@@ -2,7 +2,6 @@ package network
 
 import (
 	"fmt"
-	"github.com/spf13/viper"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -68,11 +67,3 @@ func FileExists(filePath string) bool {
 	return true
 }
 
-func GetLoadedNodeConfigs() (*NodeConfigs, error) {
-	var nodeConfig NodeConfigs
-	err := viper.Unmarshal(&nodeConfig)
-	if err != nil {
-		return nil, err
-	}
-	return &nodeConfig, nil
-}

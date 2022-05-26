@@ -25,45 +25,29 @@ import (
 )
 
 // initCmd represents the setup command
-var initCmd = &cobra.Command{
-	Use:   "init",
-	Short: "Initializes node by downloading configs and scripts",
-	Long: `This command downloads network starter scripts and config files
-from the github repository. It also updates node name and IP address in the .env file`,
-	Example: "lukso network init --chain l16 --nodeName my_node",
+var configCmd = &cobra.Command{
+	Use:     "config",
+	Short:   "Creates node_config.yaml based on the chain provided.",
+	Long:    `This command will create the default config for a given chain`,
+	Example: "lukso network [--chain l16beta]",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		chain := network.GetChainByString(viper.GetString(network.CommandOptionChain))
-		nodeName := viper.GetString(network.CommandOptionNodeName)
-
 		isGenerated, err := network.GenerateDefaultNodeConfigsIfDoesntExist(chain)
 		if err != nil {
 			cobra.CompErrorln(err.Error())
 			os.Exit(1)
 		}
 
-		if !isGenerated {
-			fmt.Println("A node is already setup in this location. Choose another location to setup a node for a different chain or modify this node by editing ./node_conf.yaml.")
-			return nil
-		}
-		config := network.MustGetNodeConfig()
-
-		err = network.SetupNetwork(chain, nodeName)
-		if err != nil {
-			cobra.CompError(err.Error())
+		if isGenerated {
+			fmt.Println("Successfully created config file node_config.yaml...")
+		} else {
+			fmt.Println("./node_config.yaml already exists")
 		}
 
-		err = config.UpdateBootnodes()
-		if err != nil {
-			fmt.Println("couldn't update bootnodes, reason:", err.Error())
-		}
-
-		fmt.Printf("You successfully prepared the node for chain %s!!!\n", chain.String())
 		return nil
 	},
 }
 
 func init() {
-	networkCmd.AddCommand(initCmd)
-	initCmd.Flags().String(network.CommandOptionNodeName, "", "set node name")
-	viper.BindPFlag(network.CommandOptionNodeName, initCmd.Flags().Lookup(network.CommandOptionNodeName))
+	//networkCmd.AddCommand(configCmd)
 }

@@ -16,39 +16,40 @@ import (
 	"strings"
 )
 
-func Deposit(depositData string, contractAddress string, privateKey string, rpcEndpoint string) error {
+func Deposit(depositData string, contractAddress string, privateKey string, rpcEndpoint string) (int, error) {
 	di, err := loadDepositInfo(depositData)
 	if err != nil {
-		return err
+		return -1, err
 	}
 
 	err = verifyDepositInfo(di)
 	if err != nil {
-		return err
+		return -1, err
 	}
 
 	tk, err := wallet.TransactionKeysFromPrivateKey(privateKey)
 	if err != nil {
-		return err
+		return -1, err
 	}
 
 	fmt.Printf("dialing into rpc endpoint %s........ ", rpcEndpoint)
 	client, err := ethclient.Dial(rpcEndpoint)
 	if err != nil {
-		return err
+		return -1, err
 	}
 	fmt.Println("success")
 
 	balance, err := client.BalanceAt(context.Background(), tk.PublicKey, nil)
 	if err != nil {
-		return err
+		return -1, err
 	}
 	fmt.Printf("Balance of transaction_key(%s): %s\n", tk.PublicKey, string2eth.WeiToString(balance, true))
 	contract, err := contracts.NewEth2Deposit(common.HexToAddress(contractAddress), client)
 	if err != nil {
-		return err
+		return -1, err
 	}
 
+	totalDeposited := 0
 	for k, d := range di {
 		opts := createTransactionOpts(client, &tk)
 		opts.Value = new(big.Int).Mul(new(big.Int).SetUint64(d.Amount), big.NewInt(1000000000))
@@ -61,16 +62,19 @@ func Deposit(depositData string, contractAddress string, privateKey string, rpcE
 		fmt.Printf("Waiting for transaction no %d to be mined ....", k)
 		signedTx, err := contract.Deposit(opts, d.PublicKey, d.WithdrawalCredentials, d.Signature, depositDataRoot)
 		if err != nil {
-			return err
+			fmt.Println("The transaction failed, reason: ", err.Error())
+			continue
 		}
 		receipt, err := bind.WaitMined(context.Background(), client, signedTx)
 		if err != nil {
-			return err
+			fmt.Println("The transaction failed, reason: ", err.Error())
+			continue
 		}
 		fmt.Println("mined at: ", receipt.BlockNumber)
+		totalDeposited++
 	}
 
-	return nil
+	return totalDeposited, nil
 }
 
 func loadDepositInfo(input string) ([]*types.DepositInfo, error) {

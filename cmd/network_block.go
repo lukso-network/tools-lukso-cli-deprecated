@@ -5,12 +5,13 @@ Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
+	"context"
 	"fmt"
-	"github.com/lukso-network/lukso-cli/api/gethrpc"
+	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/lukso-network/lukso-cli/src/network"
 	"github.com/lukso-network/lukso-cli/src/utils"
 	"github.com/spf13/cobra"
-	"os"
+	"math/big"
 )
 
 // blockCmd represents the block command
@@ -22,29 +23,35 @@ var blockCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		number, _ := cmd.Flags().GetInt64("number")
 
-		nodeConf, err := network.GetLoadedNodeConfigs()
+		nodeConf := network.MustGetNodeConfig()
+
+		client, err := ethclient.Dial(nodeConf.ApiEndpoints.ExecutionApi)
 		if err != nil {
 			cobra.CompErrorln(err.Error())
 			return
 		}
 
-		client := gethrpc.NewRPCClient(nodeConf.ApiEndpoints.ExecutionApi)
-
-		fmt.Println("Calling ", nodeConf.ApiEndpoints.ExecutionApi)
-		block, err := client.GetBlock(number)
-
-		if err != nil {
-			cobra.CompErrorln(err.Error())
-			os.Exit(1)
+		blockNumber := big.NewInt(number)
+		if number == -2 {
+			blockNumber = nil
+			fmt.Println("Fetching latest block")
+		} else {
+			fmt.Println("Fetching block", number)
 		}
 
-		utils.ColoredPrintln("Block:", block.Number)
-		utils.ColoredPrintln("Hash:", block.Hash)
-		utils.ColoredPrintln("#Transactions:", block.NumberOfTransactions)
+		block, err := client.BlockByNumber(context.Background(), blockNumber)
+		if err != nil {
+			cobra.CompErrorln(err.Error())
+			return
+		}
+
+		utils.ColoredPrintln("Block:", block.Number())
+		utils.ColoredPrintln("Hash:", block.Hash())
+		utils.ColoredPrintln("#Transactions:", block.Transactions().Len())
 	},
 }
 
 func init() {
 	networkCmd.AddCommand(blockCmd)
-	blockCmd.Flags().Int64P("number", "n", 0, "block number of geth block")
+	blockCmd.Flags().Int64P("number", "n", -2, "block number of geth block")
 }

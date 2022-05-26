@@ -40,11 +40,7 @@ var validatorDescribeCmd = &cobra.Command{
 			return
 		}
 
-		nodeConf, err := network.GetLoadedNodeConfigs()
-		if err != nil {
-			cobra.CompErrorln(err.Error())
-			return
-		}
+		nodeConf := network.MustGetNodeConfig()
 
 		baseUrl = nodeConf.ApiEndpoints.ConsensusApi
 
