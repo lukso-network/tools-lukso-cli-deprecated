@@ -72,6 +72,19 @@ type NodeConfigs struct {
 	Ports map[string]PortDescription `yaml:",omitempty"`
 }
 
+type NodeConfigsV0 struct {
+	Configs              *DataVolume       `yaml:",omitempty"`
+	Keystore             *DataVolume       `yaml:",omitempty"`
+	Node                 *NodeDetails      `yaml:",omitempty"`
+	Execution            *ClientDetails    `yaml:",omitempty"`
+	Consensus            *ClientDetails    `yaml:",omitempty"`
+	Validator            *ClientDetails    `yaml:",omitempty"`
+	ValidatorCredentials *ValidatorSecrets `yaml:",omitempty"`
+	ApiEndpoints         *NodeApi          `yaml:",omitempty"`
+
+	Ports map[string]PortDescription `yaml:",omitempty"`
+}
+
 func (d *DataVolume) getVolume() string {
 	return d.Volume
 }
@@ -164,12 +177,32 @@ func (nc *NodeConfigs) WriteOrUpdateNodeConfig() error {
 	return os.WriteFile(NodeConfigLocation, yamlData, os.ModePerm)
 }
 
-func (nc *NodeConfigs) UpdateBootnodes() error {
+func (nc *NodeConfigs) UpdateExternalIP() (bool, error) {
+	fmt.Println("Fetching external IP....")
+	oldIP := nc.Node.IP
+	ip, err := getPublicIP()
+	if err != nil {
+		return false, err
+	}
+
+	if oldIP == ip {
+		return false, nil
+	} else {
+		nc.Node.IP = ip
+		err := nc.WriteOrUpdateNodeConfig()
+		if err != nil {
+			return false, err
+		}
+		return true, nil
+	}
+}
+
+func (nc *NodeConfigs) UpdateBootnodes() (bool, error) {
 	chain := GetChainByString(nc.Chain.Name)
 	GetChainByString(nc.Chain.Name)
 	bootnodes, err := NewBootnodeUpdater(chain).DownloadLatestBootnodes()
 	if err != nil {
-		return err
+		return false, err
 	}
 
 	if len(bootnodes) == 0 {
@@ -189,14 +222,14 @@ func (nc *NodeConfigs) UpdateBootnodes() error {
 	}
 
 	if !hasUpdates {
-		fmt.Println("everything up to date")
+		return false, nil
 	} else {
 		err := nc.WriteOrUpdateNodeConfig()
 		if err != nil {
-			return err
+			return false, err
 		}
+		return true, nil
 	}
-	return nil
 }
 
 func MustGetNodeConfig() *NodeConfigs {
@@ -227,6 +260,32 @@ func MustGetNodeConfig() *NodeConfigs {
 	return config
 }
 
+func LoadNodeConf() (*NodeConfigs, error) {
+	viper.AddConfigPath(".")
+	viper.SetConfigType("yaml")
+	viper.SetConfigName("node_config")
+
+	viper.AutomaticEnv()
+
+	if err := viper.ReadInConfig(); err == nil {
+		fmt.Println("config file:", viper.ConfigFileUsed())
+	} else {
+		return nil, err
+	}
+
+	return getLoadedNodeConfigs()
+}
+
+func LoadNodeConfOrDefault(chain Chain) *NodeConfigs {
+	nodeConf, err := LoadNodeConf()
+
+	if err != nil {
+		return GetDefaultNodeConfigByOptionParam(chain.String())
+	}
+
+	return nodeConf
+}
+
 func getLoadedNodeConfigs() (*NodeConfigs, error) {
 	var nodeConfig NodeConfigs
 	err := viper.Unmarshal(&nodeConfig)
@@ -234,4 +293,40 @@ func getLoadedNodeConfigs() (*NodeConfigs, error) {
 		return nil, err
 	}
 	return &nodeConfig, nil
+}
+
+func LoadNodeConfV0() (*NodeConfigsV0, error) {
+	viper.AddConfigPath(".")
+	viper.SetConfigType("yaml")
+	viper.SetConfigName("node_config")
+
+	viper.AutomaticEnv()
+
+	if err := viper.ReadInConfig(); err == nil {
+	} else {
+		return nil, err
+	}
+
+	var nodeConfig NodeConfigsV0
+	err := viper.Unmarshal(&nodeConfig)
+	if err != nil {
+		return nil, err
+	}
+	return &nodeConfig, nil
+}
+
+func (n NodeConfigsV0) Upgrade(chain Chain) *NodeConfigs {
+	defaultConfig := GetDefaultNodeConfig(chain)
+	return &NodeConfigs{
+		Chain:                defaultConfig.Chain,
+		Configs:              n.Configs,
+		Keystore:             n.Keystore,
+		Node:                 n.Node,
+		Execution:            n.Execution,
+		Consensus:            n.Consensus,
+		Validator:            n.Validator,
+		ValidatorCredentials: n.ValidatorCredentials,
+		ApiEndpoints:         n.ApiEndpoints,
+		Ports:                n.Ports,
+	}
 }

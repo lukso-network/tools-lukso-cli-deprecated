@@ -16,7 +16,7 @@ import (
 	"strings"
 )
 
-func Deposit(depositData string, contractAddress string, privateKey string, rpcEndpoint string, gasPrice int64) (int, error) {
+func Deposit(contractDepositEvents *DepositEvents, depositData string, contractAddress string, privateKey string, rpcEndpoint string, gasPrice int64, dry bool) (int, error) {
 	di, err := loadDepositInfo(depositData)
 	if err != nil {
 		return -1, err
@@ -43,6 +43,7 @@ func Deposit(depositData string, contractAddress string, privateKey string, rpcE
 	if err != nil {
 		return -1, err
 	}
+
 	fmt.Printf("Balance of transaction_key(%s): %s\n", tk.PublicKey, utils.WeiToString(balance, true))
 	contract, err := contracts.NewEth2Deposit(common.HexToAddress(contractAddress), client)
 	if err != nil {
@@ -51,8 +52,18 @@ func Deposit(depositData string, contractAddress string, privateKey string, rpcE
 
 	totalDeposited := 0
 	for k, d := range di {
+		pubKey := common.BytesToAddress(d.PublicKey)
 		amount := new(big.Int).Mul(new(big.Int).SetUint64(d.Amount), big.NewInt(1000000000))
-		fmt.Printf("Creating %s deposit for key: %d\n (GasPrice %d)", utils.WeiToString(amount, true), common.Bytes2Hex(d.PublicKey), gasPrice)
+
+		fmt.Printf("Creating %s deposit for key: %s (GasPrice %d)\n", utils.WeiToString(amount, true), common.Bytes2Hex(d.PublicKey), gasPrice)
+
+		totalDepositedAmount := contractDepositEvents.Amount(pubKey)
+
+		if totalDepositedAmount > 0 {
+			fmt.Println("Validator has already a deposit with amount: \n", totalDepositedAmount)
+			continue
+		}
+
 		opts, err := createTransactionOpts(client, &tk, gasPrice)
 		if err != nil {
 			fmt.Println("The transaction failed, reason: ", err.Error())
@@ -64,6 +75,10 @@ func Deposit(depositData string, contractAddress string, privateKey string, rpcE
 		var depositDataRoot [32]byte
 		copy(depositDataRoot[:], d.DepositDataRoot)
 		fmt.Printf("Waiting for transaction no %d to be mined ....", k)
+		if dry {
+			fmt.Println(" transaction not transmitted - this is a dry run")
+			continue
+		}
 		signedTx, err := contract.Deposit(opts, d.PublicKey, d.WithdrawalCredentials, d.Signature, depositDataRoot)
 		if err != nil {
 			fmt.Println("The transaction failed, reason: ", err.Error())

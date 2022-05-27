@@ -25,5 +25,5 @@ func (client *Instance) RequestInt64(method string, params ...interface{}) (int6
 	if err != nil {
 		return -1, err
 	}
-	return hs.Int64(), nil
+	return hs.Int64(true), nil
 }

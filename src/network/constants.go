@@ -11,7 +11,7 @@ const (
 	CommandOptionChain              = "chain"
 	CommandOptionNodeConf           = "nodeconf"
 	CommandOptionNodeName           = "nodeName"
-	ErrMsgValidatorSecretNotPresent = "validator secret not present"
+	ErrMsgValidatorSecretNotPresent = "validator secret not present, did you setup your validator?"
 	ConfigDirectory                 = "configs"
 	BootnodesDirectory              = "bootnode"
 	ConfigBranchName                = "main"

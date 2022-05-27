@@ -20,25 +20,56 @@ var updateCmd = &cobra.Command{
 	
 `, Example: "lukso network update",
 	Run: func(cmd *cobra.Command, args []string) {
-		config := network.MustGetNodeConfig()
+		hasUpdates := false
+		fmt.Println("Searching for updates")
 
-		// trying to "repair node conf" to make it downwards compatible
-		if config.Chain == nil {
+		config, err := network.LoadNodeConf()
+		if err != nil {
+			configV0, err := network.LoadNodeConfV0()
+			if err != nil {
+				cobra.CompError(err.Error())
+				return
+			}
+
 			chain := network.GetChainByString(viper.GetString(network.CommandOptionChain))
-			defaultConfig := network.GetDefaultNodeConfig(chain)
-			config.Chain = defaultConfig.Chain
-			err := config.WriteOrUpdateNodeConfig()
+			config = configV0.Upgrade(chain)
+			err = config.WriteOrUpdateNodeConfig()
 			if err != nil {
 				cobra.CompError(err.Error())
 				return
 			}
 		}
-		err := config.UpdateBootnodes()
+
+		wasIPUpdated, err := config.UpdateExternalIP()
+		if err != nil {
+			fmt.Printf("couldn't update external IP reason: %s\n", err.Error())
+		} else {
+			if wasIPUpdated {
+				fmt.Println("Successfully updated IP -> restart your nodes to make the changes effective")
+				hasUpdates = true
+			} else {
+				fmt.Println("External IP is up to date")
+			}
+		}
+
+		wasBootnodeUpdated, err := config.UpdateBootnodes()
 		if err != nil {
 			fmt.Printf("couldn't update bootnodes reason: %s\n", err.Error())
 		} else {
-			fmt.Println("Successfully updated bootnodes -> restart your nodes to make the changes effective")
+			if wasBootnodeUpdated {
+				fmt.Println("Successfully updated bootnodes")
+				hasUpdates = true
+			} else {
+				fmt.Println("Bootnodes are up to date")
+			}
 		}
+
+		if hasUpdates {
+			fmt.Println("Successfully updated your node -> restart your nodes to make the changes effective!")
+		} else {
+			fmt.Println("Everything up to date!")
+		}
+
 	},
 }
 
