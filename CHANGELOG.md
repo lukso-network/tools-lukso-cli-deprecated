@@ -2,7 +2,7 @@
 
 
 
-## [0.1.5-rc] - 2022-05-26
+## [0.1.7] - 2022-05-26
 
 This update prepares the cli for multi chains, has a lot of improvements in std output and 
 offers a new deposit functionality.
@@ -13,6 +13,7 @@ offers a new deposit functionality.
 - command **lukso network validator start** that will start a validator
 - command **lukso network validator stop** that will stop a validator
 - command **lukso network balance -a 0x...** to call balance of validator
+- command **lukso network validator check.** to check the status of all deposited validators
 - new chain env **local**. A network can be setup with **lukso network init --chain local**
 - command **lukso network update** to update the bootnodes 
 - new chain env **local**. A network can be setup with **lukso network init --chain local**
@@ -23,6 +24,8 @@ offers a new deposit functionality.
 - command **lukso network start validator** became deprecated
 - 2 new scripts installer script **install.sh** & **download.sh** to give more control on how to get the CLI binary
 - the way node_conf.yaml is handled. It will not be auto-generated but **lukso network init** must be called to generate the file.
+- deposit checks on past events to see if a key deposited already
+- **lukos network validator describe** differs between pending and observed
 
 ### Fixed
 

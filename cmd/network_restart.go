@@ -25,6 +25,7 @@ var restartCmd = &cobra.Command{
 			cobra.CompErrorln(err.Error())
 			os.Exit(1)
 		}
+		updateEnv()
 		// take a small break between stop and start
 		time.Sleep(2 * time.Second)
 		fmt.Println("starting docker containers")

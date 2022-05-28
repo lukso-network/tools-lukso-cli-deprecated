@@ -32,7 +32,6 @@ func (c BeaconClient) ValidatorState(pubKey string, epoch int64) (ValidatorState
 	if epoch > -1 {
 		state = fmt.Sprintf("%d", epoch)
 	}
-
 	status, err := c.client.Get(&response, "", fmt.Sprintf(ValidatorStatePath, state, pubKey))
 	if err != nil {
 		return response, status, fmt.Errorf("StatusCode: %d, Error: %s", status, err.Error())

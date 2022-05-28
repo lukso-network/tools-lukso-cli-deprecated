@@ -33,7 +33,7 @@ func toBlock(response map[string]interface{}) (*Block, error) {
 	if err != nil {
 		return nil, err
 	}
-	b.Number = numberHS.Int64()
+	b.Number = numberHS.Int64(true)
 
 	transactionsRaw := response["transactions"].([]interface{})
 

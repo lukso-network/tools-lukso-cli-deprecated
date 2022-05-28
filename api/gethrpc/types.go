@@ -147,7 +147,7 @@ func (it HexString) BigInt() *big.Int {
 	return new(big.Int).SetBytes(it.value)
 }
 
-func (it *HexString) Int64() int64 {
+func (it *HexString) Int64(bigEndian bool) int64 {
 	b := it.Bytes()
 
 	if len(b) == 0 {
@@ -168,7 +168,11 @@ func (it *HexString) Int64() int64 {
 
 		b = temp
 	}
-	return int64(binary.BigEndian.Uint64(b))
+
+	if bigEndian {
+		return int64(binary.BigEndian.Uint64(b))
+	}
+	return int64(binary.LittleEndian.Uint64(b))
 }
 
 func (it *HexString) Concat(other *HexString) *HexString {

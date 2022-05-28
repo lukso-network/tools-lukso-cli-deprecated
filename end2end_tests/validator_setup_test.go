@@ -46,7 +46,7 @@ func TestValidatorSetup(t *testing.T) {
 		valSec.ValidatorMnemonic = mnemonic
 		err = valSec.GenerateWallet(5, "test1234")
 		require.NoError(t, err)
-		configs, err := network.GetLoadedNodeConfigs()
+		configs := network.MustGetNodeConfig()
 		require.NoError(t, err)
 		keyLocation, err := configs.GetKeyStorePath()
 		require.NoError(t, err)

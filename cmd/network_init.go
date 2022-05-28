@@ -52,7 +52,7 @@ from the github repository. It also updates node name and IP address in the .env
 			cobra.CompError(err.Error())
 		}
 
-		err = config.UpdateBootnodes()
+		_, err = config.UpdateBootnodes()
 		if err != nil {
 			fmt.Println("couldn't update bootnodes, reason:", err.Error())
 		}

@@ -48,17 +48,67 @@ func TestE22Deposit(t *testing.T) {
 	rpcEndpoint = "http://34.90.85.198:8545"
 	privateKey := "54843e9d1be9bd770fe343e808d40e61da04b1557a8c73cd5ab1af83f12fe52f"
 
-	contractAddress, _, err := DeployContract(privateKey, rpcEndpoint)
+	//contractAddress, _, err := DeployContract(privateKey, rpcEndpoint)
+	//if err != nil {
+	//	t.Error(err)
+	//	return
+	//}
+	//fmt.Println("Contract Address is:", contractAddress)
+	//
+	//contractAddressAlt := contractAddress.String()
+	//contractAddressAlt := "0x97EB71c2f48d5Dc5A7eB76571635B21dbe3166a7"
+	contractAddressAlt := "0x4242424242424242424242424242424242424242"
+
+	events, err := network.NewDepositEvents(contractAddressAlt, rpcEndpoint)
 	if err != nil {
 		t.Error(err)
 		return
 	}
-	fmt.Println("Contract Address is:", contractAddress)
+	fmt.Println(events)
 
-	err = network.Deposit("../test_data/deposit_data.json", contractAddress.String(), privateKey, rpcEndpoint)
+	if true {
+		return
+	}
 
+	count, err := network.Deposit(&events, "../test_data/deposit_data.json", contractAddressAlt, privateKey, rpcEndpoint, 1000000, false)
 	if err != nil {
 		t.Error(err)
+		return
+	}
+	fmt.Println("Deposited validators", count)
+
+	fmt.Println("...........................................................................")
+	// deposit again
+	events2, err := network.NewDepositEvents(contractAddressAlt, rpcEndpoint)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	fmt.Println(events2)
+
+	count2, err := network.Deposit(&events2, "../test_data/deposit_data.json", contractAddressAlt, privateKey, rpcEndpoint, 1000000, false)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	fmt.Println("Deposited validators in second run", count2)
+
+}
+
+func TestDepositCount(t *testing.T) {
+	rpcEndpoint := "https://rpc.beta.l16.lukso.network"
+	contractAddressAlt := "0x4242424242424242424242424242424242424242"
+	//rpcEndpoint := "http://34.90.85.198:8545"
+
+	e, err := network.NewDepositEvents(contractAddressAlt, rpcEndpoint)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+
+	fmt.Println("Count", len(e.Events))
+	for k, event := range e.Events {
+		fmt.Println(k, event)
 	}
 }
 
