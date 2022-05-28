@@ -2,7 +2,7 @@
 
 
 
-## [0.1.7] - 2022-05-26
+## [0.1.8] - 2022-05-28
 
 This update prepares the cli for multi chains, has a lot of improvements in std output and 
 offers a new deposit functionality.

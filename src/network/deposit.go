@@ -52,12 +52,12 @@ func Deposit(contractDepositEvents *DepositEvents, depositData string, contractA
 
 	totalDeposited := 0
 	for k, d := range di {
-		pubKey := common.BytesToHash(d.PublicKey)
+		pubKey := utils.MaybeAddHexPrefix(common.Bytes2Hex(d.PublicKey))
 		amount := new(big.Int).Mul(new(big.Int).SetUint64(d.Amount), big.NewInt(1000000000))
 
 		fmt.Printf("Creating %s deposit for key: %s (GasPrice %d)\n", utils.WeiToString(amount, true), common.Bytes2Hex(d.PublicKey), gasPrice)
 
-		totalDepositedAmount := contractDepositEvents.Amount(pubKey.String())
+		totalDepositedAmount := contractDepositEvents.Amount(pubKey)
 
 		if totalDepositedAmount > 0 {
 			fmt.Println("Validator has already a deposit with amount: \n", totalDepositedAmount)
