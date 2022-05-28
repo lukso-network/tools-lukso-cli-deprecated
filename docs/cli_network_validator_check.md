@@ -1,27 +1,25 @@
-## cli network validator describe
+## cli network validator check
 
-Show detailed status of the validators
+Show detailed status of the validators as deposited in the Deposit Contract
 
 ### Synopsis
 
-It shows validator count, addresses and transaction status.
+Show detailed status of the validators as deposited in the Deposit Contract.
 
 ```
-cli network validator describe [flags]
+cli network validator check [flags]
 ```
 
 ### Examples
 
 ```
-lukso network validator describe
+lukso network validator check
 ```
 
 ### Options
 
 ```
-  -e, --epoch int    epoch to be described - if left out it is the head epoch (default -1)
-  -h, --help         help for describe
-  -k, --key string   validator key to be described - keep empty to describe your validators defined in keystore
+  -h, --help   help for check
 ```
 
 ### Options inherited from parent commands
