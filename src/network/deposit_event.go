@@ -13,7 +13,8 @@ type DepositEvents struct {
 }
 
 type DepositEvent struct {
-	Pubkey                common.Address
+	PubKeyRaw             []byte
+	Pubkey                string
 	WithdrawalCredentials common.Hash
 	Amount                *big.Int
 	Signature             common.Hash
@@ -49,7 +50,8 @@ func NewDepositEvents(contractAddress, rpcEndpoint string) (DepositEvents, error
 func (d DepositEvents) toEvent(fe *contracts.Eth2DepositDepositEvent) (DepositEvent, error) {
 	e := DepositEvent{}
 
-	e.Pubkey = common.BytesToAddress(fe.Pubkey)
+	e.PubKeyRaw = fe.Pubkey
+	e.Pubkey = gethrpc.NewHexString().SetBytes(fe.Pubkey).String()
 	e.WithdrawalCredentials = common.BytesToHash(fe.WithdrawalCredentials)
 	e.Signature = common.BytesToHash(fe.Signature)
 
@@ -59,17 +61,17 @@ func (d DepositEvents) toEvent(fe *contracts.Eth2DepositDepositEvent) (DepositEv
 	return e, nil
 }
 
-func (d DepositEvents) FindEventsWithKey(pubKey common.Address) []DepositEvent {
+func (d DepositEvents) FindEventsWithKey(pubKey string) []DepositEvent {
 	result := make([]DepositEvent, 0)
 	for _, d := range d.Events {
-		if pubKey.String() == d.Pubkey.String() {
+		if pubKey == d.Pubkey {
 			result = append(result, d)
 		}
 	}
 	return result
 }
 
-func (d DepositEvents) Amount(pubKey common.Address) int64 {
+func (d DepositEvents) Amount(pubKey string) int64 {
 	events := d.FindEventsWithKey(pubKey)
 	if len(events) == 0 {
 		return 0
