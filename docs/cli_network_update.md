@@ -28,8 +28,7 @@ lukso network update
 ### Options inherited from parent commands
 
 ```
-      --chain string      provide chain you want to target [l16,...] (default "l16beta")
-      --nodeconf string   config file (default is MY_NODE_DIRECTORY/node_config.yaml)
+      --chain string   provide chain you want to target [l16,...] (default "l16beta")
 ```
 
 ### SEE ALSO

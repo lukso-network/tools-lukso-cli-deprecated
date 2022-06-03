@@ -2,37 +2,20 @@ package network
 
 import "os"
 
-func Clear() error {
-	execVol, err := GetExecutionDataVolume()
+func Clear(configs *NodeConfigs) error {
+	err := os.RemoveAll(configs.Execution.DataVolume)
 	if err != nil {
 		return err
 	}
-	err = os.RemoveAll(execVol)
+	err = os.RemoveAll(configs.Consensus.DataVolume)
 	if err != nil {
 		return err
 	}
-	consVol, err := GetConsensusDataVolume()
+	err = os.RemoveAll(configs.Validator.DataVolume)
 	if err != nil {
 		return err
 	}
-	err = os.RemoveAll(consVol)
-	if err != nil {
-		return err
-	}
-	validatorVol, err := GetValidatorDataVolume()
-	if err != nil {
-		return err
-	}
-	err = os.RemoveAll(validatorVol)
-	if err != nil {
-		return err
-	}
-	nodeconf := MustGetNodeConfig()
-	configLocation, err := nodeconf.getConfigPath()
-	if err != nil {
-		return err
-	}
-	err = os.RemoveAll(configLocation)
+	err = os.RemoveAll(configs.Configs.Volume)
 	if err != nil {
 		return err
 	}

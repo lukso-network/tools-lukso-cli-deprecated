@@ -1,10 +1,10 @@
 ## cli network validator describe byKey
 
-Show detailed status of the validators as deposited in the Deposit Contract
+Show detailed status of the validators as deposited in the DepositDetails Contract
 
 ### Synopsis
 
-Show detailed status of the validators as deposited in the Deposit Contract.
+Show detailed status of the validators as deposited in the DepositDetails Contract.
 
 ```
 cli network validator describe byKey [flags]
@@ -29,8 +29,7 @@ lukso network validator check
 ### Options inherited from parent commands
 
 ```
-      --chain string      provide chain you want to target [l16,...] (default "l16beta")
-      --nodeconf string   config file (default is MY_NODE_DIRECTORY/node_config.yaml)
+      --chain string   provide chain you want to target [l16,...] (default "l16beta")
 ```
 
 ### SEE ALSO

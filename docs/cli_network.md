@@ -5,9 +5,8 @@ subcommand "network" for LUKSO network related things
 ### Options
 
 ```
-      --chain string      provide chain you want to target [l16,...] (default "l16beta")
-  -h, --help              help for network
-      --nodeconf string   config file (default is MY_NODE_DIRECTORY/node_config.yaml)
+      --chain string   provide chain you want to target [l16,...] (default "l16beta")
+  -h, --help           help for network
 ```
 
 ### SEE ALSO

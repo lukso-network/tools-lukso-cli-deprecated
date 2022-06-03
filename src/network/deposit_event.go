@@ -98,3 +98,15 @@ func (d DepositEvents) GetUniqueKeys() []string {
 	}
 	return l
 }
+
+func (d DepositEvents) TotalAmount() uint64 {
+	if len(d.Events) == 0 {
+		return 0
+	}
+	amount := uint64(0)
+	for _, e := range d.Events {
+		amount += e.Amount.Uint64()
+	}
+
+	return amount
+}

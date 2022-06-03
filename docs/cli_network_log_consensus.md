@@ -25,10 +25,9 @@ lukso network log consensus --tail 30 -f
 ### Options inherited from parent commands
 
 ```
-      --chain string      provide chain you want to target [l16,...] (default "l16beta")
-  -f, --follow            follow log output as a stream
-      --nodeconf string   config file (default is MY_NODE_DIRECTORY/node_config.yaml)
-      --tail string       display last part of the log (default "5")
+      --chain string   provide chain you want to target [l16,...] (default "l16beta")
+  -f, --follow         follow log output as a stream
+      --tail string    display last part of the log (default "5")
 ```
 
 ### SEE ALSO

@@ -11,15 +11,13 @@ Subcommand to perform validator related works
 ### Options inherited from parent commands
 
 ```
-      --chain string      provide chain you want to target [l16,...] (default "l16beta")
-      --nodeconf string   config file (default is MY_NODE_DIRECTORY/node_config.yaml)
+      --chain string   provide chain you want to target [l16,...] (default "l16beta")
 ```
 
 ### SEE ALSO
 
 * [cli network](cli_network.md)	 - subcommand "network" for LUKSO network related things
-* [cli network validator deposit](cli_network_validator_deposit.md)	 - Send Deposit transactions to activate validator
-* [cli network validator deposit_legacy](cli_network_validator_deposit_legacy.md)	 - Send Deposit transactions to activate validator
+* [cli network validator deposit](cli_network_validator_deposit.md)	 - Send DepositDetails transactions to activate validator
 * [cli network validator describe](cli_network_validator_describe.md)	 - Show detailed status of the validators
 * [cli network validator setup](cli_network_validator_setup.md)	 - Prepare a validator to join the network
 * [cli network validator start](cli_network_validator_start.md)	 - This subcommand starts a validator client

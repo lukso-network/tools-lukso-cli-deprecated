@@ -7,6 +7,7 @@ package cmd
 import (
 	"fmt"
 	"github.com/lukso-network/lukso-cli/src/network"
+	"github.com/lukso-network/lukso-cli/src/utils"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -48,6 +49,11 @@ var validatorDescribeDepositsCmd = &cobra.Command{
 			cobra.CompErrorln(err.Error())
 			return
 		}
+
+		utils.ColoredPrintln("Total Amount Of Deposits", utils.GWeiToString(events.TotalAmount(), true))
+		utils.ColoredPrintln("Total Unique Validators", len(events.GetUniqueKeys()))
+		utils.ColoredPrintln("Total Deposit Events", len(events.Events))
+
 	},
 }
 

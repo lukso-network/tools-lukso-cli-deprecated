@@ -98,10 +98,7 @@ func (valSec *ValidatorCredentials) GenerateWallet(numberOfValidators int, passw
 		return err
 	}
 	nodeConfigs := MustGetNodeConfig()
-	keyStoreLocation, err := nodeConfigs.GetKeyStorePath()
-	if err != nil {
-		return err
-	}
+	keyStoreLocation := nodeConfigs.Keystore.Volume
 	walletCmd := exec.Command("./bin/network-validator-tool", "keystores",
 		"--insecure",
 		"--out-loc", keyStoreLocation,

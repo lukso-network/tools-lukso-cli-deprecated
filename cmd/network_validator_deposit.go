@@ -30,8 +30,8 @@ This tool is necessary to activate new validators`,
 		}
 		nodeConf := network.MustGetNodeConfig()
 
-		valSecrets := nodeConf.GetCredentials()
-		if valSecrets == nil {
+		credentials := nodeConf.ValidatorCredentials
+		if credentials == nil {
 			utils.PrintColoredError("no validator credentials exist. Did you forget to setup your validators?")
 			utils.Coloredln("    lukso network validator setup")
 			return

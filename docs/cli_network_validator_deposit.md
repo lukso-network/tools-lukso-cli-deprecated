@@ -1,6 +1,6 @@
 ## cli network validator deposit
 
-Send Deposit transactions to activate validator
+Send DepositDetails transactions to activate validator
 
 ### Synopsis
 
@@ -30,8 +30,7 @@ lukso network validator deposit
 ### Options inherited from parent commands
 
 ```
-      --chain string      provide chain you want to target [l16,...] (default "l16beta")
-      --nodeconf string   config file (default is MY_NODE_DIRECTORY/node_config.yaml)
+      --chain string   provide chain you want to target [l16,...] (default "l16beta")
 ```
 
 ### SEE ALSO

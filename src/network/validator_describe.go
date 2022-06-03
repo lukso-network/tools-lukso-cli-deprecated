@@ -8,6 +8,8 @@ import (
 )
 
 func DescribeValidatorKey(keys []string, contractAddress string, executionApi string, consensusApi string, depositEvents *DepositEvents) (err error) {
+	fmt.Println("........................................................................................................................................................................")
+	utils.ColoredPrintln("Number of validators:", len(keys))
 	fmt.Println("Configuration")
 	fmt.Println("........................................................................................................................................................................")
 	utils.ColoredPrintln("Consensus Api:", consensusApi)

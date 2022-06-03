@@ -21,27 +21,39 @@ var validatorDescribeCmd = &cobra.Command{
 	Long:    `It shows validator count, addresses and transaction status.`,
 	Example: "lukso network validator describe",
 	Run: func(cmd *cobra.Command, args []string) {
+		// get local node configuration
 		nodeConf := network.MustGetNodeConfig()
-		vc := nodeConf.ValidatorCredentials
-
-		// should never happen
-		if vc == nil {
-			cobra.CompErrorln("couldn't find contract details")
+		valSecrets := nodeConf.ValidatorCredentials
+		if valSecrets == nil {
+			cobra.CompErrorln(network.ErrMsgValidatorSecretNotPresent)
 			return
 		}
 
+		// read all keys being deposited
 		events, err := network.NewDepositEvents(nodeConf.DepositDetails.ContractAddress, nodeConf.ApiEndpoints.ExecutionApi)
 		if err != nil {
 			cobra.CompErrorln(fmt.Sprintf("couldn't load deposit data from contract, reason: %s", err.Error()))
 			return
 		}
 
-		valSecrets := nodeConf.GetCredentials()
-		if valSecrets == nil {
-			cobra.CompErrorln(network.ErrMsgValidatorSecretNotPresent)
+		depositData, err := network.ParseDepositDataFromFile(nodeConf.DepositDetails.DepositFileLocation)
+		if err != nil {
+			cobra.CompErrorln(err.Error())
 			return
 		}
 
+		pubKeys := make([]string, len(depositData))
+		for k, d := range depositData {
+			pubKeys[k] = d.PubKey
+		}
+
+		// give details for each key
+		err = network.DescribeValidatorKey(pubKeys, nodeConf.DepositDetails.ContractAddress, nodeConf.ApiEndpoints.ExecutionApi, nodeConf.ApiEndpoints.ConsensusApi, &events)
+		if err != nil {
+			cobra.CompErrorln(err.Error())
+		}
+
+		// show transaction wallet
 		if nodeConf.TransactionWallet == nil {
 			cobra.CompErrorln("Transaction wallet does not exist, did you forget to run lukso network validator setup?")
 			return
@@ -59,24 +71,6 @@ var validatorDescribeCmd = &cobra.Command{
 			cobra.CompErrorln(err.Error())
 		} else {
 			utils.ColoredPrintln("Transaction wallet balance:", utils.WeiToString(balance, true))
-		}
-
-		depositData, err := network.ParseDepositDataFromFile(nodeConf.DepositDetails.DepositFileLocation)
-		if err != nil {
-			cobra.CompErrorln(err.Error())
-			return
-		}
-
-		utils.ColoredPrintln("Number of validators:", len(depositData))
-
-		pubKeys := make([]string, len(depositData))
-		for k, d := range depositData {
-			pubKeys[k] = d.PubKey
-		}
-		fmt.Println("........................................................................................................................................................................")
-		err = network.DescribeValidatorKey(pubKeys, nodeConf.DepositDetails.ContractAddress, nodeConf.ApiEndpoints.ExecutionApi, nodeConf.ApiEndpoints.ConsensusApi, &events)
-		if err != nil {
-			cobra.CompErrorln(err.Error())
 		}
 	},
 }

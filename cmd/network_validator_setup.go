@@ -30,12 +30,7 @@ activate validators`,
 		nodeConf := network.MustGetNodeConfig()
 
 		// check if keystore is empty
-		keystorePath, err := nodeConf.GetKeyStorePath()
-		if err != nil {
-			cobra.CompErrorln(err.Error())
-			return
-		}
-
+		keystorePath := nodeConf.Keystore.Volume
 		isKeystoreEmpty, err := utils.IsDirectoryEmpty(keystorePath)
 		if err != nil {
 			// if directory doesn't exist, ignore it

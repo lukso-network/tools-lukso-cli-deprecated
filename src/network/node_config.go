@@ -92,66 +92,6 @@ type TransactionWallet struct {
 	PrivateKey string `yaml:",omitempty"`
 }
 
-func (d *DataVolume) getVolume() string {
-	return d.Volume
-}
-
-func (node *NodeDetails) getIP() string {
-	return node.IP
-}
-
-func (node *NodeDetails) getName() string {
-	return node.Name
-}
-
-func (cd *ClientDetails) getStatAddress() string {
-	return cd.StatsAddress
-}
-
-func (cd *ClientDetails) getVerbosity() string {
-	return cd.Verbosity
-}
-
-func (cd *ClientDetails) getEtherbase() string {
-	return cd.Etherbase
-}
-
-func (cd *ClientDetails) getDataVolume() string {
-	return cd.DataVolume
-}
-
-func (cd *ClientDetails) getNetworkID() string {
-	return cd.NetworkId
-}
-
-func (cd *ClientDetails) getBootnode() string {
-	return cd.Bootnode
-}
-
-func (cd *ClientDetails) getVersion() string {
-	return cd.Version
-}
-
-func (pd PortDescription) getHttpPort() string {
-	return pd.HttpPort
-}
-
-func (pd *PortDescription) getPeerPort() string {
-	return pd.PeerPort
-}
-
-func (nc *NodeConfigs) getConfigs() *DataVolume {
-	return nc.Configs
-}
-
-func (nc *NodeConfigs) getNode() *NodeDetails {
-	return nc.Node
-}
-
-func (nc *NodeConfigs) getValidator() *ClientDetails {
-	return nc.Validator
-}
-
 func (nc *NodeConfigs) getPort(portName string) *PortDescription {
 	if nc.Ports == nil {
 		return nil
@@ -162,10 +102,6 @@ func (nc *NodeConfigs) getPort(portName string) *PortDescription {
 
 func (nc *NodeConfigs) CreateCredentials() *ValidatorCredentials {
 	nc.ValidatorCredentials = &ValidatorCredentials{}
-	return nc.ValidatorCredentials
-}
-
-func (nc *NodeConfigs) GetCredentials() *ValidatorCredentials {
 	return nc.ValidatorCredentials
 }
 
@@ -282,16 +218,6 @@ func LoadNodeConf() (*NodeConfigs, error) {
 	}
 
 	return getLoadedNodeConfigs()
-}
-
-func LoadNodeConfOrDefault(chain Chain) *NodeConfigs {
-	nodeConf, err := LoadNodeConf()
-
-	if err != nil {
-		return GetDefaultNodeConfigByOptionParam(chain.String())
-	}
-
-	return nodeConf
 }
 
 func getLoadedNodeConfigs() (*NodeConfigs, error) {
