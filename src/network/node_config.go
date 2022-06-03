@@ -59,102 +59,37 @@ type ChainConfig struct {
 }
 
 type NodeConfigs struct {
-	Chain                *ChainConfig      `yaml:",omitempty"`
-	Configs              *DataVolume       `yaml:",omitempty"`
-	Keystore             *DataVolume       `yaml:",omitempty"`
-	Node                 *NodeDetails      `yaml:",omitempty"`
-	Execution            *ClientDetails    `yaml:",omitempty"`
-	Consensus            *ClientDetails    `yaml:",omitempty"`
-	Validator            *ClientDetails    `yaml:",omitempty"`
-	ValidatorCredentials *ValidatorSecrets `yaml:",omitempty"`
-	ApiEndpoints         *NodeApi          `yaml:",omitempty"`
+	Chain                *ChainConfig          `yaml:",omitempty"`
+	Configs              *DataVolume           `yaml:",omitempty"`
+	Keystore             *DataVolume           `yaml:",omitempty"`
+	Node                 *NodeDetails          `yaml:",omitempty"`
+	Execution            *ClientDetails        `yaml:",omitempty"`
+	Consensus            *ClientDetails        `yaml:",omitempty"`
+	Validator            *ClientDetails        `yaml:",omitempty"`
+	ValidatorCredentials *ValidatorCredentials `yaml:",omitempty"`
+	ApiEndpoints         *NodeApi              `yaml:",omitempty"`
+	TransactionWallet    *TransactionWallet    `yaml:",omitempty"`
+	DepositDetails       *DepositDetails       `yaml:",omitempty"`
 
 	Ports map[string]PortDescription `yaml:",omitempty"`
 }
 
 type NodeConfigsV0 struct {
-	Configs              *DataVolume       `yaml:",omitempty"`
-	Keystore             *DataVolume       `yaml:",omitempty"`
-	Node                 *NodeDetails      `yaml:",omitempty"`
-	Execution            *ClientDetails    `yaml:",omitempty"`
-	Consensus            *ClientDetails    `yaml:",omitempty"`
-	Validator            *ClientDetails    `yaml:",omitempty"`
-	ValidatorCredentials *ValidatorSecrets `yaml:",omitempty"`
-	ApiEndpoints         *NodeApi          `yaml:",omitempty"`
+	Configs              *DataVolume           `yaml:",omitempty"`
+	Keystore             *DataVolume           `yaml:",omitempty"`
+	Node                 *NodeDetails          `yaml:",omitempty"`
+	Execution            *ClientDetails        `yaml:",omitempty"`
+	Consensus            *ClientDetails        `yaml:",omitempty"`
+	Validator            *ClientDetails        `yaml:",omitempty"`
+	ValidatorCredentials *ValidatorCredentials `yaml:",omitempty"`
+	ApiEndpoints         *NodeApi              `yaml:",omitempty"`
 
 	Ports map[string]PortDescription `yaml:",omitempty"`
 }
 
-func (d *DataVolume) getVolume() string {
-	return d.Volume
-}
-
-func (node *NodeDetails) getIP() string {
-	return node.IP
-}
-
-func (node *NodeDetails) getName() string {
-	return node.Name
-}
-
-func (cd *ClientDetails) getStatAddress() string {
-	return cd.StatsAddress
-}
-
-func (cd *ClientDetails) getVerbosity() string {
-	return cd.Verbosity
-}
-
-func (cd *ClientDetails) getEtherbase() string {
-	return cd.Etherbase
-}
-
-func (cd *ClientDetails) getDataVolume() string {
-	return cd.DataVolume
-}
-
-func (cd *ClientDetails) getNetworkID() string {
-	return cd.NetworkId
-}
-
-func (cd *ClientDetails) getBootnode() string {
-	return cd.Bootnode
-}
-
-func (cd *ClientDetails) getVersion() string {
-	return cd.Version
-}
-
-func (pd PortDescription) getHttpPort() string {
-	return pd.HttpPort
-}
-
-func (pd *PortDescription) getPeerPort() string {
-	return pd.PeerPort
-}
-
-func (nc *NodeConfigs) getConfigs() *DataVolume {
-	return nc.Configs
-}
-
-func (nc *NodeConfigs) getKeystore() *DataVolume {
-	return nc.Keystore
-}
-
-func (nc *NodeConfigs) getNode() *NodeDetails {
-	return nc.Node
-}
-
-func (nc *NodeConfigs) getExecution() *ClientDetails {
-	return nc.Execution
-}
-
-func (nc *NodeConfigs) getConsensus() *ClientDetails {
-	return nc.Consensus
-}
-
-func (nc *NodeConfigs) getValidator() *ClientDetails {
-	return nc.Validator
+type TransactionWallet struct {
+	PublicKey  string `yaml:",omitempty"`
+	PrivateKey string `yaml:",omitempty"`
 }
 
 func (nc *NodeConfigs) getPort(portName string) *PortDescription {
@@ -165,7 +100,8 @@ func (nc *NodeConfigs) getPort(portName string) *PortDescription {
 	return &portDesc
 }
 
-func (nc *NodeConfigs) GetValSecrets() *ValidatorSecrets {
+func (nc *NodeConfigs) CreateCredentials() *ValidatorCredentials {
+	nc.ValidatorCredentials = &ValidatorCredentials{}
 	return nc.ValidatorCredentials
 }
 
@@ -232,11 +168,20 @@ func (nc *NodeConfigs) UpdateBootnodes() (bool, error) {
 	}
 }
 
-func MustGetNodeConfig() *NodeConfigs {
+/*
+	EnsureNetworkIsInitialised
+
+	Checks if the node_conf.yaml file was created otherwise it exits
+*/
+func EnsureNetworkIsInitialised() {
 	if !FileExists(NodeConfigLocation) {
 		cobra.CompErrorln("The node was not initialised yet. Call \n   lukso network init --nodeName NAME_OF_YOUR_NODE [--chain CHAIN_NAME] \n to setup a node.")
 		os.Exit(1)
 	}
+}
+
+func MustGetNodeConfig() *NodeConfigs {
+	EnsureNetworkIsInitialised()
 
 	// Search config in home directory with name ".cli" (without extension).
 	viper.AddConfigPath(".")
@@ -264,7 +209,6 @@ func LoadNodeConf() (*NodeConfigs, error) {
 	viper.AddConfigPath(".")
 	viper.SetConfigType("yaml")
 	viper.SetConfigName("node_config")
-
 	viper.AutomaticEnv()
 
 	if err := viper.ReadInConfig(); err == nil {
@@ -274,16 +218,6 @@ func LoadNodeConf() (*NodeConfigs, error) {
 	}
 
 	return getLoadedNodeConfigs()
-}
-
-func LoadNodeConfOrDefault(chain Chain) *NodeConfigs {
-	nodeConf, err := LoadNodeConf()
-
-	if err != nil {
-		return GetDefaultNodeConfigByOptionParam(chain.String())
-	}
-
-	return nodeConf
 }
 
 func getLoadedNodeConfigs() (*NodeConfigs, error) {

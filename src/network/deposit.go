@@ -146,8 +146,8 @@ func verifyDepositInfo(depositInfo []*types.DepositInfo) error {
 		//		if len(contract.forkVersion) != 0 && len(depositInfo[i].ForkVersion) != 0 {
 		//			cli.Assert(bytes.Equal(depositInfo[i].ForkVersion, contract.forkVersion), quiet, fmt.Sprintf("Incorrect fork version for deposit %d (expected %#x, found %#x)", i, contract.forkVersion, depositInfo[i].ForkVersion))
 		//		}
-		//		cli.Assert(depositInfo[i].Amount >= 1000000000, quiet, fmt.Sprintf("Deposit too small for deposit %d", i))
-		//		cli.Assert(depositInfo[i].Amount <= 32000000000 || beaconDepositAllowExcessiveDeposit, quiet, fmt.Sprintf(`Deposit more than 32 Ether for deposit %d.  Any amount above 32 Ether that is deposited will not count towards the validator's effective balance, and is effectively wasted.
+		//		cli.Assert(depositInfo[i].Amount >= 1000000000, quiet, fmt.Sprintf("DepositDetails too small for deposit %d", i))
+		//		cli.Assert(depositInfo[i].Amount <= 32000000000 || beaconDepositAllowExcessiveDeposit, quiet, fmt.Sprintf(`DepositDetails more than 32 Ether for deposit %d.  Any amount above 32 Ether that is deposited will not count towards the validator's effective balance, and is effectively wasted.
 		//
 		//If you really want to do this use the --allow-excessive-deposit option.`, i))
 		//

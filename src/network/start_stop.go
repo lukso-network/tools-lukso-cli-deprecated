@@ -28,10 +28,7 @@ func DownDockerServices() error {
 
 func StartArchNode() error {
 	config := MustGetNodeConfig()
-	configDirName, err := config.getConfigPath()
-	if err != nil {
-		return err
-	}
+	configDirName := config.Configs.Volume
 	if configDirName == "" || !FileExists(configDirName) {
 		return errors.New("config files are not present. Can't start docker containers")
 	}
@@ -40,14 +37,8 @@ func StartArchNode() error {
 
 func StartValidatorNode() error {
 	config := MustGetNodeConfig()
-	configDirName, err := config.getConfigPath()
-	if err != nil {
-		return err
-	}
-	keystorePath, err := config.GetKeyStorePath()
-	if err != nil {
-		return err
-	}
+	configDirName := config.Configs.Volume
+	keystorePath := config.Keystore.Volume
 	if configDirName == "" || !FileExists(configDirName) {
 		return errors.New("config files are not present. Can't start docker containers")
 	}

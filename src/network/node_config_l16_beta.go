@@ -40,7 +40,7 @@ var DefaultL16BetaNodeConfigs = &NodeConfigs{
 	Validator: &ClientDetails{
 		DataVolume: "./data/validator_data",
 	},
-	ValidatorCredentials: BetaDefaultValSecrets,
+	ValidatorCredentials: &ValidatorCredentials{},
 	Ports: map[string]PortDescription{
 		"geth": {
 			HttpPort: "8545",
@@ -50,5 +50,11 @@ var DefaultL16BetaNodeConfigs = &NodeConfigs{
 	ApiEndpoints: &NodeApi{
 		ConsensusApi: "https://beacon.beta.l16.lukso.network",
 		ExecutionApi: "https://rpc.beta.l16.lukso.network",
+	},
+	DepositDetails: &DepositDetails{
+		Amount:              "32000000000",
+		ContractAddress:     "0x4242424242424242424242424242424242424242",
+		DepositFileLocation: "./deposit_data.json",
+		ForkVersion:         "0x60000069",
 	},
 }

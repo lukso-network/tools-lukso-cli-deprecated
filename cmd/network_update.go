@@ -31,7 +31,7 @@ var updateCmd = &cobra.Command{
 				return
 			}
 
-			chain := network.GetChainByString(viper.GetString(network.CommandOptionChain))
+			chain := network.GetChainByString(viper.GetString(CommandOptionChain))
 			config = configV0.Upgrade(chain)
 			err = config.WriteOrUpdateNodeConfig()
 			if err != nil {

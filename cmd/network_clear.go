@@ -18,7 +18,7 @@ var clearCmd = &cobra.Command{
 engine, execution engine and validator client)`,
 	Example: "lukso network clear",
 	Run: func(cmd *cobra.Command, args []string) {
-		err := network.Clear()
+		err := network.Clear(network.MustGetNodeConfig())
 		if err != nil {
 			cobra.CompErrorln(err.Error())
 			os.Exit(1)

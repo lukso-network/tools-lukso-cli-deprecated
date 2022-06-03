@@ -34,7 +34,7 @@ var DefaultLocalNodeConfigs = &NodeConfigs{
 	Validator: &ClientDetails{
 		DataVolume: "./data/validator_data",
 	},
-	ValidatorCredentials: BetaDefaultValSecrets,
+	ValidatorCredentials: &ValidatorCredentials{},
 	Ports: map[string]PortDescription{
 		"geth": {
 			HttpPort: "8545",
@@ -44,5 +44,11 @@ var DefaultLocalNodeConfigs = &NodeConfigs{
 	ApiEndpoints: &NodeApi{
 		ConsensusApi: "http://localhost:3500",
 		ExecutionApi: "http://localhost:8545",
+	},
+	DepositDetails: &DepositDetails{
+		Amount:              "32000000000",
+		ContractAddress:     "0x4242424242424242424242424242424242424242",
+		DepositFileLocation: "./deposit_data.json",
+		ForkVersion:         "0x60000069",
 	},
 }

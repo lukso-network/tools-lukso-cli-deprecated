@@ -2,7 +2,7 @@
 
 
 
-## [0.1.8] - 2022-05-28
+## [0.2.0] - 2022-06-03
 
 This update prepares the cli for multi chains, has a lot of improvements in std output and 
 offers a new deposit functionality.
@@ -17,7 +17,8 @@ offers a new deposit functionality.
 - new chain env **local**. A network can be setup with **lukso network init --chain local**
 - command **lukso network update** to update the bootnodes 
 - new chain env **local**. A network can be setup with **lukso network init --chain local**
-- command **lukso network update** to update the bootnodes  
+- command **lukso network validator deposits** reads out all deposits in the DepositContract
+- command **lukso network validator byKey** to describe any validator key on any network
 
 ### Changed
 
@@ -25,12 +26,14 @@ offers a new deposit functionality.
 - 2 new scripts installer script **install.sh** & **download.sh** to give more control on how to get the CLI binary
 - the way node_conf.yaml is handled. It will not be auto-generated but **lukso network init** must be called to generate the file.
 - deposit checks on past events to see if a key deposited already
-- **lukos network validator describe** differs between pending and observed
+- **lukos network validator describe --dry** differs between pending and observed and offers a dry run
 
 ### Fixed
 
 - added Api entity to attach to the load balancer
 - changed the **lukso network init** to receive configs from different directory
+- cleaned up node_conf.yaml and introduced a new data structure
+- .env has a comment that it is auto generated
 
 ## [0.0.4] - 2022-05-13
 
