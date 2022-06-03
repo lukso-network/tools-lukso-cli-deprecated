@@ -116,7 +116,7 @@ func GetValidatorDataVolume() (string, error) {
 	return getDataFromContainer(dataContainer, keyDataVolume), nil
 }
 
-func GetEnvironmentConfig(nodeName string) map[string]string {
+func GetEnvironmentConfig() map[string]string {
 	nodeConfig := MustGetNodeConfig()
 	var err error
 	newEnvData := make(map[string]string)
@@ -135,28 +135,28 @@ func GetEnvironmentConfig(nodeName string) map[string]string {
 		cobra.CompError(err.Error())
 		return nil
 	}
-	newEnvData["NODE_NAME"] = nodeConfig.getNodeName(nodeName)
+	newEnvData["NODE_NAME"] = nodeConfig.Node.Name
 	executionContainer := nodeConfig.getExecutionData()
 	consensusContainer := nodeConfig.getConsensusData()
 	validatorContainer := nodeConfig.getValidatorData()
 
-	newEnvData["EXECUTION_DATA_VOLUME"] = getDataFromContainer(executionContainer, keyDataVolume)
-	newEnvData["CONSENSUS_DATA_VOLUME"] = getDataFromContainer(consensusContainer, keyDataVolume)
-	newEnvData["VALIDATOR_DATA_VOLUME"] = getDataFromContainer(validatorContainer, keyDataVolume)
+	newEnvData["EXECUTION_DATA_VOLUME"] = executionContainer.DataVolume
+	newEnvData["CONSENSUS_DATA_VOLUME"] = consensusContainer.DataVolume
+	newEnvData["VALIDATOR_DATA_VOLUME"] = validatorContainer.DataVolume
 
-	newEnvData["ETH_STATS_ADDRESS"] = getDataFromContainer(executionContainer, keyStatsAddress)
-	newEnvData["ETH_2_STATS_ADDRESS"] = getDataFromContainer(consensusContainer, keyStatsAddress)
+	newEnvData["ETH_STATS_ADDRESS"] = executionContainer.StatsAddress
+	newEnvData["ETH_2_STATS_ADDRESS"] = consensusContainer.StatsAddress
 
-	newEnvData["GETH_VERBOSITY"] = getDataFromContainer(executionContainer, keyVerbosity)
-	newEnvData["PRYSM_VERBOSITY"] = getDataFromContainer(consensusContainer, keyVerbosity)
+	newEnvData["GETH_VERBOSITY"] = executionContainer.Verbosity
+	newEnvData["PRYSM_VERBOSITY"] = consensusContainer.Verbosity
 
-	newEnvData["PRYSM_BEACON_VERSION"] = getDataFromContainer(consensusContainer, keyVersion)
-	newEnvData["GETH_VERSION"] = getDataFromContainer(executionContainer, keyVersion)
-	newEnvData["GETH_ETHERBASE"] = getDataFromContainer(executionContainer, keyEtherBase)
+	newEnvData["PRYSM_BEACON_VERSION"] = consensusContainer.Version
+	newEnvData["GETH_VERSION"] = executionContainer.Version
+	newEnvData["GETH_ETHERBASE"] = executionContainer.Etherbase
 
-	newEnvData["GETH_NETWORK_ID"] = getDataFromContainer(executionContainer, keyNetworkId)
-	newEnvData["PRYSM_BOOTSTRAP_NODE"] = getDataFromContainer(consensusContainer, keyBootNode)
-	newEnvData["GETH_BOOTSTRAP_NODE"] = getDataFromContainer(executionContainer, keyBootNode)
+	newEnvData["GETH_NETWORK_ID"] = executionContainer.NetworkId
+	newEnvData["PRYSM_BOOTSTRAP_NODE"] = consensusContainer.Bootnode
+	newEnvData["GETH_BOOTSTRAP_NODE"] = executionContainer.Bootnode
 
 	gethHttpPort, err := nodeConfig.getGethHttpPort()
 	if err != nil {

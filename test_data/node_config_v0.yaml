@@ -1,0 +1,44 @@
+configs:
+    volume: ./configs
+keystore:
+    volume: ./keystore
+node:
+    ip: 93.109.243.25
+    name: Leonards-MacBook-Pro-2.local
+execution:
+    statsaddress: 35.204.4.181
+    verbosity: "3"
+    etherbase: 0x7781121fd00A009670E31b76A2bf99b3A2D6878D
+    datavolume: ./data/execution_data
+    networkid: "83748374"
+    bootnode: enode://c2bb19ce658cfdf1fecb45da599ee6c7bf36e5292efb3fb61303a0b2cd07f96c20ac9b376a464d687ac456675a2e4a44aec39a0509bcb4b6d8221eedec25aca2@34.90.85.198:30303
+    version: v0.2.0-dev
+consensus:
+    statsaddress: 34.141.143.70:9090
+    verbosity: info
+    datavolume: ./data/consensus_data
+    bootnode: enr:-MK4QJ170_c4shhTN7NYc0ZiumYUrME_YUcWw_d8W6KKPHtHYVTVogsTqsQZDY_R3VlWnpKW-tIMJeB2JOIvo0D3Gi6GAYDxIN1yh2F0dG5ldHOIAAAAAAAAAACEZXRoMpCBQMXLYgAAcf__________gmlkgnY0gmlwhCJaVcaJc2VjcDI1NmsxoQI6qePHCvwjkh8CMvuUaSWTNiYkFzZpZh3j-DgNjBLvo4hzeW5jbmV0cwCDdGNwgjLIg3VkcIIu4A
+    version: v0.2.3-dev
+validator:
+    datavolume: ./data/validator_data
+validatorcredentials:
+    validatormnemonic: sister victory vehicle fly exchange floor peasant error situate rhythm task vacuum expect model bachelor vessel globe gold impact hockey cabbage cash average oyster
+    withdrawalmnemonic: file fitness broccoli spare century crisp tag flush sadness toss merge iron senior canal leaf kangaroo review method change rigid squirrel quarter slim else
+    forkversion: "0x60000069"
+    deposit:
+        amount: "32000000000"
+        contractaddress: 0x4242424242424242424242424242424242424242
+        depositfilelocation: ./deposit_data.json
+        force: true
+    eth1data:
+        walletaddress: 0xffbe0028588bf9e3a0d61642990d884491470b07
+        walletprivkey: 04a1c4d3e2d20d677ac4a0952edf0acea21ae88acecec884387fda75f31f0c88
+    eth2data:
+        grpcendpoint: 35.204.5.43:4000
+apiendpoints:
+    consensusapi: https://beacon.beta.l16.lukso.network
+    executionapi: https://rpc.beta.l16.lukso.network
+ports:
+    geth:
+        httpport: "8545"
+        peerport: "30303"

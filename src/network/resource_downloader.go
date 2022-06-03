@@ -27,7 +27,7 @@ func NewResourceDownloader(chain Chain, clientVersion string) ResourceDownloader
 	return downloader
 }
 
-func (d ResourceDownloader) DownloadAll(nodeName string) error {
+func (d ResourceDownloader) DownloadAll() error {
 	err := d.downloadDocker()
 	if err != nil {
 		return err
@@ -38,7 +38,7 @@ func (d ResourceDownloader) DownloadAll(nodeName string) error {
 		return err
 	}
 
-	err = GenerateEnvFile(nodeName)
+	err = GenerateEnvFile()
 	if err != nil {
 		return err
 	}

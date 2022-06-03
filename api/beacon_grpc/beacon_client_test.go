@@ -9,7 +9,7 @@ import (
 func TestBeaconClient_GetValidatorStatus(t *testing.T) {
 	t.Skip("skip e2e tests")
 	nodeconf := network.DefaultL16BetaNodeConfigs
-	valSec := nodeconf.GetValSecrets()
+	valSec := nodeconf.GetCredentials()
 	valClient, err := NewBeaconClient(valSec.Eth2Data.GRPCEndPoint)
 	require.NoError(t, err)
 	depositData, err := network.ParseDepositDataFromFile("../../test_data/deposit_data.json")

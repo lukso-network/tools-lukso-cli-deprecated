@@ -14,8 +14,8 @@ import (
 // validatorDescribeDepositsCmd represents the check command
 var validatorDescribeDepositsCmd = &cobra.Command{
 	Use:     "deposits",
-	Short:   "Show detailed status of the validators as deposited in the Deposit Contract",
-	Long:    `Show detailed status of the validators as deposited in the Deposit Contract.`,
+	Short:   "Show detailed status of the validators as deposited in the DepositDetails Contract",
+	Long:    `Show detailed status of the validators as deposited in the DepositDetails Contract.`,
 	Example: "lukso network validator check",
 	Run: func(cmd *cobra.Command, args []string) {
 		// get node conf from --chain param or get default chain
@@ -43,7 +43,7 @@ var validatorDescribeDepositsCmd = &cobra.Command{
 			return
 		}
 
-		err = describeValidatorKey(events.GetUniqueKeys(), address, executionApi, consensusApi, &events)
+		err = network.DescribeValidatorKey(events.GetUniqueKeys(), address, executionApi, consensusApi, &events)
 		if err != nil {
 			cobra.CompErrorln(err.Error())
 			return

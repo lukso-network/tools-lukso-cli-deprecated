@@ -11,7 +11,7 @@ const (
 	CommandOptionChain              = "chain"
 	CommandOptionNodeConf           = "nodeconf"
 	CommandOptionNodeName           = "nodeName"
-	ErrMsgValidatorSecretNotPresent = "validator secret not present, did you setup your validator?"
+	ErrMsgValidatorSecretNotPresent = "Validator secret not present, did you call lukso network validator setup first?"
 	ConfigDirectory                 = "configs"
 	BootnodesDirectory              = "bootnode"
 	ConfigBranchName                = "main"

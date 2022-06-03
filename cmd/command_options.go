@@ -50,5 +50,5 @@ func readDepositAddress(cmd *cobra.Command, nodeConf *network.NodeConfigs) (stri
 		return flag, nil
 	}
 
-	return nodeConf.ValidatorCredentials.Deposit.ContractAddress, nil
+	return nodeConf.DepositDetails.ContractAddress, nil
 }

@@ -40,9 +40,6 @@ activate validators`,
 		if err != nil {
 			// if directory doesn't exist, ignore it
 			if strings.Contains(err.Error(), "no such file or directory") {
-				//if err := os.Mkdir(keystorePath, os.ModePerm); err != nil {
-				//	continue
-				//}
 			} else {
 				cobra.CompErrorln(err.Error())
 				return
@@ -87,12 +84,7 @@ activate validators`,
 		}
 
 		// create secrets
-		valSecrets := nodeConf.GetValSecrets()
-		if valSecrets == nil {
-			cobra.CompErrorln(network.ErrMsgValidatorSecretNotPresent)
-			return
-		}
-
+		valSecrets := nodeConf.CreateCredentials()
 		// generate mnemonic
 		err = valSecrets.GenerateMnemonic()
 		if err != nil {
@@ -101,7 +93,7 @@ activate validators`,
 		}
 
 		// generate deposit data
-		err = valSecrets.GenerateDepositData(numOfVal)
+		err = valSecrets.GenerateDepositData(nodeConf.DepositDetails, numOfVal)
 		if err != nil {
 			cobra.CompErrorln(err.Error())
 			return
@@ -120,11 +112,9 @@ activate validators`,
 			return
 		}
 
-		fmt.Println(valSecrets.Eth1Data)
-
-		valSecrets.Eth1Data = &network.Eth1Details{
-			walletInfo.PubKey,
-			walletInfo.PrivKey,
+		nodeConf.TransactionWallet = &network.TransactionWallet{
+			PublicKey:  walletInfo.PubKey,
+			PrivateKey: walletInfo.PrivKey,
 		}
 
 		// push node config
@@ -136,7 +126,7 @@ activate validators`,
 		fmt.Println("Validator wallet was successfully created. Type")
 		fmt.Println(utils.ConsoleInBlue("        lukso network validator describe"))
 		fmt.Println("to see data related to the validator setup. ")
-		fmt.Println("A transaction wallet will be used to pay for the deposit transaction. ")
+		fmt.Println("A transaction wallet was created to pay for the deposit transaction. ")
 		fmt.Println("The transaction wallet needs at least [staking amount] + [gas costs] LyX before you can create a deposit transaction!")
 
 	},

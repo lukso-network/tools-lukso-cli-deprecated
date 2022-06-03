@@ -8,7 +8,6 @@ import (
 	"fmt"
 	"github.com/lukso-network/lukso-cli/src/network"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 	"os"
 )
 
@@ -35,7 +34,7 @@ func init() {
 
 func updateEnv() {
 	fmt.Println("update env")
-	err := network.GenerateEnvFile(viper.GetString("nodeName"))
+	err := network.GenerateEnvFile()
 	if err != nil {
 		cobra.CompErrorln(err.Error())
 		return

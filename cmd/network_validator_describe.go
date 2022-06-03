@@ -12,7 +12,6 @@ import (
 	"github.com/lukso-network/lukso-cli/src/network"
 	"github.com/lukso-network/lukso-cli/src/utils"
 	"github.com/spf13/cobra"
-	"strings"
 )
 
 // validatorDescribeCmd represents the describe command
@@ -31,38 +30,38 @@ var validatorDescribeCmd = &cobra.Command{
 			return
 		}
 
-		events, err := network.NewDepositEvents(vc.Deposit.ContractAddress, nodeConf.ApiEndpoints.ExecutionApi)
+		events, err := network.NewDepositEvents(nodeConf.DepositDetails.ContractAddress, nodeConf.ApiEndpoints.ExecutionApi)
 		if err != nil {
 			cobra.CompErrorln(fmt.Sprintf("couldn't load deposit data from contract, reason: %s", err.Error()))
 			return
 		}
 
-		valSecrets := nodeConf.GetValSecrets()
+		valSecrets := nodeConf.GetCredentials()
 		if valSecrets == nil {
 			cobra.CompErrorln(network.ErrMsgValidatorSecretNotPresent)
 			return
 		}
 
-		if valSecrets.Eth1Data == nil {
-			cobra.CompErrorln(network.ErrMsgValidatorSecretNotPresent)
+		if nodeConf.TransactionWallet == nil {
+			cobra.CompErrorln("Transaction wallet does not exist, did you forget to run lukso network validator setup?")
 			return
 		}
 
-		utils.ColoredPrintln("Transaction wallet address:", valSecrets.Eth1Data.WalletAddress)
+		utils.ColoredPrintln("Transaction wallet address:", nodeConf.TransactionWallet.PublicKey)
 		client, err := ethclient.Dial(nodeConf.ApiEndpoints.ExecutionApi)
 		if err != nil {
 			cobra.CompErrorln(err.Error())
 			return
 		}
 
-		balance, err := client.BalanceAt(context.Background(), common.HexToAddress(valSecrets.Eth1Data.WalletAddress), nil)
+		balance, err := client.BalanceAt(context.Background(), common.HexToAddress(nodeConf.TransactionWallet.PublicKey), nil)
 		if err != nil {
 			cobra.CompErrorln(err.Error())
 		} else {
 			utils.ColoredPrintln("Transaction wallet balance:", utils.WeiToString(balance, true))
 		}
 
-		depositData, err := network.ParseDepositDataFromFile(valSecrets.Deposit.DepositFileLocation)
+		depositData, err := network.ParseDepositDataFromFile(nodeConf.DepositDetails.DepositFileLocation)
 		if err != nil {
 			cobra.CompErrorln(err.Error())
 			return
@@ -74,20 +73,12 @@ var validatorDescribeCmd = &cobra.Command{
 		for k, d := range depositData {
 			pubKeys[k] = d.PubKey
 		}
-
-		err = describeValidatorKey(pubKeys, vc.Deposit.ContractAddress, nodeConf.ApiEndpoints.ExecutionApi, nodeConf.ApiEndpoints.ConsensusApi, &events)
+		fmt.Println("........................................................................................................................................................................")
+		err = network.DescribeValidatorKey(pubKeys, nodeConf.DepositDetails.ContractAddress, nodeConf.ApiEndpoints.ExecutionApi, nodeConf.ApiEndpoints.ConsensusApi, &events)
 		if err != nil {
 			cobra.CompErrorln(err.Error())
 		}
 	},
-}
-
-func maybeAddHexPrefix(address string) string {
-	a := address
-	if !strings.Contains(address, "0x") {
-		a = fmt.Sprintf("0x%s", address)
-	}
-	return strings.ToLower(a)
 }
 
 func init() {
