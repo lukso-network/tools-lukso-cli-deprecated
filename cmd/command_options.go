@@ -12,6 +12,9 @@ const (
 	CommandOptionExecutionApiShort   = "e"
 	CommandOptionDepositAddress      = "address"
 	CommandOptionDepositAddressShort = "a"
+
+	CommandOptionChain    = "chain"
+	CommandOptionNodeName = "nodeName"
 )
 
 func readConsensusApiEndpoint(cmd *cobra.Command, nodeConf *network.NodeConfigs) (string, error) {

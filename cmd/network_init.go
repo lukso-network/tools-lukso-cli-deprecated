@@ -32,8 +32,8 @@ var initCmd = &cobra.Command{
 from the github repository. It also updates node name and IP address in the .env file`,
 	Example: "lukso network init --chain l16 --nodeName my_node",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		chain := network.GetChainByString(viper.GetString(network.CommandOptionChain))
-		nodeName := viper.GetString(network.CommandOptionNodeName)
+		chain := network.GetChainByString(viper.GetString(CommandOptionChain))
+		nodeName := viper.GetString(CommandOptionNodeName)
 
 		isGenerated, err := network.GenerateDefaultNodeConfigsIfDoesntExist(nodeName, chain)
 		if err != nil {
@@ -64,7 +64,7 @@ from the github repository. It also updates node name and IP address in the .env
 
 func init() {
 	networkCmd.AddCommand(initCmd)
-	initCmd.Flags().String(network.CommandOptionNodeName, "", "name of your node as it appears in the stats services")
-	initCmd.MarkFlagRequired(network.CommandOptionNodeName)
-	viper.BindPFlag(network.CommandOptionNodeName, initCmd.Flags().Lookup(network.CommandOptionNodeName))
+	initCmd.Flags().String(CommandOptionNodeName, "", "name of your node as it appears in the stats services")
+	initCmd.MarkFlagRequired(CommandOptionNodeName)
+	viper.BindPFlag(CommandOptionNodeName, initCmd.Flags().Lookup(CommandOptionNodeName))
 }

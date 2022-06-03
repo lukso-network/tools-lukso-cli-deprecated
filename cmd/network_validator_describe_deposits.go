@@ -20,7 +20,7 @@ var validatorDescribeDepositsCmd = &cobra.Command{
 	Example: "lukso network validator check",
 	Run: func(cmd *cobra.Command, args []string) {
 		// get node conf from --chain param or get default chain
-		nodeConf := network.GetDefaultNodeConfigByOptionParam(viper.GetString(network.CommandOptionChain))
+		nodeConf := network.GetDefaultNodeConfigByOptionParam(viper.GetString(CommandOptionChain))
 
 		consensusApi, err := readConsensusApiEndpoint(cmd, nodeConf)
 		if err != nil {

@@ -22,7 +22,7 @@ Leaving out the epoch number gives the latest status.
 	Run: func(cmd *cobra.Command, args []string) {
 		baseUrl, _ := cmd.Flags().GetString("beaconapi")
 		if baseUrl == "" {
-			baseUrl = network.GetDefaultNodeConfigByOptionParam(viper.GetString(network.CommandOptionChain)).ApiEndpoints.ConsensusApi
+			baseUrl = network.GetDefaultNodeConfigByOptionParam(viper.GetString(CommandOptionChain)).ApiEndpoints.ConsensusApi
 		}
 		epoch, _ := cmd.Flags().GetInt64("epoch")
 
