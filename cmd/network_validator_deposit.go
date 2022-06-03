@@ -64,8 +64,12 @@ This tool is necessary to activate new validators`,
 			return
 		}
 		if !dry {
-			fmt.Printf("You successfully deposited %d key(s)! Your keys need to be activated which takes around 8h. You can check the status by calling:\n", totalDeposits)
-			fmt.Println(utils.ConsoleInBlue("        lukso network validator describe"))
+			if totalDeposits == 0 {
+				fmt.Printf("You didn't manage to deposit any keys:\n")
+			} else {
+				fmt.Printf("You successfully deposited %d key(s)! Your keys need to be activated which takes around 8h. You can check the status by calling:\n", totalDeposits)
+				fmt.Println(utils.ConsoleInBlue("        lukso network validator describe"))
+			}
 		} else {
 			fmt.Println("THIS WAS A DRY RUN - you didn't deposit any keys")
 		}

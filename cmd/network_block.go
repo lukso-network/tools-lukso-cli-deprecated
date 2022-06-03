@@ -22,10 +22,13 @@ var blockCmd = &cobra.Command{
 	Example: "lukso network block -n 100",
 	Run: func(cmd *cobra.Command, args []string) {
 		number, _ := cmd.Flags().GetInt64("number")
+		baseUrl, _ := cmd.Flags().GetString(CommandOptionExecutionApi)
 
-		nodeConf := network.MustGetNodeConfig()
+		if baseUrl == "" {
+			baseUrl = network.MustGetNodeConfig().ApiEndpoints.ExecutionApi
+		}
 
-		client, err := ethclient.Dial(nodeConf.ApiEndpoints.ExecutionApi)
+		client, err := ethclient.Dial(baseUrl)
 		if err != nil {
 			cobra.CompErrorln(err.Error())
 			return
@@ -54,4 +57,5 @@ var blockCmd = &cobra.Command{
 func init() {
 	networkCmd.AddCommand(blockCmd)
 	blockCmd.Flags().Int64P("number", "n", -2, "block number of geth block")
+	blockCmd.Flags().StringP(CommandOptionExecutionApi, CommandOptionExecutionApiShort, "", "executionApi endpoint")
 }

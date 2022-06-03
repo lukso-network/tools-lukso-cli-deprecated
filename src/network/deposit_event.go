@@ -5,6 +5,7 @@ import (
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/lukso-network/lukso-cli/api/gethrpc"
 	"github.com/lukso-network/lukso-cli/src/network/contracts"
+	"github.com/lukso-network/lukso-cli/src/utils"
 	"math/big"
 )
 
@@ -82,4 +83,18 @@ func (d DepositEvents) Amount(pubKey string) int64 {
 	}
 
 	return amount
+}
+
+func (d DepositEvents) GetUniqueKeys() []string {
+	m := make(map[string]string, 0)
+	for _, e := range d.Events {
+		m[e.Pubkey] = utils.MaybeAddHexPrefix(e.Pubkey)
+	}
+
+	l := make([]string, 0)
+
+	for _, v := range m {
+		l = append(l, v)
+	}
+	return l
 }

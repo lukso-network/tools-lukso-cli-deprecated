@@ -65,5 +65,6 @@ from the github repository. It also updates node name and IP address in the .env
 func init() {
 	networkCmd.AddCommand(initCmd)
 	initCmd.Flags().String(network.CommandOptionNodeName, "", "set node name")
+	initCmd.MarkFlagRequired(network.CommandOptionNodeName)
 	viper.BindPFlag(network.CommandOptionNodeName, initCmd.Flags().Lookup(network.CommandOptionNodeName))
 }

@@ -49,9 +49,22 @@ func KeyFromWalletAndPasswordFile(keystoreUTCPath string, password string) (*key
 	return key, nil
 }
 
+func ReadPasswordFile(passwordFile string) (string, error) {
+	password, err := ioutil.ReadFile(passwordFile)
+	if err != nil {
+		return "", fmt.Errorf("couldn't read wallet file %v %v", passwordFile, err.Error())
+	}
+
+	return string(password), nil
+}
+
 func PrivateKeyFromKey(key *keystore.Key) string {
 	privateKeyBytes := crypto.FromECDSA(key.PrivateKey)
 	return hexutil.Encode(privateKeyBytes)
+}
+
+func PublicKeyFromKey(k *keystore.Key) string {
+	return k.Address.String()
 }
 
 func PrivateKeyFromHex(privateKey string) (*ecdsa.PrivateKey, error) {
