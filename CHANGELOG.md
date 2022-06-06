@@ -2,7 +2,7 @@
 
 
 
-## [0.2.0] - 2022-06-03
+## [0.2.1] - 2022-06-06
 
 This update prepares the cli for multi chains, has a lot of improvements in std output and 
 offers a new deposit functionality.
@@ -19,6 +19,7 @@ offers a new deposit functionality.
 - new chain env **local**. A network can be setup with **lukso network init --chain local**
 - command **lukso network validator deposits** reads out all deposits in the DepositContract
 - command **lukso network validator byKey** to describe any validator key on any network
+- dev environment for experimenting with nodes
 
 ### Changed
 
@@ -35,6 +36,7 @@ offers a new deposit functionality.
 - cleaned up node_conf.yaml and introduced a new data structure
 - .env has a comment that it is auto generated
 - made **lukso network init** command to prompt for node name if not given
+- fixed problem with startup time of cli -> runs faster
 
 ## [0.0.4] - 2022-05-13
 

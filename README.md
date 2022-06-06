@@ -4,23 +4,12 @@
 ## Download
 
 ### Install
-Use the following command to download `lukso` inside `/usr/local/bin` directory.
-```bash
-sudo curl https://raw.githubusercontent.com/lukso-network/lukso-cli/main/cli_downloader.sh | sudo bash
-```
-
-or
+Use the following command to download `lukso` inside `/usr/local/bin` directory.  
 
 ```
 sudo curl https://raw.githubusercontent.com/lukso-network/lukso-cli/main/install.sh | sudo bash
 ```
-
-RC:
-
-```
-sudo curl https://raw.githubusercontent.com/lukso-network/lukso-cli/main/install-rc.sh | sudo bash
-```
-
+ 
 
 ### Download
 
@@ -33,7 +22,7 @@ sudo curl https://raw.githubusercontent.com/lukso-network/lukso-cli/main/downloa
 
 Or use go installer to install `lukso-cli` into your GOPATH
 ```bash
-go install github.com/lukso-network/lukso-cli@v0.0.4
+go install github.com/lukso-network/lukso-cli@v0.2.1
 ```
 The cli distinguishes subcommands. You can always 
 
