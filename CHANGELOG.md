@@ -34,6 +34,7 @@ offers a new deposit functionality.
 - changed the **lukso network init** to receive configs from different directory
 - cleaned up node_conf.yaml and introduced a new data structure
 - .env has a comment that it is auto generated
+- made **lukso network init** command to prompt for node name if not given
 
 ## [0.0.4] - 2022-05-13
 

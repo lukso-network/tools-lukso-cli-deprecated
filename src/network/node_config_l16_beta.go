@@ -1,11 +1,5 @@
 package network
 
-import "os"
-
-// Generate node IP and Hostname dynamically
-var myPublicIP, _ = getPublicIP()
-var myHostName, _ = os.Hostname()
-
 var DefaultL16BetaNodeConfigs = &NodeConfigs{
 	Chain: &ChainConfig{
 		Name: ChainL16Beta,
@@ -17,10 +11,7 @@ var DefaultL16BetaNodeConfigs = &NodeConfigs{
 	Keystore: &DataVolume{
 		Volume: "./keystore",
 	},
-	Node: &NodeDetails{
-		IP:   myPublicIP,
-		Name: myHostName,
-	},
+	Node: &NodeDetails{},
 	Execution: &ClientDetails{
 		StatsAddress: "35.204.4.181",
 		Verbosity:    "3",

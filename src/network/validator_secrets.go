@@ -6,23 +6,23 @@ import (
 )
 
 type DepositDetails struct {
-	Amount              string `yaml:",omitempty"`
-	ContractAddress     string `yaml:",omitempty"`
-	DepositFileLocation string `yaml:",omitempty"`
-	ForkVersion         string `yaml:",omitempty"`
+	Amount              string `yaml:""`
+	ContractAddress     string `yaml:""`
+	DepositFileLocation string `yaml:""`
+	ForkVersion         string `yaml:""`
 }
 
 type ValidatorCredentials struct {
-	ValidatorMnemonic  string `yaml:",omitempty"`
-	WithdrawalMnemonic string `yaml:",omitempty"`
+	ValidatorMnemonic  string `yaml:""`
+	WithdrawalMnemonic string `yaml:""`
 }
 
 type ValidatorSecretsV0 struct {
-	ValidatorMnemonic  string `yaml:",omitempty"`
-	WithdrawalMnemonic string `yaml:",omitempty"`
-	ForkVersion        string `yaml:",omitempty"`
+	ValidatorMnemonic  string `yaml:""`
+	WithdrawalMnemonic string `yaml:""`
+	ForkVersion        string `yaml:""`
 
-	Deposit *DepositDetails `yaml:",omitempty"`
+	Deposit *DepositDetails `yaml:""`
 }
 
 func (valSec *ValidatorCredentials) WriteToFile(fileName string) error {

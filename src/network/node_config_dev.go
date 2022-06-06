@@ -1,9 +1,9 @@
 package network
 
-var DefaultLocalNodeConfigs = &NodeConfigs{
+var DefaultDevNodeConfigs = &NodeConfigs{
 	Chain: &ChainConfig{
-		Name: ChainLocal,
-		ID:   "190578",
+		Name: ChainDev,
+		ID:   "00000000",
 	},
 	Configs: &DataVolume{
 		Volume: "./configs",
@@ -13,20 +13,20 @@ var DefaultLocalNodeConfigs = &NodeConfigs{
 	},
 	Node: &NodeDetails{},
 	Execution: &ClientDetails{
-		StatsAddress: "127.0.0.1",
+		StatsAddress: "EXECUTION_STATS_ADDRESS",
 		Verbosity:    "3",
 		Version:      "v0.2.0-dev",
 		Etherbase:    "0x7781121fd00A009670E31b76A2bf99b3A2D6878D",
 		DataVolume:   "./data/execution_data",
-		NetworkId:    "19191919",
-		Bootnode:     "",
+		NetworkId:    "NETWORK_ID",
+		Bootnode:     "EXECUTION_BOOTNODE",
 	},
 	Consensus: &ClientDetails{
-		StatsAddress: "127.0.0.1",
+		StatsAddress: "CONSENSUS_STATS_ADDRESS",
 		Verbosity:    "info",
 		Version:      "v0.2.3-dev",
 		DataVolume:   "./data/consensus_data",
-		Bootnode:     "",
+		Bootnode:     "CONSENSUS_BOOTNODE",
 	},
 	Validator: &ClientDetails{
 		DataVolume: "./data/validator_data",
@@ -39,11 +39,11 @@ var DefaultLocalNodeConfigs = &NodeConfigs{
 		},
 	},
 	ApiEndpoints: &NodeApi{
-		ConsensusApi: "http://localhost:3500",
-		ExecutionApi: "http://localhost:8545",
+		ConsensusApi: "ConsensusApi",
+		ExecutionApi: "ExecutionApi",
 	},
 	DepositDetails: &DepositDetails{
-		Amount:              "32000000000",
+		Amount:              "Amount",
 		ContractAddress:     "0x4242424242424242424242424242424242424242",
 		DepositFileLocation: "./deposit_data.json",
 		ForkVersion:         "0x60000069",

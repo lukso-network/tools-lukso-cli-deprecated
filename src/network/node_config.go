@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"io/ioutil"
 	"os"
 
 	"gopkg.in/yaml.v3"
@@ -19,77 +20,79 @@ func GetDefaultNodeConfig(chain Chain) *NodeConfigs {
 		return DefaultL16BetaNodeConfigs
 	case Local:
 		return DefaultLocalNodeConfigs
+	case Dev:
+		return DefaultDevNodeConfigs
 	default:
 		return DefaultL16BetaNodeConfigs
 	}
 }
 
 type DataVolume struct {
-	Volume string `yaml:",omitempty"`
+	Volume string `yaml:""`
 }
 
 type NodeDetails struct {
-	IP   string `yaml:",omitempty"`
-	Name string `yaml:",omitempty"`
+	IP   string `yaml:""`
+	Name string `yaml:""`
 }
 
 type ClientDetails struct {
-	StatsAddress string `yaml:",omitempty"`
-	Verbosity    string `yaml:",omitempty"`
-	Etherbase    string `yaml:",omitempty"`
-	DataVolume   string `yaml:",omitempty"`
-	NetworkId    string `yaml:",omitempty"`
-	Bootnode     string `yaml:",omitempty"`
-	Version      string `yaml:",omitempty"`
+	StatsAddress string `yaml:""`
+	Verbosity    string `yaml:""`
+	Etherbase    string `yaml:""`
+	DataVolume   string `yaml:""`
+	NetworkId    string `yaml:""`
+	Bootnode     string `yaml:""`
+	Version      string `yaml:""`
 }
 
 type PortDescription struct {
-	HttpPort string `yaml:",omitempty"`
-	PeerPort string `yaml:",omitempty"`
+	HttpPort string `yaml:""`
+	PeerPort string `yaml:""`
 }
 
 type NodeApi struct {
-	ConsensusApi string `yaml:",omitempty"`
-	ExecutionApi string `yaml:",omitempty"`
+	ConsensusApi string `yaml:""`
+	ExecutionApi string `yaml:""`
 }
 
 type ChainConfig struct {
-	Name string `yaml:",omitempty"`
-	ID   string `yaml:",omitempty"`
+	Name string `yaml:""`
+	ID   string `yaml:""`
 }
 
 type NodeConfigs struct {
-	Chain                *ChainConfig          `yaml:",omitempty"`
-	Configs              *DataVolume           `yaml:",omitempty"`
-	Keystore             *DataVolume           `yaml:",omitempty"`
-	Node                 *NodeDetails          `yaml:",omitempty"`
-	Execution            *ClientDetails        `yaml:",omitempty"`
-	Consensus            *ClientDetails        `yaml:",omitempty"`
-	Validator            *ClientDetails        `yaml:",omitempty"`
-	ValidatorCredentials *ValidatorCredentials `yaml:",omitempty"`
-	ApiEndpoints         *NodeApi              `yaml:",omitempty"`
-	TransactionWallet    *TransactionWallet    `yaml:",omitempty"`
-	DepositDetails       *DepositDetails       `yaml:",omitempty"`
+	Chain                *ChainConfig          `yaml:""`
+	Configs              *DataVolume           `yaml:""`
+	Keystore             *DataVolume           `yaml:""`
+	Node                 *NodeDetails          `yaml:""`
+	Execution            *ClientDetails        `yaml:""`
+	Consensus            *ClientDetails        `yaml:""`
+	Validator            *ClientDetails        `yaml:""`
+	ValidatorCredentials *ValidatorCredentials `yaml:""`
+	ApiEndpoints         *NodeApi              `yaml:""`
+	TransactionWallet    *TransactionWallet    `yaml:""`
+	DepositDetails       *DepositDetails       `yaml:""`
 
-	Ports map[string]PortDescription `yaml:",omitempty"`
+	Ports map[string]PortDescription `yaml:""`
 }
 
 type NodeConfigsV0 struct {
-	Configs              *DataVolume           `yaml:",omitempty"`
-	Keystore             *DataVolume           `yaml:",omitempty"`
-	Node                 *NodeDetails          `yaml:",omitempty"`
-	Execution            *ClientDetails        `yaml:",omitempty"`
-	Consensus            *ClientDetails        `yaml:",omitempty"`
-	Validator            *ClientDetails        `yaml:",omitempty"`
-	ValidatorCredentials *ValidatorCredentials `yaml:",omitempty"`
-	ApiEndpoints         *NodeApi              `yaml:",omitempty"`
+	Configs              *DataVolume           `yaml:""`
+	Keystore             *DataVolume           `yaml:""`
+	Node                 *NodeDetails          `yaml:""`
+	Execution            *ClientDetails        `yaml:""`
+	Consensus            *ClientDetails        `yaml:""`
+	Validator            *ClientDetails        `yaml:""`
+	ValidatorCredentials *ValidatorCredentials `yaml:""`
+	ApiEndpoints         *NodeApi              `yaml:""`
 
-	Ports map[string]PortDescription `yaml:",omitempty"`
+	Ports map[string]PortDescription `yaml:""`
 }
 
 type TransactionWallet struct {
-	PublicKey  string `yaml:",omitempty"`
-	PrivateKey string `yaml:",omitempty"`
+	PublicKey  string `yaml:""`
+	PrivateKey string `yaml:""`
 }
 
 func (nc *NodeConfigs) getPort(portName string) *PortDescription {
@@ -135,8 +138,42 @@ func (nc *NodeConfigs) UpdateExternalIP() (bool, error) {
 
 func (nc *NodeConfigs) UpdateBootnodes() (bool, error) {
 	chain := GetChainByString(nc.Chain.Name)
-	GetChainByString(nc.Chain.Name)
 	bootnodes, err := NewBootnodeUpdater(chain).DownloadLatestBootnodes()
+	if err != nil {
+		return false, err
+	}
+
+	if len(bootnodes) == 0 {
+		fmt.Println("No bootnodes available for this chain ", chain.String())
+	}
+
+	hasUpdates := false
+	if nc.Consensus.Bootnode != bootnodes[0].Consensus {
+		fmt.Println("Updating bootnode for the consensus chain...")
+		hasUpdates = true
+		nc.Consensus.Bootnode = bootnodes[0].Consensus
+	}
+	if nc.Execution.Bootnode != bootnodes[0].Execution {
+		fmt.Println("Updating bootnode for the execution chain...")
+		hasUpdates = true
+		nc.Execution.Bootnode = bootnodes[0].Execution
+	}
+
+	if !hasUpdates {
+		return false, nil
+	} else {
+		err := nc.WriteOrUpdateNodeConfig()
+		if err != nil {
+			return false, err
+		}
+		return true, nil
+	}
+}
+
+func (nc *NodeConfigs) InitDevBootnodes(devLocation string) (bool, error) {
+	chain := GetChainByString(nc.Chain.Name)
+	GetChainByString(nc.Chain.Name)
+	bootnodes, err := NewBootnodeUpdaterDev(chain, devLocation).DownloadLatestBootnodes()
 	if err != nil {
 		return false, err
 	}
@@ -197,7 +234,7 @@ func MustGetNodeConfig() *NodeConfigs {
 		os.Exit(1)
 	}
 
-	config, err := getLoadedNodeConfigs()
+	config, err := readNodeConfigsFromFile()
 	if err != nil {
 		cobra.CompErrorln(err.Error())
 		os.Exit(1)
@@ -217,16 +254,17 @@ func LoadNodeConf() (*NodeConfigs, error) {
 		return nil, err
 	}
 
-	return getLoadedNodeConfigs()
+	return readNodeConfigsFromFile()
 }
 
-func getLoadedNodeConfigs() (*NodeConfigs, error) {
-	var nodeConfig NodeConfigs
-	err := viper.Unmarshal(&nodeConfig)
-	if err != nil {
-		return nil, err
-	}
-	return &nodeConfig, nil
+func readNodeConfigsFromFile() (*NodeConfigs, error) {
+	return getConf()
+	//var nodeConfig NodeConfigs
+	//err := viper.Unmarshal(&nodeConfig)
+	//if err != nil {
+	//	return nil, err
+	//}
+	//return &nodeConfig, nil
 }
 
 func LoadNodeConfV0() (*NodeConfigsV0, error) {
@@ -263,4 +301,26 @@ func (n NodeConfigsV0) Upgrade(chain Chain) *NodeConfigs {
 		ApiEndpoints:         n.ApiEndpoints,
 		Ports:                n.Ports,
 	}
+}
+
+func getConf() (*NodeConfigs, error) {
+	yamlFile, err := ioutil.ReadFile(NodeConfigLocation)
+	if err != nil {
+		return nil, err
+	}
+	node := &NodeConfigs{}
+	err = yaml.Unmarshal(yamlFile, node)
+	if err != nil {
+		return nil, err
+	}
+
+	return node, nil
+}
+
+func (config *NodeConfigs) Save() error {
+	yamlData, err := yaml.Marshal(config)
+	if err != nil {
+		return err
+	}
+	return os.WriteFile(NodeConfigLocation, yamlData, os.ModePerm)
 }

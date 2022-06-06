@@ -4,45 +4,27 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"net/url"
 	"os"
-	"path"
 )
 
-func getNetworkDataLocation(chain Chain) (*url.URL, error) {
-	u, err := url.Parse(GitUrl)
+func GetIPAndHostName(nodeName string) (*NodeDetails, error) {
+	ip, err := getPublicIP()
 	if err != nil {
 		return nil, err
 	}
-	u.Path = path.Join(u.Path, ConfigRepoName, ConfigBranchName, chain.String())
-	return u, nil
-}
 
-func getNetworkConfigUrl(chain Chain) (*url.URL, error) {
-	urlWithNetworkName, err := getNetworkDataLocation(chain)
-	if err != nil {
-		return nil, err
+	if nodeName == "" {
+		hostName, err := os.Hostname()
+		if err != nil {
+			return nil, err
+		}
+		nodeName = hostName
 	}
-	urlWithNetworkName.Path = path.Join(urlWithNetworkName.Path, ConfigDirectory)
-	return urlWithNetworkName, nil
-}
 
-func getBootnodeUrl(chain Chain) (*url.URL, error) {
-	urlWithNetworkName, err := getNetworkDataLocation(chain)
-	if err != nil {
-		return nil, err
-	}
-	urlWithNetworkName.Path = path.Join(urlWithNetworkName.Path, BootnodesDirectory, BootnodeJSONName)
-	return urlWithNetworkName, nil
-}
-
-func getConfigFileUrl(chain Chain, fileName string) (*url.URL, error) {
-	urlWithNetworkName, err := getNetworkConfigUrl(chain)
-	if err != nil {
-		return nil, err
-	}
-	urlWithNetworkName.Path = path.Join(urlWithNetworkName.Path, fileName)
-	return urlWithNetworkName, nil
+	return &NodeDetails{
+		IP:   ip,
+		Name: nodeName,
+	}, nil
 }
 
 func getPublicIP() (string, error) {
@@ -66,4 +48,3 @@ func FileExists(filePath string) bool {
 	}
 	return true
 }
-

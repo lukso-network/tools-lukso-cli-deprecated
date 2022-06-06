@@ -34,7 +34,6 @@ func downloadFile(src, dest string) error {
 }
 
 func downloadFileOverHttp(url string) ([]byte, error) {
-	fmt.Println("Fetching bootnodes from", url)
 	// Get the data
 	resp, err := http.Get(url)
 	if err != nil {
@@ -77,18 +76,11 @@ func WriteEnvMap(envMap map[string]string, filename string) error {
 	return err
 }
 
-func GenerateDefaultNodeConfigsIfDoesntExist(nodeName string, chain Chain) (isGenerated bool, err error) {
+func GetDefaultNodeConfigsIfDoesntExist(chain Chain) *NodeConfigs {
 	if !FileExists(NodeConfigLocation) {
-		var nodeConfig = GetDefaultNodeConfig(chain)
-		nodeConfig.Node.Name = nodeName
-		err := nodeConfig.WriteOrUpdateNodeConfig()
-		if err != nil {
-			return false, err
-		} else {
-			return true, nil
-		}
+		return GetDefaultNodeConfig(chain)
 	}
-	return false, nil
+	return nil
 }
 
 func SetupNetwork(chain Chain) error {
@@ -100,4 +92,10 @@ func SetupNetwork(chain Chain) error {
 	}
 
 	return NewResourceDownloader(chain, clientVersion).DownloadAll()
+}
+
+func SetupDevNetwork(devLocation string) error {
+	fmt.Printf("Setting up node for dev chain %s.\n", devLocation)
+	clientVersion := BeaconClientPrysm
+	return NewDevResourceDownloader(devLocation, clientVersion).DownloadAll()
 }

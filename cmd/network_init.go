@@ -17,11 +17,13 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"errors"
 	"fmt"
 	"github.com/lukso-network/lukso-cli/src/network"
+	"github.com/lukso-network/lukso-cli/src/utils"
+	"github.com/manifoldco/promptui"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"os"
 )
 
 // initCmd represents the setup command
@@ -33,26 +35,94 @@ from the github repository. It also updates node name and IP address in the .env
 	Example: "lukso network init --chain l16 --nodeName my_node",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		chain := network.GetChainByString(viper.GetString(CommandOptionChain))
-		nodeName := viper.GetString(CommandOptionNodeName)
+		nodeName, _ := cmd.Flags().GetString(CommandOptionNodeName)
+		devConfig, _ := cmd.Flags().GetString(CommandOptionDevConfig)
 
-		isGenerated, err := network.GenerateDefaultNodeConfigsIfDoesntExist(nodeName, chain)
-		if err != nil {
-			cobra.CompErrorln(err.Error())
-			os.Exit(1)
+		if chain == network.Dev && devConfig == "" {
+			utils.PrintColoredError("you need to provide a dev location if you want to use a dev chain: lukso network init --nodeName [NAME] -d test --chain dev")
+			return nil
 		}
 
-		if !isGenerated {
+		if nodeName == "" {
+			// set number of validators
+			prompt := promptui.Prompt{
+				Label: "Enter the name of your node (how it appears on the stat pages)",
+				Validate: func(input string) error {
+					if input == "" {
+						return errors.New("your node name cannot be empty")
+					}
+					return nil
+				},
+			}
+
+			name, err := prompt.Run()
+			if err != nil {
+				cobra.CompErrorln(err.Error())
+				return nil
+			}
+			nodeName = name
+		}
+
+		nodeConf := network.GetDefaultNodeConfigsIfDoesntExist(chain)
+		if nodeConf == nil {
 			fmt.Println("A node is already setup in this location. Choose another location to setup a node for a different chain or modify this node by editing ./node_conf.yaml.")
 			return nil
 		}
-		config := network.MustGetNodeConfig()
 
-		err = network.SetupNetwork(chain)
+		// Get IP And HostName
+		nodeDetails, err := network.GetIPAndHostName(nodeName)
 		if err != nil {
-			cobra.CompError(err.Error())
+			utils.PrintColoredError(fmt.Sprintf("\ncouldn't ip or host name, reason %s", err.Error()))
+			return nil
+		}
+		nodeConf.Node = nodeDetails
+		// download node params
+		if chain == network.Dev {
+			nodeParams := network.NewNodeParams()
+			fmt.Println("devConfig:", devConfig)
+			location := nodeParams.GetLocation(devConfig)
+			fmt.Printf("Loading node params from  %s ...", location)
+			err := nodeParams.LoadNodeParams(location)
+			if err != nil {
+				fmt.Println("unsuccessful")
+				utils.PrintColoredError(fmt.Sprintf("couldn't load node params for dev chain, reason %s", err.Error()))
+				return nil
+			}
+			nodeConf.ApiEndpoints = &network.NodeApi{
+				ConsensusApi: nodeParams.ConsensusAPI,
+				ExecutionApi: nodeParams.ExecutionAPI,
+			}
+			nodeConf.Chain.ID = nodeParams.NetworkID
+			nodeConf.Execution.NetworkId = nodeParams.NetworkID
+			nodeConf.Execution.StatsAddress = nodeParams.ExecutionStats
+			nodeConf.Consensus.StatsAddress = nodeParams.ConsensusStats
+			nodeConf.DepositDetails.Amount = nodeParams.MinStakeAmount
+
+			fmt.Println("success")
 		}
 
-		_, err = config.UpdateBootnodes()
+		err = nodeConf.Save()
+		if err != nil {
+			utils.PrintColoredError(fmt.Sprintf("\ncouldn't save %s, reason %s", network.NodeConfigLocation, err.Error()))
+			return nil
+		}
+
+		// when chain is dev -> download the settings for this chain
+		if chain == network.Dev {
+			err = network.SetupDevNetwork(devConfig)
+		} else {
+			err = network.SetupNetwork(chain)
+		}
+		if err != nil {
+			cobra.CompError(err.Error())
+			return nil
+		}
+
+		if chain == network.Dev {
+			_, err = nodeConf.InitDevBootnodes(devConfig)
+		} else {
+			_, err = nodeConf.UpdateBootnodes()
+		}
 		if err != nil {
 			fmt.Println("couldn't update bootnodes, reason:", err.Error())
 		}
@@ -65,6 +135,5 @@ from the github repository. It also updates node name and IP address in the .env
 func init() {
 	networkCmd.AddCommand(initCmd)
 	initCmd.Flags().String(CommandOptionNodeName, "", "name of your node as it appears in the stats services")
-	initCmd.MarkFlagRequired(CommandOptionNodeName)
-	viper.BindPFlag(CommandOptionNodeName, initCmd.Flags().Lookup(CommandOptionNodeName))
+	initCmd.Flags().StringP(CommandOptionDevConfig, "d", "", "location of the dev configuration")
 }

@@ -11,6 +11,7 @@ import (
 	"github.com/lukso-network/lukso-cli/src/network"
 	"github.com/lukso-network/lukso-cli/src/utils"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 // balanceCmd represents the balance command
@@ -25,9 +26,15 @@ var balanceCmd = &cobra.Command{
 			cobra.CompError("address must be given")
 			return
 		}
-		nodeConf := network.MustGetNodeConfig()
+		// get node conf from --chain param or get default chain
+		nodeConf := network.GetDefaultNodeConfigByOptionParam(viper.GetString(CommandOptionChain))
+		executionApi, err := readExecutionApiEndpoint(cmd, nodeConf)
+		if err != nil {
+			cobra.CompErrorln(err.Error())
+			return
+		}
 
-		client, err := ethclient.Dial(nodeConf.ApiEndpoints.ExecutionApi)
+		client, err := ethclient.Dial(executionApi)
 		if err != nil {
 			cobra.CompErrorln(err.Error())
 			return
@@ -46,4 +53,5 @@ var balanceCmd = &cobra.Command{
 func init() {
 	networkCmd.AddCommand(balanceCmd)
 	balanceCmd.Flags().StringP("address", "a", "", "ethereum address")
+	balanceCmd.Flags().StringP(CommandOptionExecutionApi, CommandOptionExecutionApiShort, "", "execution api endpoint")
 }

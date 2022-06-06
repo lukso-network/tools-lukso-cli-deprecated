@@ -9,6 +9,7 @@ const (
 	L16
 	L16Beta
 	Local
+	Dev
 
 	DefaultNetworkID = "l16beta"
 )
@@ -30,6 +31,8 @@ func (c Chain) String() string {
 		return ChainL16Beta
 	case Local:
 		return ChainLocal
+	case Dev:
+		return ChainDev
 	default:
 		return "unknown chain"
 	}
@@ -46,6 +49,8 @@ func GetChainByString(chainId string) Chain {
 		return MainNet
 	case "local":
 		return Local
+	case "dev":
+		return Dev
 	default:
 		return L16Beta
 	}
