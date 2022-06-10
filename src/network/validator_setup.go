@@ -78,6 +78,7 @@ func (valSec *ValidatorCredentials) GenerateDepositData(details *DepositDetails,
 		"--fork-version", details.ForkVersion,
 		"--source-max", fmt.Sprintf("%d", numberOfValidators),
 		"--source-min", "0",
+		"--amount", details.Amount,
 		"--validators-mnemonic", valSec.ValidatorMnemonic,
 		"--withdrawals-mnemonic", valSec.WithdrawalMnemonic,
 	)
