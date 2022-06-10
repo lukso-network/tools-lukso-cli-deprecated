@@ -78,14 +78,14 @@ type NodeConfigs struct {
 }
 
 type NodeConfigsV0 struct {
-	Configs              *DataVolume           `yaml:""`
-	Keystore             *DataVolume           `yaml:""`
-	Node                 *NodeDetails          `yaml:""`
-	Execution            *ClientDetails        `yaml:""`
-	Consensus            *ClientDetails        `yaml:""`
-	Validator            *ClientDetails        `yaml:""`
-	ValidatorCredentials *ValidatorCredentials `yaml:""`
-	ApiEndpoints         *NodeApi              `yaml:""`
+	Configs              *DataVolume         `yaml:""`
+	Keystore             *DataVolume         `yaml:""`
+	Node                 *NodeDetails        `yaml:""`
+	Execution            *ClientDetails      `yaml:""`
+	Consensus            *ClientDetails      `yaml:""`
+	Validator            *ClientDetails      `yaml:""`
+	ValidatorCredentials *ValidatorSecretsV0 `yaml:""`
+	ApiEndpoints         *NodeApi            `yaml:""`
 
 	Ports map[string]PortDescription `yaml:""`
 }
@@ -297,10 +297,13 @@ func (n NodeConfigsV0) Upgrade(chain Chain) *NodeConfigs {
 		Execution:            n.Execution,
 		Consensus:            n.Consensus,
 		Validator:            n.Validator,
-		ValidatorCredentials: n.ValidatorCredentials,
-		ApiEndpoints:         n.ApiEndpoints,
-		Ports:                n.Ports,
+		ValidatorCredentials: &ValidatorCredentials{},
+		ApiEndpoints:         defaultConfig.ApiEndpoints,
+		TransactionWallet:    &TransactionWallet{},
+		DepositDetails:       defaultConfig.DepositDetails,
+		Ports:                defaultConfig.Ports,
 	}
+
 }
 
 func getConf() (*NodeConfigs, error) {

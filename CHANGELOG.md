@@ -2,12 +2,22 @@
 
 
 
+## [v0.2.2] -
+
+
+### Fixed
+
+- amount in validator setup
+
 ## [0.2.1] - 2022-06-06
 
 This update prepares the cli for multi chains, has a lot of improvements in std output and 
 offers a new deposit functionality.
 
 ### Added
+### Changed
+- network balance show denominated balances
+### Fixed
 
 - command **lukso network block -n N** that will return the N-th execution block
 - command **lukso network validator start** that will start a validator
