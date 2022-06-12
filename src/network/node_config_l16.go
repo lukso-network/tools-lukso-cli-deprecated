@@ -2,7 +2,7 @@ package network
 
 var DefaultL16NodeConfigs = &NodeConfigs{
 	Chain: &ChainConfig{
-		Name: ChainL16Beta,
+		Name: ChainL16,
 		ID:   "2828",
 	},
 	Configs: &DataVolume{
