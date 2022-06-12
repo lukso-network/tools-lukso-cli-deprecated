@@ -39,7 +39,6 @@ func Deposit(
 	if err != nil {
 		return -1, err
 	}
-	fmt.Println(tk)
 
 	fmt.Printf("dialing into rpc endpoint %s........ ", rpcEndpoint)
 	client, err := ethclient.Dial(rpcEndpoint)
