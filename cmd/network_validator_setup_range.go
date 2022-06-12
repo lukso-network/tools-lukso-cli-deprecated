@@ -11,25 +11,26 @@ import (
 	"github.com/lukso-network/lukso-cli/src/utils"
 	"github.com/lukso-network/lukso-cli/src/wallet"
 	"github.com/manifoldco/promptui"
-	"strconv"
 	"strings"
 
 	"github.com/spf13/cobra"
 )
 
 // setupCmd represents the setup command
-var setupCmd = &cobra.Command{
-	Use:   "setup",
-	Short: "Prepare a validator to join the network",
+var setupRangeCmd = &cobra.Command{
+	Use:   "range",
+	Short: "Prepare a keystore to join the network",
 	Long: `This command prepares wallet, deposit_data and creates a secret.yaml file. These files are necessary to
-activate validators`,
-	Example: "lukso network validator setup",
+activate validators. The command gives greater control than "lukso network validator setup" over creating a keystore by describing the position of the keys derived from the mnemonic.`,
+	Example: "lukso network validator setup range --from 0 --to 10",
 	Run: func(cmd *cobra.Command, args []string) {
-		// Checks
-		// load node config
+		vRange, err := readRangeFromCommand(cmd)
+		if err != nil {
+			utils.PrintColoredError(err.Error())
+			return
+		}
 		nodeConf := network.MustGetNodeConfig()
 
-		// check if keystore is empty
 		keystorePath := nodeConf.Keystore.Volume
 		isKeystoreEmpty, err := utils.IsDirectoryEmpty(keystorePath)
 		if err != nil {
@@ -42,6 +43,35 @@ activate validators`,
 		}
 		if !isKeystoreEmpty {
 			cobra.CompError("The keystore directory is not empty. In order to setup the validator you need an empty keystore directory. \nConsider setting up the node in a different location.\n")
+			return
+		}
+
+		// preparing credentials
+		fmt.Println("Creating keystore")
+		// create secrets
+		if !nodeConf.HasMnemonic() {
+			valSecrets := nodeConf.CreateCredentials()
+			// generate mnemonic
+			err = valSecrets.GenerateMnemonic()
+			if err != nil {
+				cobra.CompErrorln(err.Error())
+				return
+			}
+		}
+
+		nodeConf.ValidatorCredentials.ValidatorIndexTo = vRange.To
+		nodeConf.ValidatorCredentials.ValidatorIndexFrom = vRange.From
+		if err = nodeConf.Save(); err != nil {
+			cobra.CompErrorln(err.Error())
+			return
+		}
+		// _ prepared the credentials
+
+		// Everything is alright -> create the keystore
+		fmt.Println("Creating keystore with the following configuration")
+		nodeConf.ValidatorCredentials.Print()
+		if !promptDoYouWantToContinue() {
+			fmt.Println("Creation canceled")
 			return
 		}
 
@@ -62,40 +92,23 @@ activate validators`,
 			return
 		}
 
-		// set number of validators
-		prompt = promptui.Prompt{
-			Label: "How Many Validators Do You Want To Run",
-		}
-
-		numOfValString, err := prompt.Run()
-		if err != nil {
-			cobra.CompErrorln(err.Error())
-			return
-		}
-		numOfVal, err := strconv.Atoi(numOfValString)
-		if err != nil {
-			cobra.CompErrorln(err.Error())
-			return
-		}
-
-		// create secrets
-		valSecrets := nodeConf.CreateCredentials()
-		// generate mnemonic
-		err = valSecrets.GenerateMnemonic()
-		if err != nil {
-			cobra.CompErrorln(err.Error())
-			return
-		}
-
 		// generate deposit data
-		err = valSecrets.GenerateDepositData(nodeConf.DepositDetails, numOfVal)
+		valSecrets := nodeConf.ValidatorCredentials
+
+		err = valSecrets.GenerateDepositDataWithRange(nodeConf.DepositDetails, vRange)
 		if err != nil {
 			cobra.CompErrorln(err.Error())
 			return
 		}
 
 		// generate wallet
-		err = valSecrets.GenerateKeystore(numOfVal, password)
+		err = valSecrets.GenerateKeystoreWithRange(vRange, password)
+		if err != nil {
+			cobra.CompErrorln(err.Error())
+			return
+		}
+
+		err = nodeConf.Save()
 		if err != nil {
 			cobra.CompErrorln(err.Error())
 			return
@@ -112,23 +125,36 @@ activate validators`,
 			PrivateKey: walletInfo.PrivKey,
 		}
 
-		nodeConf.ValidatorCredentials.ValidatorIndexTo = 0
-		nodeConf.ValidatorCredentials.ValidatorIndexFrom = int64(numOfVal)
-
+		// push node config
 		err = nodeConf.Save()
 		if err != nil {
 			cobra.CompErrorln(err.Error())
 			return
 		}
+
 		fmt.Println("Validator wallet was successfully created. Type")
 		fmt.Println(utils.ConsoleInBlue("        lukso network validator describe"))
 		fmt.Println("to see data related to the validator setup. ")
 		fmt.Println("A transaction wallet was created to pay for the deposit transaction. ")
-		fmt.Println("The transaction wallet needs at least [staking amount] + [gas costs] LyX before you can create a deposit transaction!")
+		fmt.Println("The transaction wallet needs at least [staking amount] + [gas costs] LYX before you can create a deposit transaction!")
 
 	},
 }
 
 func init() {
-	validatorCmd.AddCommand(setupCmd)
+	setupCmd.AddCommand(setupRangeCmd)
+	setupRangeCmd.Flags().Int64P(CommandOptionFrom, CommandOptionFromShort, -1, "from position of validator key")
+	setupRangeCmd.Flags().Int64P(CommandOptionTo, CommandOptionToShort, -1, "from position of validator key")
+}
+
+func promptDoYouWantToContinue() bool {
+	prompt := promptui.Prompt{
+		Label:     "Do you want to continue?",
+		IsConfirm: true,
+	}
+	result, err := prompt.Run()
+	if err != nil {
+		return false
+	}
+	return result == "y"
 }

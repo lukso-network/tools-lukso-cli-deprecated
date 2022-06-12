@@ -16,6 +16,8 @@ func GetDefaultNodeConfigByOptionParam(chain string) *NodeConfigs {
 
 func GetDefaultNodeConfig(chain Chain) *NodeConfigs {
 	switch chain {
+	case L16:
+		return DefaultL16NodeConfigs
 	case L16Beta:
 		return DefaultL16BetaNodeConfigs
 	case Local:
@@ -41,7 +43,6 @@ type ClientDetails struct {
 	Verbosity    string `yaml:""`
 	Etherbase    string `yaml:""`
 	DataVolume   string `yaml:""`
-	NetworkId    string `yaml:""`
 	Bootnode     string `yaml:""`
 	Version      string `yaml:""`
 }
@@ -73,19 +74,6 @@ type NodeConfigs struct {
 	ApiEndpoints         *NodeApi              `yaml:""`
 	TransactionWallet    *TransactionWallet    `yaml:""`
 	DepositDetails       *DepositDetails       `yaml:""`
-
-	Ports map[string]PortDescription `yaml:""`
-}
-
-type NodeConfigsV0 struct {
-	Configs              *DataVolume         `yaml:""`
-	Keystore             *DataVolume         `yaml:""`
-	Node                 *NodeDetails        `yaml:""`
-	Execution            *ClientDetails      `yaml:""`
-	Consensus            *ClientDetails      `yaml:""`
-	Validator            *ClientDetails      `yaml:""`
-	ValidatorCredentials *ValidatorSecretsV0 `yaml:""`
-	ApiEndpoints         *NodeApi            `yaml:""`
 
 	Ports map[string]PortDescription `yaml:""`
 }
@@ -259,51 +247,6 @@ func LoadNodeConf() (*NodeConfigs, error) {
 
 func readNodeConfigsFromFile() (*NodeConfigs, error) {
 	return getConf()
-	//var nodeConfig NodeConfigs
-	//err := viper.Unmarshal(&nodeConfig)
-	//if err != nil {
-	//	return nil, err
-	//}
-	//return &nodeConfig, nil
-}
-
-func LoadNodeConfV0() (*NodeConfigsV0, error) {
-	viper.AddConfigPath(".")
-	viper.SetConfigType("yaml")
-	viper.SetConfigName("node_config")
-
-	viper.AutomaticEnv()
-
-	if err := viper.ReadInConfig(); err == nil {
-	} else {
-		return nil, err
-	}
-
-	var nodeConfig NodeConfigsV0
-	err := viper.Unmarshal(&nodeConfig)
-	if err != nil {
-		return nil, err
-	}
-	return &nodeConfig, nil
-}
-
-func (n NodeConfigsV0) Upgrade(chain Chain) *NodeConfigs {
-	defaultConfig := GetDefaultNodeConfig(chain)
-	return &NodeConfigs{
-		Chain:                defaultConfig.Chain,
-		Configs:              n.Configs,
-		Keystore:             n.Keystore,
-		Node:                 n.Node,
-		Execution:            n.Execution,
-		Consensus:            n.Consensus,
-		Validator:            n.Validator,
-		ValidatorCredentials: &ValidatorCredentials{},
-		ApiEndpoints:         defaultConfig.ApiEndpoints,
-		TransactionWallet:    &TransactionWallet{},
-		DepositDetails:       defaultConfig.DepositDetails,
-		Ports:                defaultConfig.Ports,
-	}
-
 }
 
 func getConf() (*NodeConfigs, error) {
@@ -326,4 +269,12 @@ func (config *NodeConfigs) Save() error {
 		return err
 	}
 	return os.WriteFile(NodeConfigLocation, yamlData, os.ModePerm)
+}
+
+func (config *NodeConfigs) HasMnemonic() bool {
+	if config.ValidatorCredentials == nil {
+		return false
+	}
+
+	return config.ValidatorCredentials.ValidatorMnemonic == "" || config.ValidatorCredentials.WithdrawalMnemonic == ""
 }

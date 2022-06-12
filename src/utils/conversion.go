@@ -217,7 +217,7 @@ func integerStringToWei(amount string, unit string, result *big.Int) error {
 
 // Metric units
 //var metricUnits = [...]string{"Wei", "KWei", "MWei", "GWei", "Microether", "Milliether", "Ether", "Kiloether", "Megaether", "Gigaether", "Teraether"}
-var metricUnits = [...]string{"Wei", "KWei", "MWei", "GWei", "Microlyx", "Millilyx", "LyX", "Kilolyx", "Megalyx", "Gigalyx", "Teralyx"}
+var metricUnits = [...]string{"Wei", "KWei", "MWei", "GWei", "MicroLYX", "MilliLYX", "LYX", "KiloLYX", "MegaLYX", "GigaLYX", "TeraLYX"}
 
 // Named units
 // var namedUnits = [...]string{"Wei", "Ada", "Babbage", "Shannon", "Szazbo", "Finney", "Ether", "Einstein", "Kilo", "Mega", "Giga", "Tera"}

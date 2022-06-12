@@ -18,7 +18,7 @@ const (
 	Currently Supported Networks
 */
 func IsChainSupported(chain Chain) bool {
-	return chain == L16Beta || chain == Local
+	return chain == L16Beta || chain == Local || chain == L16
 }
 
 func (c Chain) String() string {

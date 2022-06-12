@@ -18,7 +18,6 @@ var DefaultDevNodeConfigs = &NodeConfigs{
 		Version:      "v0.2.0-dev",
 		Etherbase:    "0x7781121fd00A009670E31b76A2bf99b3A2D6878D",
 		DataVolume:   "./data/execution_data",
-		NetworkId:    "NETWORK_ID",
 		Bootnode:     "EXECUTION_BOOTNODE",
 	},
 	Consensus: &ClientDetails{

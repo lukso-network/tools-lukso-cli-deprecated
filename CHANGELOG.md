@@ -1,6 +1,17 @@
 # Change Log
 
 
+## [v0.3.0] -
+
+
+### Added
+
+- command **lukso network validator setup range --from [FROM_POSITION] --to [TO_POSITION]
+- added possibility to run l16 with **lukso network init --chain l16**
+
+### Fixed
+
+- spelling of LYX
 
 ## [v0.2.2] -
 
@@ -13,8 +24,7 @@
 
 This update prepares the cli for multi chains, has a lot of improvements in std output and 
 offers a new deposit functionality.
-
-### Added
+ 
 ### Changed
 - network balance show denominated balances
 ### Fixed
