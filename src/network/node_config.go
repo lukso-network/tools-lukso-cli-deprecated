@@ -278,3 +278,7 @@ func (config *NodeConfigs) HasMnemonic() bool {
 
 	return config.ValidatorCredentials.ValidatorMnemonic == "" || config.ValidatorCredentials.WithdrawalMnemonic == ""
 }
+
+func (config *NodeConfigs) GetChain() Chain {
+	return GetChainByString(config.Chain.Name)
+}

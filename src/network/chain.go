@@ -38,6 +38,15 @@ func (c Chain) String() string {
 	}
 }
 
+func (c Chain) GetCurrencySymbol() string {
+	switch c {
+	case MainNet:
+		return "LYX"
+	default:
+		return "LYXt"
+	}
+}
+
 func GetChainByString(chainId string) Chain {
 	c := strings.ToLower(chainId)
 	switch c {

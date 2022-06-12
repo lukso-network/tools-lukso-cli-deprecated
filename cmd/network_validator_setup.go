@@ -112,8 +112,8 @@ activate validators`,
 			PrivateKey: walletInfo.PrivKey,
 		}
 
-		nodeConf.ValidatorCredentials.ValidatorIndexTo = 0
-		nodeConf.ValidatorCredentials.ValidatorIndexFrom = int64(numOfVal)
+		nodeConf.ValidatorCredentials.ValidatorIndexTo = int64(numOfVal)
+		nodeConf.ValidatorCredentials.ValidatorIndexFrom = 0
 
 		err = nodeConf.Save()
 		if err != nil {
@@ -124,8 +124,7 @@ activate validators`,
 		fmt.Println(utils.ConsoleInBlue("        lukso network validator describe"))
 		fmt.Println("to see data related to the validator setup. ")
 		fmt.Println("A transaction wallet was created to pay for the deposit transaction. ")
-		fmt.Println("The transaction wallet needs at least [staking amount] + [gas costs] LyX before you can create a deposit transaction!")
-
+		fmt.Println("The transaction wallet needs at least [staking amount] + [gas costs] LyX before you can create a deposit transaction!", nodeConf.GetChain().GetCurrencySymbol())
 	},
 }
 
