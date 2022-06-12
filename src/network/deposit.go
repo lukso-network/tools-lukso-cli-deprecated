@@ -16,7 +16,15 @@ import (
 	"strings"
 )
 
-func Deposit(contractDepositEvents *DepositEvents, depositData string, contractAddress string, privateKey string, rpcEndpoint string, gasPrice int64, dry bool) (int, error) {
+func Deposit(
+	contractDepositEvents *DepositEvents,
+	depositData string,
+	contractAddress string,
+	privateKey string,
+	rpcEndpoint string,
+	maxGasFee int64,
+	priorityFee int64,
+	dry bool) (int, error) {
 	di, err := loadDepositInfo(depositData)
 	if err != nil {
 		return -1, err
@@ -56,7 +64,7 @@ func Deposit(contractDepositEvents *DepositEvents, depositData string, contractA
 		pubKey := utils.MaybeAddHexPrefix(common.Bytes2Hex(d.PublicKey))
 		amount := new(big.Int).Mul(new(big.Int).SetUint64(d.Amount), big.NewInt(1000000000))
 
-		fmt.Printf("Creating %s deposit for key: %s (GasPrice %d)\n", utils.WeiToString(amount, true), common.Bytes2Hex(d.PublicKey), gasPrice)
+		fmt.Printf("Creating %s deposit for key: %s (PriorityFee/MaxFee %d/%d)\n", utils.WeiToString(amount, true), common.Bytes2Hex(d.PublicKey), priorityFee, maxGasFee)
 
 		totalDepositedAmount := contractDepositEvents.Amount(pubKey)
 
@@ -65,7 +73,7 @@ func Deposit(contractDepositEvents *DepositEvents, depositData string, contractA
 			//continue
 		}
 
-		opts, err := createTransactionOpts(client, &tk, gasPrice)
+		opts, err := createTransactionOpts(client, &tk, priorityFee, maxGasFee)
 		if err != nil {
 			fmt.Println("The transaction failed, reason: ", err.Error())
 			continue
@@ -149,7 +157,7 @@ func verifyDepositInfo(depositInfo []*types.DepositInfo) error {
 	return nil
 }
 
-func createTransactionOpts(client *ethclient.Client, tk *wallet.TransactionKeys, gasPrice int64) (*bind.TransactOpts, error) {
+func createTransactionOpts(client *ethclient.Client, tk *wallet.TransactionKeys, maxFee int64, priorityFee int64) (*bind.TransactOpts, error) {
 	//fetch the last use nonce of account
 	nonce, err := client.PendingNonceAt(context.Background(), tk.PublicKey)
 	if err != nil {
@@ -166,8 +174,8 @@ func createTransactionOpts(client *ethclient.Client, tk *wallet.TransactionKeys,
 	}
 	auth.Nonce = big.NewInt(int64(nonce))
 	auth.GasLimit = uint64(160000) // in units
-	auth.GasTipCap = big.NewInt(2500000000)
-	auth.GasFeeCap = big.NewInt(2500000014)
+	auth.GasTipCap = big.NewInt(priorityFee)
+	auth.GasFeeCap = big.NewInt(maxFee)
 	//auth.GasPrice = big.NewInt(gasPrice)
 
 	return auth, err

@@ -70,7 +70,7 @@ func TestE22Deposit(t *testing.T) {
 		return
 	}
 
-	count, err := network.Deposit(&events, "../test_data/deposit_data.json", contractAddressAlt, privateKey, rpcEndpoint, 1000000, false)
+	count, err := network.Deposit(&events, "../test_data/deposit_data.json", contractAddressAlt, privateKey, rpcEndpoint, 1000000, 0, false)
 	if err != nil {
 		t.Error(err)
 		return
@@ -86,7 +86,7 @@ func TestE22Deposit(t *testing.T) {
 	}
 	fmt.Println(events2)
 
-	count2, err := network.Deposit(&events2, "../test_data/deposit_data.json", contractAddressAlt, privateKey, rpcEndpoint, 1000000, false)
+	count2, err := network.Deposit(&events2, "../test_data/deposit_data.json", contractAddressAlt, privateKey, rpcEndpoint, 1000000, 0, false)
 	if err != nil {
 		t.Error(err)
 		return

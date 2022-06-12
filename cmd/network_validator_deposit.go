@@ -11,7 +11,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const CommandOptionGasPrice = "gasPrice"
 const CommandOptionDry = "dry"
 
 // depositCmd represents the deposit command
@@ -37,7 +36,13 @@ This tool is necessary to activate new validators`,
 			return
 		}
 
-		gasPrice, err := cmd.Flags().GetInt64(CommandOptionGasPrice)
+		maxGasFee, err := cmd.Flags().GetInt64(CommandOptionMaxGasFee)
+		if err != nil {
+			cobra.CompErrorln(err.Error())
+			return
+		}
+
+		priorityGasFee, err := cmd.Flags().GetInt64(CommandOptionPriorityFee)
 		if err != nil {
 			cobra.CompErrorln(err.Error())
 			return
@@ -58,7 +63,7 @@ This tool is necessary to activate new validators`,
 
 		fmt.Println("Past deposit events loaded", len(events.Events))
 
-		totalDeposits, err := network.Deposit(&events, nodeConf.DepositDetails.DepositFileLocation, nodeConf.DepositDetails.ContractAddress, nodeConf.TransactionWallet.PrivateKey, nodeConf.ApiEndpoints.ExecutionApi, gasPrice, dry)
+		totalDeposits, err := network.Deposit(&events, nodeConf.DepositDetails.DepositFileLocation, nodeConf.DepositDetails.ContractAddress, nodeConf.TransactionWallet.PrivateKey, nodeConf.ApiEndpoints.ExecutionApi, maxGasFee, priorityGasFee, dry)
 		if err != nil {
 			cobra.CompErrorln(err.Error())
 			return
@@ -79,6 +84,7 @@ This tool is necessary to activate new validators`,
 func init() {
 	validatorCmd.AddCommand(depositCmd)
 
-	depositCmd.Flags().Int64P(CommandOptionGasPrice, "g", 1000000, "set the gas price for transactions")
+	depositCmd.Flags().Int64P(CommandOptionMaxGasFee, CommandOptionMaxGasFeeShort, 2500000014, "set the max gas price for transactions")
+	depositCmd.Flags().Int64P(CommandOptionPriorityFee, CommandOptionPriorityFeeShort, 2500000000, "set priority price for transactions")
 	depositCmd.Flags().BoolP(CommandOptionDry, "d", false, "don't run the transactions but just prepare it")
 }
