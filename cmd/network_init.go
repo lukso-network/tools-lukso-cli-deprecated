@@ -72,7 +72,7 @@ from the github repository. It also updates node name and IP address in the .env
 		// Get IP And HostName
 		nodeDetails, err := network.GetIPAndHostName(nodeName)
 		if err != nil {
-			utils.PrintColoredError(fmt.Sprintf("\ncouldn't ip or host name, reason %s", err.Error()))
+			utils.PrintColoredError(fmt.Sprintf("\ncouldn't get ip or host name, reason %s", err.Error()))
 			return nil
 		}
 		nodeConf.Node = nodeDetails
@@ -93,7 +93,6 @@ from the github repository. It also updates node name and IP address in the .env
 				ExecutionApi: nodeParams.ExecutionAPI,
 			}
 			nodeConf.Chain.ID = nodeParams.NetworkID
-			nodeConf.Execution.NetworkId = nodeParams.NetworkID
 			nodeConf.Execution.StatsAddress = nodeParams.ExecutionStats
 			nodeConf.Consensus.StatsAddress = nodeParams.ConsensusStats
 			nodeConf.DepositDetails.Amount = nodeParams.MinStakeAmount

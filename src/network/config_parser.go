@@ -51,7 +51,7 @@ func GetEnvironmentConfig() map[string]string {
 	newEnvData["GETH_VERSION"] = e.Version
 	newEnvData["GETH_ETHERBASE"] = e.Etherbase
 
-	newEnvData["GETH_NETWORK_ID"] = e.NetworkId
+	newEnvData["GETH_NETWORK_ID"] = nodeConfig.Chain.ID
 	newEnvData["PRYSM_BOOTSTRAP_NODE"] = c.Bootnode
 	newEnvData["GETH_BOOTSTRAP_NODE"] = e.Bootnode
 

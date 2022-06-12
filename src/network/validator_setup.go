@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/client"
+	types2 "github.com/lukso-network/lukso-cli/src/network/types"
 	"github.com/manifoldco/promptui"
 	"io"
 	"os"
@@ -64,6 +65,8 @@ func (valSec *ValidatorCredentials) GenerateMnemonic() error {
 			return err
 		}
 	}
+
+	fmt.Println("A mnemonic was generated and stored in node_config.yaml.\n Make sure you don't loose it as you will not be able to recover your keystore if you loose it....")
 	return nil
 }
 
@@ -93,7 +96,7 @@ func (valSec *ValidatorCredentials) GenerateDepositData(details *DepositDetails,
 	return nil
 }
 
-func (valSec *ValidatorCredentials) GenerateWallet(numberOfValidators int, password string) error {
+func (valSec *ValidatorCredentials) GenerateKeystore(numberOfValidators int, password string) error {
 	err := CheckAndDownloadValTool()
 	if err != nil {
 		return err
@@ -116,15 +119,53 @@ func (valSec *ValidatorCredentials) GenerateWallet(numberOfValidators int, passw
 	return os.WriteFile(passwdFile, []byte(password), os.ModePerm)
 }
 
-func PullEtherealImage(ctx context.Context, client *client.Client) error {
-	reader, err := client.ImagePull(ctx, "wealdtech/ethereal", types.ImagePullOptions{})
+func (valSec *ValidatorCredentials) GenerateDepositDataWithRange(details *DepositDetails, vRange types2.ValidatorRange) error {
+	err := CheckAndDownloadValTool()
 	if err != nil {
 		return err
 	}
 
-	defer reader.Close()
-	_, err = io.Copy(os.Stdout, reader)
-	return err
+	depositCmd := exec.Command("./bin/network-validator-tool", "deposit-data",
+		"--as-json-list",
+		"--fork-version", details.ForkVersion,
+		"--source-max", fmt.Sprintf("%d", vRange.To),
+		"--source-min", fmt.Sprintf("%d", vRange.From),
+		"--amount", details.Amount,
+		"--validators-mnemonic", valSec.ValidatorMnemonic,
+		"--withdrawals-mnemonic", valSec.WithdrawalMnemonic,
+	)
+	commandOutput, err := depositCmd.Output()
+	if err != nil {
+		return err
+	}
+	err = os.WriteFile(details.DepositFileLocation, commandOutput, os.ModePerm)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (valSec *ValidatorCredentials) GenerateKeystoreWithRange(vRange types2.ValidatorRange, password string) error {
+	err := CheckAndDownloadValTool()
+	if err != nil {
+		return err
+	}
+	nodeConfigs := MustGetNodeConfig()
+	keyStoreLocation := nodeConfigs.Keystore.Volume
+	walletCmd := exec.Command("./bin/network-validator-tool", "keystores",
+		"--insecure",
+		"--out-loc", keyStoreLocation,
+		"--prysm-pass", password,
+		"--source-max", fmt.Sprintf("%d", vRange.To),
+		"--source-min", fmt.Sprintf("%d", vRange.From),
+		"--source-mnemonic", valSec.ValidatorMnemonic,
+	)
+	err = walletCmd.Run()
+	if err != nil {
+		return err
+	}
+	passwdFile := path.Join(keyStoreLocation, "password.txt")
+	return os.WriteFile(passwdFile, []byte(password), os.ModePerm)
 }
 
 func (valSec *ValidatorCredentials) DownloadEthereal(ctx context.Context, cli *client.Client) error {

@@ -8,6 +8,8 @@ import (
 	"fmt"
 	"github.com/lukso-network/lukso-cli/api"
 	"github.com/lukso-network/lukso-cli/api/gethrpc"
+	"github.com/lukso-network/lukso-cli/src/network"
+	"github.com/lukso-network/lukso-cli/src/utils"
 	"github.com/spf13/cobra"
 )
 
@@ -18,14 +20,12 @@ var nodeCmd = &cobra.Command{
 	Long:    `shows the peers of this node`,
 	Example: "lukso network describe node",
 	Run: func(cmd *cobra.Command, args []string) {
-		ip, _ := cmd.Flags().GetString("ip")
-		if ip == "" {
-			fmt.Println("Error: ip is empty")
-		}
+		nodeConf := network.MustGetNodeConfig()
 
-		i := api.NewIP(ip)
+		utils.ColoredPrintln("Chain", nodeConf.Chain.Name)
+		utils.ColoredPrintln("NetworkId", nodeConf.Chain.ID)
 
-		c := gethrpc.NewRPCClient(i.RPCAddress())
+		c := gethrpc.NewRPCClient("http://localhost:8545")
 
 		nodeInfo, err := api.AdminNodeInfoRequest(c)
 
@@ -43,24 +43,23 @@ var nodeCmd = &cobra.Command{
 			fmt.Println("Error: ", err.Error())
 		}
 
-		fmt.Println("Execution:")
-		fmt.Println(".........................................")
-		fmt.Println("Enode: ", nodeInfo.Enode)
-		fmt.Println("Peers: ", len(peers))
-		fmt.Println("Latest Block:", blocknumber)
+		utils.Coloredln("Execution:")
+		utils.Coloredln(".........................................")
+		utils.ColoredPrintln("Bootnode: ", nodeConf.Consensus.Bootnode)
+		utils.ColoredPrintln("Enode: ", nodeInfo.Enode)
+		utils.ColoredPrintln("Peers: ", len(peers))
+		utils.ColoredPrintln("Latest Block:", blocknumber)
 
-		//
-		//fmt.Println("Consensus:")
-		//fmt.Println(".........................................")
-		//fmt.Println("Enode: ", nodeInfo.Enode)
-		//fmt.Println("Peers: ", len(peers))
+		utils.Coloredln(".........................................")
+		utils.Coloredln("Consensus:")
+		utils.Coloredln(".........................................")
+		utils.ColoredPrintln("Bootnode: ", nodeConf.Execution.Bootnode)
+		utils.ColoredPrintln("Peers: ", len(peers))
+		utils.ColoredPrintln("Latest Block:", blocknumber)
+
 	},
 }
 
 func init() {
 	describeCmd.AddCommand(nodeCmd)
-
-	nodeCmd.Flags().StringP("ip", "i", "", "set ip")
-	_ = nodeCmd.MarkFlagRequired("ip")
-
 }

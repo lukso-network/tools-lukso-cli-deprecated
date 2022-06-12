@@ -8,7 +8,6 @@ import (
 	"fmt"
 	"github.com/lukso-network/lukso-cli/src/network"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 // describeCmd represents the describe command
@@ -23,22 +22,7 @@ var updateCmd = &cobra.Command{
 		hasUpdates := false
 		fmt.Println("Searching for updates")
 
-		config, err := network.LoadNodeConf()
-		if err != nil {
-			configV0, err := network.LoadNodeConfV0()
-			if err != nil {
-				cobra.CompError(err.Error())
-				return
-			}
-
-			chain := network.GetChainByString(viper.GetString(CommandOptionChain))
-			config = configV0.Upgrade(chain)
-			err = config.WriteOrUpdateNodeConfig()
-			if err != nil {
-				cobra.CompError(err.Error())
-				return
-			}
-		}
+		config := network.MustGetNodeConfig()
 
 		wasIPUpdated, err := config.UpdateExternalIP()
 		if err != nil {

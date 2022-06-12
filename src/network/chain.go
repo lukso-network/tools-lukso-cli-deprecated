@@ -18,7 +18,7 @@ const (
 	Currently Supported Networks
 */
 func IsChainSupported(chain Chain) bool {
-	return chain == L16Beta || chain == Local
+	return chain == L16Beta || chain == Local || chain == L16
 }
 
 func (c Chain) String() string {
@@ -35,6 +35,15 @@ func (c Chain) String() string {
 		return ChainDev
 	default:
 		return "unknown chain"
+	}
+}
+
+func (c Chain) GetCurrencySymbol() string {
+	switch c {
+	case MainNet:
+		return "LYX"
+	default:
+		return "LYXt"
 	}
 }
 
