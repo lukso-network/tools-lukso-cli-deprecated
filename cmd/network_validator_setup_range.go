@@ -136,8 +136,7 @@ activate validators. The command gives greater control than "lukso network valid
 		fmt.Println(utils.ConsoleInBlue("        lukso network validator describe"))
 		fmt.Println("to see data related to the validator setup. ")
 		fmt.Println("A transaction wallet was created to pay for the deposit transaction. ")
-		fmt.Println("The transaction wallet needs at least [staking amount] + [gas costs] LYX before you can create a deposit transaction!")
-
+		fmt.Printf("The transaction wallet needs at least [staking amount] + [gas costs] %s before you can create a deposit transaction!\n", nodeConf.GetChain().GetCurrencySymbol())
 	},
 }
 

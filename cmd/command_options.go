@@ -23,6 +23,11 @@ const (
 	CommandOptionFromShort = "f"
 	CommandOptionTo        = "to"
 	CommandOptionToShort   = "t"
+
+	CommandOptionMaxGasFee        = "maxGasFee"
+	CommandOptionMaxGasFeeShort   = "m"
+	CommandOptionPriorityFee      = "priorityFee"
+	CommandOptionPriorityFeeShort = "p"
 )
 
 func readConsensusApiEndpoint(cmd *cobra.Command, nodeConf *network.NodeConfigs) (string, error) {
