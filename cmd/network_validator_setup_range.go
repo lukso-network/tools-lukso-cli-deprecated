@@ -50,6 +50,7 @@ activate validators. The command gives greater control than "lukso network valid
 		fmt.Println("Creating keystore")
 		// create secrets
 		if !nodeConf.HasMnemonic() {
+			fmt.Println("No mnemonic is present -> need to create one")
 			valSecrets := nodeConf.CreateCredentials()
 			// generate mnemonic
 			err = valSecrets.GenerateMnemonic()
