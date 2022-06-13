@@ -59,3 +59,7 @@ func (c *ValidatorCredentials) ValidatorRange() types.ValidatorRange {
 		To:   c.ValidatorIndexTo,
 	}
 }
+
+func (c *ValidatorCredentials) IsEmpty() bool {
+	return c.ValidatorMnemonic == "" || c.WithdrawalMnemonic == ""
+}

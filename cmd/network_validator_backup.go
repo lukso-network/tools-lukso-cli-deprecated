@@ -20,14 +20,15 @@ var validatorBackupCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		nodeConf := network.MustGetNodeConfig()
 		credentials := nodeConf.ValidatorCredentials
-		if credentials == nil {
-			cobra.CompErrorln(network.ErrMsgValidatorSecretNotPresent)
+		if credentials == nil || credentials.IsEmpty() {
+			utils.PrintColoredError(network.ErrMsgValidatorSecretNotPresent)
 			return
 		}
 
 		err := credentials.CreateNodeRecovery().Save()
 		if err != nil {
-			utils.PrintColoredError(fmt.Sprintf("couldn't create recovery file, reason: %s", err.Error()))
+			utils.PrintColoredErrorWithReason("couldn't create recovery file", err)
+			return
 		}
 
 		fmt.Println("A file ./node_recovery.json was created. Store this in a save place.")
