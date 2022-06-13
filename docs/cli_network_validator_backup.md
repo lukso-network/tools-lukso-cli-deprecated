@@ -1,21 +1,25 @@
-## cli network validator start
+## cli network validator backup
 
-This subcommand starts a validator client
+Creates a recovery file
+
+### Synopsis
+
+Creates a recovery file that can be used to recreate the node somewhere els
 
 ```
-cli network validator start [flags]
+cli network validator backup [flags]
 ```
 
 ### Examples
 
 ```
-lukso network validator start
+lukso network validator backup
 ```
 
 ### Options
 
 ```
-  -h, --help   help for start
+  -h, --help   help for backup
 ```
 
 ### Options inherited from parent commands
