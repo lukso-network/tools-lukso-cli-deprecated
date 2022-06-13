@@ -16,4 +16,5 @@ const (
 	BootnodeJSONName                = "bootnodes.json"
 	GitUrl                          = "https://raw.githubusercontent.com/lukso-network/"
 	NodeConfigLocation              = "./node_config.yaml"
+	NodeRecoveryFileLocation        = "./node_recovery.json"
 )
