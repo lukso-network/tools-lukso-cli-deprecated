@@ -41,6 +41,10 @@ func downloadFileOverHttp(url string) ([]byte, error) {
 	}
 	defer resp.Body.Close()
 
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("couldn't download file %d", resp.StatusCode)
+	}
+
 	return ioutil.ReadAll(resp.Body)
 }
 

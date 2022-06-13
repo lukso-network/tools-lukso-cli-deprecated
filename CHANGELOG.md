@@ -1,6 +1,13 @@
 # Change Log
 
 
+## [v0.3.3] - L16 Improvements
+
+
+### Added
+
+- added node params to l16 to change client versions on the fly
+
 ## [v0.3.2] - L16
 
 

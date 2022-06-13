@@ -158,7 +158,7 @@ func (nc *NodeConfigs) UpdateBootnodes() (bool, error) {
 	}
 }
 
-func (nc *NodeConfigs) InitDevBootnodes(devLocation string) (bool, error) {
+func (nc *NodeConfigs) UpdateDevBootnodes(devLocation string) (bool, error) {
 	chain := GetChainByString(nc.Chain.Name)
 	GetChainByString(nc.Chain.Name)
 	bootnodes, err := NewBootnodeUpdaterDev(chain, devLocation).DownloadLatestBootnodes()

@@ -77,15 +77,22 @@ from the github repository. It also updates node name and IP address in the .env
 		}
 		nodeConf.Node = nodeDetails
 		// download node params
-		if chain == network.Dev {
-			nodeParams := network.NewNodeParams()
+		if chain != network.L16Beta {
+			nodeParams := network.NewNodeParamsLoader()
 			fmt.Println("devConfig:", devConfig)
-			location := nodeParams.GetLocation(devConfig)
+
+			location := ""
+			if chain == network.Dev {
+				location = nodeParams.GetDevLocation(devConfig)
+			} else {
+				location = nodeParams.GetLocation(chain)
+			}
+
 			fmt.Printf("Loading node params from  %s ...", location)
 			err := nodeParams.LoadNodeParams(location)
 			if err != nil {
 				fmt.Println("unsuccessful")
-				utils.PrintColoredError(fmt.Sprintf("couldn't load node params for dev chain, reason %s", err.Error()))
+				utils.PrintColoredError(fmt.Sprintf("couldn't load node params for dev chain, reason: %s", err.Error()))
 				return nil
 			}
 			nodeConf.ApiEndpoints = &network.NodeApi{
@@ -96,6 +103,8 @@ from the github repository. It also updates node name and IP address in the .env
 			nodeConf.Execution.StatsAddress = nodeParams.ExecutionStats
 			nodeConf.Consensus.StatsAddress = nodeParams.ConsensusStats
 			nodeConf.DepositDetails.Amount = nodeParams.MinStakeAmount
+			nodeConf.Execution.Version = nodeParams.GethVersion
+			nodeConf.Consensus.Version = nodeParams.PrysmVersion
 
 			fmt.Println("success")
 		}
@@ -118,7 +127,7 @@ from the github repository. It also updates node name and IP address in the .env
 		}
 
 		if chain == network.Dev {
-			_, err = nodeConf.InitDevBootnodes(devConfig)
+			_, err = nodeConf.UpdateDevBootnodes(devConfig)
 		} else {
 			_, err = nodeConf.UpdateBootnodes()
 		}

@@ -7,6 +7,7 @@ package cmd
 import (
 	"fmt"
 	"github.com/lukso-network/lukso-cli/src/network"
+	"github.com/lukso-network/lukso-cli/src/utils"
 	"github.com/spf13/cobra"
 )
 
@@ -22,9 +23,11 @@ var updateCmd = &cobra.Command{
 		hasUpdates := false
 		fmt.Println("Searching for updates")
 
-		config := network.MustGetNodeConfig()
+		nodeConf := network.MustGetNodeConfig()
+		chain := network.GetChainByString(nodeConf.Chain.Name)
+		chainId := nodeConf.Chain.ID
 
-		wasIPUpdated, err := config.UpdateExternalIP()
+		wasIPUpdated, err := nodeConf.UpdateExternalIP()
 		if err != nil {
 			fmt.Printf("couldn't update external IP reason: %s\n", err.Error())
 		} else {
@@ -36,7 +39,12 @@ var updateCmd = &cobra.Command{
 			}
 		}
 
-		wasBootnodeUpdated, err := config.UpdateBootnodes()
+		wasBootnodeUpdated := false
+		if chain == network.Dev {
+			wasBootnodeUpdated, err = nodeConf.UpdateDevBootnodes(chainId)
+		} else {
+			wasBootnodeUpdated, err = nodeConf.UpdateBootnodes()
+		}
 		if err != nil {
 			fmt.Printf("couldn't update bootnodes reason: %s\n", err.Error())
 		} else {
@@ -45,6 +53,41 @@ var updateCmd = &cobra.Command{
 				hasUpdates = true
 			} else {
 				fmt.Println("Bootnodes are up to date")
+			}
+		}
+
+		if chain != network.L16Beta {
+			nodeParamsLoader := network.NewNodeParamsLoader()
+
+			location := ""
+			if chain == network.Dev {
+				location = nodeParamsLoader.GetDevLocation(chainId)
+			} else {
+				location = nodeParamsLoader.GetLocation(chain)
+			}
+
+			fmt.Printf("Loading node params from  %s ...", location)
+			err := nodeParamsLoader.LoadNodeParams(location)
+			if err != nil {
+				fmt.Println("unsuccessful")
+				utils.PrintColoredError(fmt.Sprintf("couldn't load node params for chain, reason: %s", err.Error()))
+			} else {
+				hasUpdates = true
+				nodeConf.ApiEndpoints = &network.NodeApi{
+					ConsensusApi: nodeParamsLoader.ConsensusAPI,
+					ExecutionApi: nodeParamsLoader.ExecutionAPI,
+				}
+				nodeConf.Chain.ID = nodeParamsLoader.NetworkID
+				nodeConf.Execution.StatsAddress = nodeParamsLoader.ExecutionStats
+				nodeConf.Consensus.StatsAddress = nodeParamsLoader.ConsensusStats
+				nodeConf.DepositDetails.Amount = nodeParamsLoader.MinStakeAmount
+				nodeConf.Execution.Version = nodeParamsLoader.GethVersion
+				nodeConf.Consensus.Version = nodeParamsLoader.PrysmVersion
+				err = nodeConf.Save()
+				fmt.Println("")
+				if err != nil {
+					fmt.Println("couldn't update node params, reason:", err.Error())
+				}
 			}
 		}
 
