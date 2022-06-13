@@ -71,7 +71,7 @@ activate validators. The command gives greater control than "lukso network valid
 		// Everything is alright -> create the keystore
 		fmt.Println("Creating keystore with the following configuration")
 		nodeConf.ValidatorCredentials.Print()
-		if !promptDoYouWantToContinue() {
+		if !promptDoYouWantToContinue("Do you want to continue?") {
 			fmt.Println("Creation canceled")
 			return
 		}
@@ -147,9 +147,9 @@ func init() {
 	setupRangeCmd.Flags().Int64P(CommandOptionTo, CommandOptionToShort, -1, "from position of validator key")
 }
 
-func promptDoYouWantToContinue() bool {
+func promptDoYouWantToContinue(msg string) bool {
 	prompt := promptui.Prompt{
-		Label:     "Do you want to continue?",
+		Label:     msg,
 		IsConfirm: true,
 	}
 	result, err := prompt.Run()

@@ -135,3 +135,7 @@ func Coloredln(msg string) {
 func PrintColoredError(msg string) {
 	fmt.Println(ConsoleInColor(ConsoleColorRed, fmt.Sprintf("error: %s", msg)))
 }
+
+func PrintColoredErrorWithReason(msg string, err error) {
+	PrintColoredError(fmt.Sprintf("%s, reason: %s", msg, err.Error()))
+}

@@ -47,7 +47,7 @@ download() {
 
 
 # download lukso and give exec permission
-download https://github.com/lukso-network/lukso-cli/releases/download/v0.3.4/lukso-cli-${PLATFORM}-${ARCHITECTURE} lukso
+download https://github.com/lukso-network/lukso-cli/releases/download/v0.3.5/lukso-cli-${PLATFORM}-${ARCHITECTURE} lukso
 chmod +x lukso
 
 

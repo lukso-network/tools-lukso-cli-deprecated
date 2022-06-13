@@ -1,7 +1,7 @@
 # Change Log
 
 
-## [v0.3.4] - L16 Release
+## [v0.3.5] - L16 Release
 
 
 ### Added
@@ -10,6 +10,7 @@
 - command **lukso network validator setup range --from [FROM_POSITION] --to [TO_POSITION]
 - added possibility to run l16 with **lukso network init --chain l16**
 - added node_params for each chain
+- added recovery mechanism
 
 
 ### Fixed
