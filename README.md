@@ -17,7 +17,7 @@ to only download the binary use
 
 
 ```
-sudo curl https://raw.githubusercontent.com/lukso-network/lukso-cli/main/download.sh | sh
+sudo curl https://raw.githubusercontent.com/lukso-network/lukso-cli/main/download.sh | sudo bash
 ```
 
 Or use go installer to install `lukso-cli` into your GOPATH
