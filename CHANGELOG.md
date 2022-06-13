@@ -1,24 +1,22 @@
 # Change Log
 
 
-## [v0.3.3] - L16 Improvements
+## [v0.3.4] - L16 Release
 
 
 ### Added
 
 - added node params to l16 to change client versions on the fly
-
-## [v0.3.2] - L16
-
-
-### Added
-
 - command **lukso network validator setup range --from [FROM_POSITION] --to [TO_POSITION]
 - added possibility to run l16 with **lukso network init --chain l16**
+- added node_params for each chain
+
 
 ### Fixed
 
 - spelling of LYX
+ 
+
 
 ## [v0.2.2] -
 
