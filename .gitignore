@@ -13,3 +13,4 @@ configs
 deposit_data.json
 transaction_wallet
 keystore
+data

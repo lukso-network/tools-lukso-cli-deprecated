@@ -72,7 +72,7 @@ func Deposit(
 			//continue
 		}
 
-		opts, err := createTransactionOpts(client, &tk, priorityFee, maxGasFee)
+		opts, err := createTransactionOpts(client, &tk, maxGasFee, priorityFee)
 		if err != nil {
 			fmt.Println("The transaction failed, reason: ", err.Error())
 			continue
@@ -167,15 +167,14 @@ func createTransactionOpts(client *ethclient.Client, tk *wallet.TransactionKeys,
 		return nil, err
 	}
 
-	auth, err := bind.NewKeyedTransactorWithChainID(tk.PrivateKey, chainID)
+	opts, err := bind.NewKeyedTransactorWithChainID(tk.PrivateKey, chainID)
 	if err != nil {
 		panic(err)
 	}
-	auth.Nonce = big.NewInt(int64(nonce))
-	auth.GasLimit = uint64(160000) // in units
-	auth.GasTipCap = big.NewInt(priorityFee)
-	auth.GasFeeCap = big.NewInt(maxFee)
-	//auth.GasPrice = big.NewInt(gasPrice)
+	opts.Nonce = big.NewInt(int64(nonce))
+	opts.GasLimit = uint64(160000) // in units
+	opts.GasTipCap = big.NewInt(priorityFee)
+	opts.GasFeeCap = big.NewInt(maxFee)
 
-	return auth, err
+	return opts, err
 }
