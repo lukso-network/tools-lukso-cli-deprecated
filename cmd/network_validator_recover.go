@@ -20,7 +20,7 @@ var validatorRecoverCmd = &cobra.Command{
 	Use:     "recover",
 	Short:   "Recovers a keystore from a recovery file",
 	Long:    `Creates a recovery file that can be used to recreate the node somewhere els`,
-	Example: "lukso network validator recover --path [PATH_TO_RECOVERY_FILE]",
+	Example: "lukso network validator recover --recoveryFile [PATH_TO_RECOVERY_FILE]",
 	Run: func(cmd *cobra.Command, args []string) {
 		nodeConf := network.MustGetNodeConfig()
 		keystorePath := nodeConf.Keystore.Volume

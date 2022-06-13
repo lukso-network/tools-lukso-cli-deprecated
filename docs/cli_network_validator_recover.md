@@ -13,14 +13,14 @@ cli network validator recover [flags]
 ### Examples
 
 ```
-lukso network validator recover --path [PATH_TO_RECOVERY_FILE]
+lukso network validator recover --recoveryFile [PATH_TO_RECOVERY_FILE]
 ```
 
 ### Options
 
 ```
   -h, --help          help for recover
-  -p, --path string   path to recovery file (default "./node_recovery.json")
+  -p, --recoveryFile string   path to recovery file (default "./node_recovery.json")
 ```
 
 ### Options inherited from parent commands
