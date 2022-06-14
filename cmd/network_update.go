@@ -93,6 +93,7 @@ var updateCmd = &cobra.Command{
 
 		if hasUpdates {
 			fmt.Println("Successfully updated your node -> restart your nodes to make the changes effective!")
+			updateEnv()
 		} else {
 			fmt.Println("Everything up to date!")
 		}

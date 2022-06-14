@@ -135,6 +135,8 @@ from the github repository. It also updates node name and IP address in the .env
 			fmt.Println("couldn't update bootnodes, reason:", err.Error())
 		}
 
+		updateEnv()
+
 		fmt.Printf("You successfully prepared the node for chain %s!!!\n", chain.String())
 		return nil
 	},
