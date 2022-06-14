@@ -33,7 +33,7 @@ var validatorBackupCmd = &cobra.Command{
 
 		fmt.Println("A file ./node_recovery.json was created. Store this in a save place.")
 		fmt.Println("You can recover your keystore with")
-		utils.Coloredln("   lukso network validator recover --recoveryFile [PATH_TO_FILE]")
+		utils.Coloredln("   lukso network validator recover --path [PATH_TO_FILE]")
 		fmt.Println("Make sure to NEVER run 2 nodes with the same keystore. You will prone to slashing.")
 	},
 }

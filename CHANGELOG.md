@@ -1,7 +1,7 @@
 # Change Log
 
 
-## [v0.3.5] - L16 Release
+## [v0.3.6] - L16 Release
 
 
 ### Added
@@ -16,6 +16,7 @@
 ### Fixed
 
 - spelling of LYX
+- contract address for L16
  
 
 
