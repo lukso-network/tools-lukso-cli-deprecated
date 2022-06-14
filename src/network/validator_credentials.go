@@ -1,10 +1,14 @@
 package network
 
 import (
+	"fmt"
 	"github.com/lukso-network/lukso-cli/src/network/types"
 	"github.com/lukso-network/lukso-cli/src/utils"
+	"github.com/manifoldco/promptui"
 	"gopkg.in/yaml.v3"
 	"os"
+	"os/exec"
+	"path"
 )
 
 type DepositDetails struct {
@@ -62,4 +66,136 @@ func (c *ValidatorCredentials) ValidatorRange() types.ValidatorRange {
 
 func (c *ValidatorCredentials) IsEmpty() bool {
 	return c.ValidatorMnemonic == "" || c.WithdrawalMnemonic == ""
+}
+
+func (c *ValidatorCredentials) GenerateMnemonic() error {
+	err := CheckAndDownloadValTool()
+	if err != nil {
+		return err
+	}
+
+	fmt.Println("Generating mnemonic")
+
+	output, err := GetMnemonic()
+	if err != nil {
+		return err
+	}
+	c.ValidatorMnemonic = output
+	c.WithdrawalMnemonic = output
+
+	propmt := promptui.Select{
+		Label: "Generate separate withdrawal mnemonic? [Yes/No]",
+		Items: []string{"Yes", "No"},
+	}
+	_, generateVal, err := propmt.Run()
+	if err != nil {
+		return err
+	}
+	if generateVal == "Yes" {
+		c.WithdrawalMnemonic, err = GetMnemonic()
+		if err != nil {
+			return err
+		}
+	}
+
+	fmt.Println("A mnemonic was generated and stored in node_config.yaml.\n Make sure you don't loose it as you will not be able to recover your keystore if you loose it....")
+	return nil
+}
+
+func (c *ValidatorCredentials) GenerateDepositData(details *DepositDetails, numberOfValidators int) error {
+	err := CheckAndDownloadValTool()
+	if err != nil {
+		return err
+	}
+
+	depositCmd := exec.Command("./bin/network-validator-tool", "deposit-data",
+		"--as-json-list",
+		"--fork-version", details.ForkVersion,
+		"--source-max", fmt.Sprintf("%d", numberOfValidators),
+		"--source-min", "0",
+		"--amount", details.Amount,
+		"--validators-mnemonic", c.ValidatorMnemonic,
+		"--withdrawals-mnemonic", c.WithdrawalMnemonic,
+	)
+	commandOutput, err := depositCmd.Output()
+	if err != nil {
+		return err
+	}
+	err = os.WriteFile(details.DepositFileLocation, commandOutput, os.ModePerm)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (c *ValidatorCredentials) GenerateKeystore(numberOfValidators int, password string) error {
+	err := CheckAndDownloadValTool()
+	if err != nil {
+		return err
+	}
+	nodeConfigs := MustGetNodeConfig()
+	keyStoreLocation := nodeConfigs.Keystore.Volume
+	walletCmd := exec.Command("./bin/network-validator-tool", "keystores",
+		"--insecure",
+		"--out-loc", keyStoreLocation,
+		"--prysm-pass", password,
+		"--source-max", fmt.Sprintf("%d", numberOfValidators),
+		"--source-min", "0",
+		"--source-mnemonic", c.ValidatorMnemonic,
+	)
+	err = walletCmd.Run()
+	if err != nil {
+		return err
+	}
+	passwdFile := path.Join(keyStoreLocation, "password.txt")
+	return os.WriteFile(passwdFile, []byte(password), os.ModePerm)
+}
+
+func (c *ValidatorCredentials) GenerateDepositDataWithRange(details *DepositDetails, vRange types.ValidatorRange) error {
+	err := CheckAndDownloadValTool()
+	if err != nil {
+		return err
+	}
+
+	depositCmd := exec.Command("./bin/network-validator-tool", "deposit-data",
+		"--as-json-list",
+		"--fork-version", details.ForkVersion,
+		"--source-max", fmt.Sprintf("%d", vRange.To),
+		"--source-min", fmt.Sprintf("%d", vRange.From),
+		"--amount", details.Amount,
+		"--validators-mnemonic", c.ValidatorMnemonic,
+		"--withdrawals-mnemonic", c.WithdrawalMnemonic,
+	)
+	commandOutput, err := depositCmd.Output()
+	if err != nil {
+		return err
+	}
+	err = os.WriteFile(details.DepositFileLocation, commandOutput, os.ModePerm)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (c *ValidatorCredentials) GenerateKeystoreWithRange(vRange types.ValidatorRange, password string) error {
+	err := CheckAndDownloadValTool()
+	if err != nil {
+		return err
+	}
+	nodeConfigs := MustGetNodeConfig()
+	keyStoreLocation := nodeConfigs.Keystore.Volume
+	walletCmd := exec.Command("./bin/network-validator-tool", "keystores",
+		"--insecure",
+		"--out-loc", keyStoreLocation,
+		"--prysm-pass", password,
+		"--source-max", fmt.Sprintf("%d", vRange.To),
+		"--source-min", fmt.Sprintf("%d", vRange.From),
+		"--source-mnemonic", c.ValidatorMnemonic,
+	)
+	err = walletCmd.Run()
+	if err != nil {
+		return err
+	}
+	passwdFile := path.Join(keyStoreLocation, "password.txt")
+	return os.WriteFile(passwdFile, []byte(password), os.ModePerm)
 }

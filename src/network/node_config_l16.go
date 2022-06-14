@@ -13,15 +13,15 @@ var DefaultL16NodeConfigs = &NodeConfigs{
 	},
 	Node: &NodeDetails{},
 	Execution: &ClientDetails{
-		StatsAddress: "35.204.4.181",
+		StatsAddress: "",
 		Verbosity:    "3",
-		Version:      "v0.2.0-dev",
+		Version:      "v0.2.1",
 		Etherbase:    "0x7781121fd00A009670E31b76A2bf99b3A2D6878D",
 		DataVolume:   "./data/execution_data",
-		Bootnode:     "enode://c2bb19ce658cfdf1fecb45da599ee6c7bf36e5292efb3fb61303a0b2cd07f96c20ac9b376a464d687ac456675a2e4a44aec39a0509bcb4b6d8221eedec25aca2@34.91.51.22:30303",
+		Bootnode:     "",
 	},
 	Consensus: &ClientDetails{
-		StatsAddress: "34.141.143.70:9090",
+		StatsAddress: "",
 		Verbosity:    "info",
 		Version:      "v0.2.3-dev",
 		DataVolume:   "./data/consensus_data",
@@ -43,7 +43,7 @@ var DefaultL16NodeConfigs = &NodeConfigs{
 	},
 	DepositDetails: &DepositDetails{
 		Amount:              "220000000000",
-		ContractAddress:     "0x4242424242424242424242424242424242424242",
+		ContractAddress:     "0x000000000000000000000000000000000000cafe",
 		DepositFileLocation: "./deposit_data.json",
 		ForkVersion:         "0x60000069",
 	},

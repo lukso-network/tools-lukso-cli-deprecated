@@ -1,7 +1,9 @@
 package network
 
 import (
+	"context"
 	"fmt"
+	"github.com/hashicorp/go-getter"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -47,4 +49,33 @@ func FileExists(filePath string) bool {
 		return false
 	}
 	return true
+}
+
+func downloadFile(src, dest string) error {
+	client := &getter.Client{
+		Ctx:  context.Background(),
+		Src:  src,
+		Dst:  dest,
+		Dir:  true,
+		Mode: getter.ClientModeFile,
+	}
+	if err := client.Get(); err != nil {
+		return err
+	}
+	return nil
+}
+
+func downloadFileOverHttp(url string) ([]byte, error) {
+	// Get the data
+	resp, err := http.Get(url)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("couldn't download file %d", resp.StatusCode)
+	}
+
+	return ioutil.ReadAll(resp.Body)
 }
