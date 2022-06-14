@@ -34,3 +34,11 @@ func (nr NodeRecovery) Save() error {
 	}
 	return os.WriteFile(NodeRecoveryFileLocation, bytes, os.ModePerm)
 }
+
+func (nr NodeRecovery) SaveWithDestination(dest string) error {
+	bytes, err := json.Marshal(nr)
+	if err != nil {
+		return err
+	}
+	return os.WriteFile(dest, bytes, os.ModePerm)
+}
