@@ -11,20 +11,14 @@ sudo curl https://raw.githubusercontent.com/lukso-network/lukso-cli/main/install
 ```
  
 
-### Download
+### RC
 
 to only download the binary use
 
-
 ```
-sudo curl https://raw.githubusercontent.com/lukso-network/lukso-cli/main/download.sh | sudo bash
+sudo curl https://raw.githubusercontent.com/lukso-network/lukso-cli/main/install-rc.sh | sudo bash
 ```
-
-Or use go installer to install `lukso-cli` into your GOPATH
-```bash
-go install github.com/lukso-network/lukso-cli@v0.2.1
-```
-The cli distinguishes subcommands. You can always 
+ 
 
 ## Commands
 
