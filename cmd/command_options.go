@@ -24,6 +24,12 @@ const (
 	CommandOptionTo        = "to"
 	CommandOptionToShort   = "t"
 
+	CommandOptionPassword      = "password"
+	CommandOptionPasswordShort = "p"
+
+	CommandOptionNoPrompt      = "no-prompt"
+	CommandOptionNoPromptShort = "n"
+
 	CommandOptionMaxGasFee        = "maxGasFee"
 	CommandOptionMaxGasFeeShort   = "m"
 	CommandOptionPriorityFee      = "priorityFee"
