@@ -57,7 +57,7 @@ func GetDefaultNodeConfigsIfDoesntExist(chain Chain) *NodeConfigs {
 func SetupNetwork(chain Chain) error {
 	fmt.Printf("Setting up node for chain %s.\n", chain.String())
 	clientVersion := BeaconClientPrysm
-
+	
 	if !IsChainSupported(chain) {
 		return fmt.Errorf("the network %s does not exist or is not supported\n", chain.String())
 	}

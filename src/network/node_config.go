@@ -18,14 +18,12 @@ func GetDefaultNodeConfig(chain Chain) *NodeConfigs {
 	switch chain {
 	case L16:
 		return DefaultL16NodeConfigs
-	case L16Beta:
-		return DefaultL16BetaNodeConfigs
 	case Local:
 		return DefaultLocalNodeConfigs
 	case Dev:
 		return DefaultDevNodeConfigs
 	default:
-		return DefaultL16BetaNodeConfigs
+		return DefaultL16NodeConfigs
 	}
 }
 

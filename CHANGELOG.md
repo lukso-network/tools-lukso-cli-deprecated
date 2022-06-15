@@ -1,6 +1,23 @@
 # Change Log
 
 
+
+## [v0.4.0] - L16 Release
+
+
+### Added
+
+- lukso network init without --chain param will error out
+### Changed
+
+- removed L16Beta references in code
+
+
+### Fixed
+
+- spelling of LYX
+- contract address for L16
+
 ## [v0.3.6] - L16 Release
 
 
