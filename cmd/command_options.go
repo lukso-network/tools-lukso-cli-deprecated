@@ -16,7 +16,7 @@ const (
 	CommandOptionDepositAddressShort = "a"
 
 	CommandOptionChain     = "chain"
-	CommandOptionNodeName  = "nodeName"
+	CommandOptionNodeName  = "stats-name"
 	CommandOptionDevConfig = "devConfig"
 
 	CommandOptionFrom      = "from"
