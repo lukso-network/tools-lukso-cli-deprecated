@@ -102,6 +102,29 @@ func (c *ValidatorCredentials) GenerateMnemonic() error {
 	return nil
 }
 
+func (c *ValidatorCredentials) GenerateMnemonicWithoutPrompt() error {
+	err := CheckAndDownloadValTool()
+	if err != nil {
+		return err
+	}
+
+	fmt.Println("Generating mnemonic")
+
+	output, err := GetMnemonic()
+	if err != nil {
+		return err
+	}
+	c.ValidatorMnemonic = output
+	output, err = GetMnemonic()
+	if err != nil {
+		return err
+	}
+	c.WithdrawalMnemonic = output
+
+	fmt.Println("A mnemonic was generated and stored in node_config.yaml.\n Make sure you don't loose it as you will not be able to recover your keystore if you loose it....")
+	return nil
+}
+
 func (c *ValidatorCredentials) GenerateDepositData(details *DepositDetails, numberOfValidators int) error {
 	err := CheckAndDownloadValTool()
 	if err != nil {

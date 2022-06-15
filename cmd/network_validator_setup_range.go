@@ -43,6 +43,23 @@ activate validators. The command gives greater control than "lukso network valid
 		}
 		nodeConf := network.MustGetNodeConfig()
 
+		password, err := cmd.Flags().GetString(CommandOptionPassword)
+		if err != nil {
+			utils.PrintColoredError(err.Error())
+			return
+		}
+
+		noPrompt, err := cmd.Flags().GetBool(CommandOptionNoPrompt)
+		if err != nil {
+			utils.PrintColoredError(err.Error())
+			return
+		}
+
+		if noPrompt && password == "" {
+			utils.PrintColoredError("need to provide a password with --password if no prompt")
+			return
+		}
+
 		keystorePath := nodeConf.Keystore.Volume
 		isKeystoreEmpty, err := utils.IsDirectoryEmpty(keystorePath)
 		if err != nil {
@@ -63,11 +80,16 @@ activate validators. The command gives greater control than "lukso network valid
 		// create secrets
 		if !nodeConf.HasMnemonic() {
 			fmt.Println("No mnemonic is present -> need to create one")
-			valSecrets := nodeConf.CreateCredentials()
+			credentials := nodeConf.CreateCredentials()
 			// generate mnemonic
-			err = valSecrets.GenerateMnemonic()
+			if noPrompt {
+				err = credentials.GenerateMnemonicWithoutPrompt()
+			} else {
+				err = credentials.GenerateMnemonic()
+			}
+
 			if err != nil {
-				cobra.CompErrorln(err.Error())
+				utils.PrintColoredErrorWithReason("couldn't create mnemonic", err)
 				return
 			}
 		}
@@ -83,26 +105,29 @@ activate validators. The command gives greater control than "lukso network valid
 		// Everything is alright -> create the keystore
 		fmt.Println("Creating keystore with the following configuration")
 		nodeConf.ValidatorCredentials.Print()
-		if !promptDoYouWantToContinue("Do you want to continue?") {
-			fmt.Println("Creation canceled")
-			return
+		if !noPrompt {
+			if !promptDoYouWantToContinue("Do you want to continue?") {
+				fmt.Println("Creation canceled")
+				return
+			}
 		}
 
-		// choose password
-		prompt := promptui.Prompt{
-			Label: "Choose A Password For Your Keystore",
-			Validate: func(s string) error {
-				if len(s) < 6 {
-					return errors.New("password must have more than 6 characters")
-				}
-				return nil
-			},
-			Mask: '*',
-		}
-		password, err := prompt.Run()
-		if err != nil {
-			cobra.CompErrorln(err.Error())
-			return
+		if !noPrompt && password == "" {
+			prompt := promptui.Prompt{
+				Label: "Choose A Password For Your Keystore",
+				Validate: func(s string) error {
+					if len(s) < 6 {
+						return errors.New("password must have more than 6 characters")
+					}
+					return nil
+				},
+				Mask: '*',
+			}
+			password, err = prompt.Run()
+			if err != nil {
+				cobra.CompErrorln(err.Error())
+				return
+			}
 		}
 
 		// generate deposit data
@@ -157,6 +182,8 @@ func init() {
 	setupCmd.AddCommand(setupRangeCmd)
 	setupRangeCmd.Flags().Int64P(CommandOptionFrom, CommandOptionFromShort, -1, "from position of validator key")
 	setupRangeCmd.Flags().Int64P(CommandOptionTo, CommandOptionToShort, -1, "from position of validator key")
+	setupRangeCmd.Flags().StringP(CommandOptionPassword, CommandOptionPasswordShort, "", "password for the keystore")
+	setupRangeCmd.Flags().BoolP(CommandOptionNoPrompt, CommandOptionNoPromptShort, false, "no prompt to continue")
 }
 
 func promptDoYouWantToContinue(msg string) bool {
