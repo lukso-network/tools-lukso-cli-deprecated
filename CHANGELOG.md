@@ -2,6 +2,14 @@
 
 
 
+## [v0.4.1-rc] - L16 Release
+ 
+
+### Fixed
+
+- fixed bug in deposit
+
+
 ## [v0.4.0] - L16 Release
 
 
@@ -11,6 +19,7 @@
 ### Changed
 
 - removed L16Beta references in code
+- --nodeName renamed to --stats-name in **lukso network init**
 
 
 ### Fixed
