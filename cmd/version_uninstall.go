@@ -20,10 +20,12 @@ import "github.com/spf13/cobra"
 
 // versionUninstallCmd represents the 'uninstall' command
 var versionUninstallCmd = &cobra.Command{
-	Use:   "version uninstall [version]",
+	Use:   "version uninstall",
 	Short: "Uninstall a local LUKSO CLI version.",
 }
 
 func init() {
 	versionCmd.AddCommand(versionUninstallCmd)
+
+	versionUninstallCmd.Flags().StringP("version", "v", "", "Uninstall the specified LUKSO CLI version.")
 }

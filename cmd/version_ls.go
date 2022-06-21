@@ -27,5 +27,5 @@ var versionLsCmd = &cobra.Command{
 func init() {
 	versionCmd.AddCommand(versionLsCmd)
 
-	describeCmd.Flags().BoolP("remote", "r", true, "list all available remote versions")
+	versionLsCmd.Flags().BoolP("remote", "r", true, "List all available remote versions.")
 }

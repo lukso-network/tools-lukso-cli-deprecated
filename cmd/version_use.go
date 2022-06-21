@@ -20,10 +20,12 @@ import "github.com/spf13/cobra"
 
 // versionUseCmd represents the use command
 var versionUseCmd = &cobra.Command{
-	Use:   "version use [version]",
-	Short: "Switch between LUKSO CLI versions.",
+	Use:   "version use",
+	Short: "Switch between locally installed LUKSO CLI versions.",
 }
 
 func init() {
 	versionCmd.AddCommand(versionUseCmd)
+
+	versionUseCmd.Flags().StringP("version", "v", "", "Use the specified LUKSO CLI version.")
 }

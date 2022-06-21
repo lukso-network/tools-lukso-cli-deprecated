@@ -20,10 +20,12 @@ import "github.com/spf13/cobra"
 
 // versionInstallCmd represents the 'install' command
 var versionInstallCmd = &cobra.Command{
-	Use:   "version install [version]",
+	Use:   "version install",
 	Short: "Install a LUKSO CLI version locally.",
 }
 
 func init() {
 	versionCmd.AddCommand(versionInstallCmd)
+
+	versionInstallCmd.Flags().StringP("version", "v", "", "Install the specified LUKSO CLI version.")
 }
