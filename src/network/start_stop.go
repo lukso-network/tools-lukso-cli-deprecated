@@ -7,6 +7,7 @@ import (
 )
 
 func runDockerServices(serviceList ...string) error {
+	checkDockerIsRunning()
 	dockerCommand := []string{"docker-compose", "up", "-d"}
 	dockerCommand = append(dockerCommand, serviceList...)
 	fmt.Println("You may need to provide super user (sudo) password to run docker (if needed)")
@@ -18,6 +19,7 @@ func runDockerServices(serviceList ...string) error {
 }
 
 func DownDockerServices() error {
+	checkDockerIsRunning()
 	command := exec.Command("sudo", "docker-compose", "down")
 	if cmdOutput, err := command.CombinedOutput(); err != nil {
 		fmt.Println(string(cmdOutput))
@@ -53,6 +55,15 @@ func StopValidatorNode() error {
 	if cmdOutput, err := command.CombinedOutput(); err != nil {
 		fmt.Println(string(cmdOutput))
 		return err
+	}
+	return nil
+}
+
+func checkDockerIsRunning() error {
+	cmd := exec.Command("docker", "version", ">", "/dev/null", "2>&1")
+	err := cmd.Run()
+	if err != nil {
+		return errors.New("the Docker daemon is not running. Has Docker been installed")
 	}
 	return nil
 }
