@@ -18,12 +18,12 @@ package cmd
 
 import "github.com/spf13/cobra"
 
-// versionsCmd represents the use command
-var versionsLsCmd = &cobra.Command{
-	Use:   "versions ls",
+// versionLsCmd represents the use command
+var versionLsCmd = &cobra.Command{
+	Use:   "version ls",
 	Short: "Lists local LUKSO CLI versions currently installed.",
 }
 
 func init() {
-	rootCmd.AddCommand(versionsLsCmd)
+	rootCmd.AddCommand(versionLsCmd)
 }
