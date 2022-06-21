@@ -70,10 +70,10 @@ func StopValidatorNode() error {
 }
 
 func checkDockerIsRunning() error {
-	command := exec.Command("docker", "version")
+	command := exec.Command("docker", "info")
 	err := command.Run()
 	if err != nil {
-		return errors.New("docker error. The Docker daemon might not be installed/running")
+		return errors.New("docker error. The Docker daemon might not be running")
 	}
 	return nil
 }
