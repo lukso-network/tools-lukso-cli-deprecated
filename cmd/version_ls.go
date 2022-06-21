@@ -18,12 +18,14 @@ package cmd
 
 import "github.com/spf13/cobra"
 
-// versionLsCmd represents the use command
+// versionLsCmd represents the list command
 var versionLsCmd = &cobra.Command{
 	Use:   "version ls",
 	Short: "Lists local LUKSO CLI versions currently installed.",
 }
 
 func init() {
-	rootCmd.AddCommand(versionLsCmd)
+	versionCmd.AddCommand(versionLsCmd)
+
+	describeCmd.Flags().BoolP("remote", "r", true, "list all available remote versions")
 }

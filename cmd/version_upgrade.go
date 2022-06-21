@@ -18,12 +18,12 @@ package cmd
 
 import "github.com/spf13/cobra"
 
-// versionUseCmd represents the use command
-var versionUseCmd = &cobra.Command{
-	Use:   "version use [version]",
-	Short: "Switch between LUKSO CLI versions.",
+// versionUpgradeCmd represents the 'upgrade' command
+var versionUpgradeCmd = &cobra.Command{
+	Use:   "version upgrade",
+	Short: "Upgrade to the latest stable Lukso CLI version.",
 }
 
 func init() {
-	versionCmd.AddCommand(versionUseCmd)
+	versionCmd.AddCommand(versionInstallCmd)
 }
