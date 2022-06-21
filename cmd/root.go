@@ -12,7 +12,7 @@ import (
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "cli",
+	Use:   "lukso",
 	Short: "Command Line Interface to spin up a LUKSO node",
 	Long: `A Command Line Interface to spin up and maintain different components of LUKSO network. This CLI
 is helpful to spin up a full node as well as it monitors log for all the components (e.g. execution engine, consensus engine, eth2stats client and validator client).

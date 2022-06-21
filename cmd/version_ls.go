@@ -16,12 +16,19 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 package cmd
 
-import "github.com/spf13/cobra"
+import (
+	"github.com/lukso-network/lukso-cli/src/version"
+	"github.com/spf13/cobra"
+)
 
 // versionLsCmd represents the list command
 var versionLsCmd = &cobra.Command{
-	Use:   "version ls",
-	Short: "Lists local LUKSO CLI versions currently installed.",
+	Use:     "ls",
+	Short:   "Lists local LUKSO CLI versions currently installed.",
+	Example: "lukso version ls",
+	RunE: func(cmd *cobra.Command, args []string) error {
+		return version.List()
+	},
 }
 
 func init() {
