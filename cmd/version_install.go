@@ -28,4 +28,5 @@ func init() {
 	versionCmd.AddCommand(versionInstallCmd)
 
 	versionInstallCmd.Flags().StringP("version", "v", "", "Install the specified LUKSO CLI version.")
+	versionInstallCmd.Flags().BoolP("upgrade", "u", true, "Upgrade to the latest LUKSO CLI version.")
 }
