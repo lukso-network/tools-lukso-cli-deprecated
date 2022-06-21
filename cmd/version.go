@@ -20,7 +20,7 @@ import "github.com/spf13/cobra"
 
 // versionsCmd represents the versions command
 var versionCmd = &cobra.Command{
-	Use:   "versions",
+	Use:   "version",
 	Short: "subcommand \"versions\" for versioning the LUKSO CLI.",
 }
 
