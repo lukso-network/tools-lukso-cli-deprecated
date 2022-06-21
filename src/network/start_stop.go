@@ -7,7 +7,10 @@ import (
 )
 
 func runDockerServices(serviceList ...string) error {
-	checkDockerIsRunning()
+	err := checkDockerIsRunning()
+	if err != nil {
+		return err
+	}
 	dockerCommand := []string{"docker-compose", "up", "-d"}
 	dockerCommand = append(dockerCommand, serviceList...)
 	fmt.Println("You may need to provide super user (sudo) password to run docker (if needed)")
@@ -19,7 +22,10 @@ func runDockerServices(serviceList ...string) error {
 }
 
 func DownDockerServices() error {
-	checkDockerIsRunning()
+	err := checkDockerIsRunning()
+	if err != nil {
+		return err
+	}
 	command := exec.Command("sudo", "docker-compose", "down")
 	if cmdOutput, err := command.CombinedOutput(); err != nil {
 		fmt.Println(string(cmdOutput))
@@ -51,6 +57,10 @@ func StartValidatorNode() error {
 }
 
 func StopValidatorNode() error {
+	err := checkDockerIsRunning()
+	if err != nil {
+		return err
+	}
 	command := exec.Command("sudo", "docker-compose", "stop", "prysm_validator")
 	if cmdOutput, err := command.CombinedOutput(); err != nil {
 		fmt.Println(string(cmdOutput))
@@ -60,10 +70,10 @@ func StopValidatorNode() error {
 }
 
 func checkDockerIsRunning() error {
-	cmd := exec.Command("docker", "version", ">", "/dev/null", "2>&1")
-	err := cmd.Run()
+	command := exec.Command("docker", "version")
+	err := command.Run()
 	if err != nil {
-		return errors.New("the Docker daemon is not running. Has Docker been installed")
+		return errors.New("docker error. The Docker daemon might not be installed/running")
 	}
 	return nil
 }
