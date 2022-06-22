@@ -1,13 +1,18 @@
 # Change Log
 
 
+## [v0.4.2] - L16 Release
 
-## [v0.4.1-rc] - L16 Release
- 
 
 ### Fixed
 
-- fixed bug in deposit
+- fixed bug in deposit (v0.4.1-rc)
+### Added
+
+- check to see if Docker is running on
+### Changed
+
+- root command use description from `cli` to `lukso`
 
 
 ## [v0.4.0] - L16 Release
