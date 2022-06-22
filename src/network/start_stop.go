@@ -3,6 +3,7 @@ package network
 import (
 	"errors"
 	"fmt"
+	"github.com/lukso-network/lukso-cli/src/utils"
 	"os/exec"
 )
 
@@ -73,7 +74,8 @@ func checkDockerIsRunning() error {
 	command := exec.Command("docker", "info")
 	err := command.Run()
 	if err != nil {
-		return errors.New("docker error. The Docker daemon might not be running")
+		return errors.New(utils.ConsoleInColor(utils.ConsoleColorRed, "You need to have Docker installed and running to use the LUKSO CLI.\n"+
+			"Read the documentation (https://docs.docker.com/desktop/#download-and-install) to learn how to set Docker up."))
 	}
 	return nil
 }
