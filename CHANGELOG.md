@@ -9,7 +9,8 @@
 - fixed bug in deposit (v0.4.1-rc)
 ### Added
 
-- check to see if Docker is running on
+- check to see if Docker is running
+- pull & update configurations when **lukso network update** is run
 ### Changed
 
 - root command use description from `cli` to `lukso`
