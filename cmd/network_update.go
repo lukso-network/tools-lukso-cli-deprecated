@@ -6,6 +6,7 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/lukso-network/lukso-cli/api/beaconapi"
 	"github.com/lukso-network/lukso-cli/src/network"
 	"github.com/lukso-network/lukso-cli/src/utils"
 	"github.com/spf13/cobra"
@@ -24,6 +25,17 @@ var updateCmd = &cobra.Command{
 		fmt.Println("Searching for updates")
 
 		nodeConf := network.MustGetNodeConfig()
+
+		// TODO put it in right position
+		response, err := beaconapi.NewBeaconClient(nodeConf.ApiEndpoints.ConsensusApi).Identity()
+		if err != nil {
+			utils.PrintColoredErrorWithReason("couldn't get bootnode enr", err)
+		}
+		// TODO find a better place to save it
+		nodeConf.Consensus.Bootnode = response.Data.Enr
+		nodeConf.Save()
+		fmt.Println("Bootnode:", response.Data.Enr)
+
 		chain := network.GetChainByString(nodeConf.Chain.Name)
 		chainId := nodeConf.Chain.ID
 
