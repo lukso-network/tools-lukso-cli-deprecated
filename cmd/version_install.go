@@ -17,7 +17,14 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"errors"
+	"github.com/lukso-network/lukso-cli/src/version"
 	"github.com/spf13/cobra"
+)
+
+const (
+	CommandOptionVersion = "version"
+	CommandOptionUpgrade = "upgrade"
 )
 
 // versionInstallCmd represents the 'install' command
@@ -26,6 +33,28 @@ var versionInstallCmd = &cobra.Command{
 	Short:   "Install a LUKSO CLI version locally.",
 	Example: "lukso version install --version v0.4.2",
 	RunE: func(cmd *cobra.Command, args []string) error {
+		upgrade, _ := cmd.Flags().GetBool(CommandOptionUpgrade)
+		if upgrade {
+			latestVersion, err := version.GetLatestVersion()
+			if err != nil {
+				return err
+			}
+			err = version.Install(latestVersion)
+			if err != nil {
+				return err
+			}
+			return nil
+		}
+
+		// Install specified version
+		specifiedVersion, err := cmd.Flags().GetString(CommandOptionVersion)
+		if err != nil {
+			return errors.New("please specify the version you want to install")
+		}
+		err = version.Install(specifiedVersion)
+		if err != nil {
+			return err
+		}
 		return nil
 	},
 }
@@ -33,6 +62,6 @@ var versionInstallCmd = &cobra.Command{
 func init() {
 	versionCmd.AddCommand(versionInstallCmd)
 
-	versionInstallCmd.Flags().StringP("version", "v", "", "Install the specified LUKSO CLI version.")
-	versionInstallCmd.Flags().BoolP("upgrade", "u", true, "Upgrade to the latest LUKSO CLI version.")
+	versionInstallCmd.Flags().StringP(CommandOptionVersion, "v", "", "Install the specified LUKSO CLI version.")
+	versionInstallCmd.Flags().BoolP(CommandOptionUpgrade, "u", true, "Upgrade to the latest LUKSO CLI version.")
 }

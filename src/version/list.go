@@ -9,12 +9,11 @@ import (
 )
 
 func List(currentVersion string) error {
-	client := github.NewClient(nil)
-	releases, _, err := client.Repositories.ListReleases(context.Background(), "lukso-network", "lukso-cli", nil)
+
+	releases, err := getReleases()
 	if err != nil {
 		return err
 	}
-
 	for _, release := range releases {
 		releaseTag := *release.TagName
 		if runtime.GOOS == "windows" {
@@ -29,4 +28,22 @@ func List(currentVersion string) error {
 		}
 	}
 	return nil
+}
+
+func GetLatestVersion() (string, error) {
+	releases, err := getReleases()
+	if err != nil {
+		return nil, err
+	}
+	latestRelease := releases[0]
+	return *latestRelease.TagName, nil
+}
+
+func getReleases() ([]*github.RepositoryRelease, error) {
+	client := github.NewClient(nil)
+	releases, _, err := client.Repositories.ListReleases(context.Background(), "lukso-network", "lukso-cli", nil)
+	if err != nil {
+		return nil, err
+	}
+	return releases, nil
 }
