@@ -6,7 +6,6 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/lukso-network/lukso-cli/api/beaconapi"
 	"github.com/lukso-network/lukso-cli/src/network"
 	"github.com/lukso-network/lukso-cli/src/utils"
 	"github.com/spf13/cobra"
@@ -78,11 +77,7 @@ var updateCmd = &cobra.Command{
 			utils.PrintColoredError(fmt.Sprintf("couldn't load node params for chain, reason: %s", err.Error()))
 		} else {
 			hasUpdates = true
-			response, err := beaconapi.NewBeaconClient(nodeConf.ApiEndpoints.ConsensusApi).Identity()
-			if err != nil {
-				utils.PrintColoredErrorWithReason("couldn't get bootnode enr", err)
-			}
-			nodeConf.Consensus.Bootnode = response.Data.Enr
+			nodeConf.Consensus.Bootnode = network.GetENRFromBootNode(nodeParamsLoader.ConsensusAPI)
 			nodeConf.ApiEndpoints = &network.NodeApi{
 				ConsensusApi: nodeParamsLoader.ConsensusAPI,
 				ExecutionApi: nodeParamsLoader.ExecutionAPI,
