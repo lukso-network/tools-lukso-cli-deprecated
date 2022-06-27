@@ -2,6 +2,8 @@ package network
 
 import (
 	"fmt"
+	"github.com/lukso-network/lukso-cli/api/beaconapi"
+	"github.com/lukso-network/lukso-cli/src/utils"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"io/ioutil"
@@ -279,4 +281,12 @@ func (config *NodeConfigs) HasMnemonic() bool {
 
 func (config *NodeConfigs) GetChain() Chain {
 	return GetChainByString(config.Chain.Name)
+}
+
+func GetENRFromBootNode(endpoint string) string {
+	response, err := beaconapi.NewBeaconClient(endpoint).Identity()
+	if err != nil {
+		utils.PrintColoredErrorWithReason("couldn't get bootnode enr", err)
+	}
+	return response.Data.Enr
 }

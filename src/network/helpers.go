@@ -4,8 +4,6 @@ import (
 	"context"
 	"fmt"
 	"github.com/hashicorp/go-getter"
-	"github.com/lukso-network/lukso-cli/api/beaconapi"
-	"github.com/lukso-network/lukso-cli/src/utils"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -80,12 +78,4 @@ func downloadFileOverHttp(url string) ([]byte, error) {
 	}
 
 	return ioutil.ReadAll(resp.Body)
-}
-
-func GetENRFromBootNode(endpoint string) string {
-	response, err := beaconapi.NewBeaconClient(endpoint).Identity()
-	if err != nil {
-		utils.PrintColoredErrorWithReason("couldn't get bootnode enr", err)
-	}
-	return response.Data.Enr
 }

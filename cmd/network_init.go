@@ -101,6 +101,7 @@ from the github repository. It also updates node name and IP address in the .env
 			utils.PrintColoredError(fmt.Sprintf("couldn't load node params for dev chain, reason: %s", err.Error()))
 			return nil
 		}
+		nodeConf.Consensus.Bootnode = network.GetENRFromBootNode(nodeParams.ConsensusAPI)
 		nodeConf.ApiEndpoints = &network.NodeApi{
 			ConsensusApi: nodeParams.ConsensusAPI,
 			ExecutionApi: nodeParams.ExecutionAPI,
