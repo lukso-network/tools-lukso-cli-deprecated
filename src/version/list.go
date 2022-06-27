@@ -9,7 +9,6 @@ import (
 )
 
 func List(currentVersion string) error {
-
 	releases, err := getReleases()
 	if err != nil {
 		return err
