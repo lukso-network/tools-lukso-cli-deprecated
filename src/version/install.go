@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/hashicorp/go-getter"
 	"github.com/lukso-network/lukso-cli/src/utils"
+	"log"
 	"os"
 	"runtime"
 )
@@ -23,12 +24,16 @@ func Install(version string) error {
 	client := &getter.Client{
 		Ctx:  context.Background(),
 		Src:  downloadURL,
-		Dst:  UserPath,
+		Dst:  UserPath + "/lukso",
 		Dir:  true,
 		Mode: getter.ClientModeFile,
 	}
 	if err = client.Get(); err != nil {
 		return err
+	}
+	err = os.Chmod(UserPath+"/lukso", 0755)
+	if err != nil {
+		log.Fatal(err)
 	}
 	utils.Coloredln(fmt.Sprintf("%s installed!", version))
 	return nil
