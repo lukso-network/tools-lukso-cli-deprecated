@@ -33,7 +33,7 @@ func List(currentVersion string) error {
 func GetLatestVersion() (string, error) {
 	releases, err := getReleases()
 	if err != nil {
-		return nil, err
+		return "", err
 	}
 	latestRelease := releases[0]
 	return *latestRelease.TagName, nil
