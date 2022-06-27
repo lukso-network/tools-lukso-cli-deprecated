@@ -26,16 +26,6 @@ var updateCmd = &cobra.Command{
 
 		nodeConf := network.MustGetNodeConfig()
 
-		// TODO put it in right position
-		response, err := beaconapi.NewBeaconClient(nodeConf.ApiEndpoints.ConsensusApi).Identity()
-		if err != nil {
-			utils.PrintColoredErrorWithReason("couldn't get bootnode enr", err)
-		}
-		// TODO find a better place to save it
-		nodeConf.Consensus.Bootnode = response.Data.Enr
-		nodeConf.Save()
-		fmt.Println("Bootnode:", response.Data.Enr)
-
 		chain := network.GetChainByString(nodeConf.Chain.Name)
 		chainId := nodeConf.Chain.ID
 
@@ -88,6 +78,11 @@ var updateCmd = &cobra.Command{
 			utils.PrintColoredError(fmt.Sprintf("couldn't load node params for chain, reason: %s", err.Error()))
 		} else {
 			hasUpdates = true
+			response, err := beaconapi.NewBeaconClient(nodeConf.ApiEndpoints.ConsensusApi).Identity()
+			if err != nil {
+				utils.PrintColoredErrorWithReason("couldn't get bootnode enr", err)
+			}
+			nodeConf.Consensus.Bootnode = response.Data.Enr
 			nodeConf.ApiEndpoints = &network.NodeApi{
 				ConsensusApi: nodeParamsLoader.ConsensusAPI,
 				ExecutionApi: nodeParamsLoader.ExecutionAPI,
