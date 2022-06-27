@@ -8,6 +8,7 @@ bin/*
 .env
 node_config.yaml
 lukso-cli
+Dockerfile
 docker-compose.yml
 configs
 deposit_data.json

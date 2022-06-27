@@ -73,8 +73,12 @@ var updateCmd = &cobra.Command{
 		location := ""
 		if chain == network.Dev {
 			location = nodeParamsLoader.GetDevLocation(chainId)
+			// Update network configuration
+			network.NewDevResourceDownloader(location, network.BeaconClientPrysm).DownloadAll()
 		} else {
 			location = nodeParamsLoader.GetLocation(chain)
+			// Update network configuration
+			network.NewResourceDownloader(chain, network.BeaconClientPrysm).DownloadAll()
 		}
 
 		fmt.Printf("Loading node params from  %s ...", location)
