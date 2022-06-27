@@ -2,11 +2,13 @@ package version
 
 import (
 	"context"
-	"fmt"
 	"github.com/google/go-github/github"
+	"github.com/lukso-network/lukso-cli/src/utils"
+	"runtime"
+	"strings"
 )
 
-func List() error {
+func List(currentVersion string) error {
 	client := github.NewClient(nil)
 	releases, _, err := client.Repositories.ListReleases(context.Background(), "lukso-network", "lukso-cli", nil)
 	if err != nil {
@@ -14,7 +16,17 @@ func List() error {
 	}
 
 	for _, release := range releases {
-		fmt.Println(*release.TagName)
+		releaseTag := *release.TagName
+		if runtime.GOOS == "windows" {
+			releaseTag = strings.TrimRight(releaseTag, "\r\n")
+		} else {
+			releaseTag = strings.TrimRight(releaseTag, "\n")
+		}
+		if strings.Compare(releaseTag, currentVersion) == 0 {
+			utils.SelectedColorPrintln("Currently installed", releaseTag, utils.ConsoleColorGreen, utils.ConsoleColorBlue)
+		} else {
+			utils.Coloredln(releaseTag)
+		}
 	}
 	return nil
 }

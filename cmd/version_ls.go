@@ -27,7 +27,8 @@ var versionLsCmd = &cobra.Command{
 	Short:   "Lists LUKSO CLI versions available. Indicates which version of the CLI has been installed.",
 	Example: "lukso version ls",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		return version.List()
+		currentVersion := rootCmd.Version
+		return version.List(currentVersion)
 	},
 }
 
