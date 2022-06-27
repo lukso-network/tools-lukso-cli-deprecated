@@ -16,12 +16,18 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 package cmd
 
-import "github.com/spf13/cobra"
+import (
+	"github.com/spf13/cobra"
+)
 
 // versionInstallCmd represents the 'install' command
 var versionInstallCmd = &cobra.Command{
-	Use:   "install",
-	Short: "Install a LUKSO CLI version locally.",
+	Use:     "install",
+	Short:   "Install a LUKSO CLI version locally.",
+	Example: "lukso version install --version v0.4.2",
+	RunE: func(cmd *cobra.Command, args []string) error {
+		return nil
+	},
 }
 
 func init() {
