@@ -24,7 +24,7 @@ import (
 // versionLsCmd represents the list command
 var versionLsCmd = &cobra.Command{
 	Use:     "ls",
-	Short:   "Lists local LUKSO CLI versions currently installed.",
+	Short:   "Lists LUKSO CLI versions available. Indicates which version of the CLI has been installed.",
 	Example: "lukso version ls",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		return version.List()
@@ -33,6 +33,4 @@ var versionLsCmd = &cobra.Command{
 
 func init() {
 	versionCmd.AddCommand(versionLsCmd)
-
-	versionLsCmd.Flags().BoolP("remote", "r", true, "List all available remote versions.")
 }

@@ -21,7 +21,7 @@ import "github.com/spf13/cobra"
 // versionsCmd represents the versions command
 var versionCmd = &cobra.Command{
 	Use:   "version",
-	Short: "subcommand \"version\". Relates to versioning the LUKSO CLI tool. Returns current LUKSO CLI version in use.",
+	Short: "subcommand \"version\". Relates to versioning the LUKSO CLI tool.",
 }
 
 func init() {
