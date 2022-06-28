@@ -2,6 +2,7 @@ package network
 
 import (
 	"fmt"
+	"os"
 	"path"
 )
 
@@ -55,6 +56,7 @@ func (d ResourceDownloader) DownloadAll() error {
 
 func (d ResourceDownloader) downloadDocker() error {
 	fmt.Printf("Fetching docker-compose from %s..... ", d.DockerLocation)
+	os.Remove(DockerComposeDefaultName)
 	if err := downloadFile(d.DockerLocation, DockerComposeDefaultName); err != nil {
 		return err
 	}
