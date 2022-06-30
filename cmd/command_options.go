@@ -37,6 +37,9 @@ const (
 
 	CommandOptionPath      = "path"
 	CommandOptionPathShort = "p"
+
+	CommandOptionVersion = "version"
+	CommandOptionUpgrade = "upgrade"
 )
 
 func readConsensusApiEndpoint(cmd *cobra.Command, nodeConf *network.NodeConfigs) (string, error) {

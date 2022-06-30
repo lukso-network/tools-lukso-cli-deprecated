@@ -22,11 +22,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const (
-	CommandOptionVersion = "version"
-	CommandOptionUpgrade = "upgrade"
-)
-
 // versionInstallCmd represents the 'install' command
 var versionInstallCmd = &cobra.Command{
 	Use:     "install",
