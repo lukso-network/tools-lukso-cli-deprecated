@@ -47,9 +47,6 @@ func getExistingMnemonic() (string, error) {
 		cobra.CompErrorln(err.Error())
 		return "", err
 	}
-	if err != nil {
-		return "", err
-	}
 	return existingMnemonicVal, nil
 }
 
