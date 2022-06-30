@@ -89,7 +89,7 @@ func (c *ValidatorCredentials) GenerateMnemonic() error {
 	if err != nil {
 		return err
 	}
-	
+
 	fmt.Println("A mnemonic was generated and stored in node_config.yaml.\n Make sure you don't loose it as you will not be able to recover your keystore if you loose it....")
 	return nil
 }
@@ -120,17 +120,12 @@ func (c *ValidatorCredentials) GenerateMnemonicWithoutPrompt() error {
 
 	fmt.Println("Generating mnemonic")
 
-	useExisting, err := UseExistingMnemonicPrompt()
-	if err != nil {
-		return err
-	}
-
-	output, err := GetMnemonic(useExisting)
+	output, err := GetMnemonic(false)
 	if err != nil {
 		return err
 	}
 	c.ValidatorMnemonic = output
-	output, err = GetMnemonic(useExisting)
+	output, err = GetMnemonic(false)
 	if err != nil {
 		return err
 	}
