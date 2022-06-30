@@ -80,7 +80,7 @@ var updateCmd = &cobra.Command{
 			nodeConf.Consensus.Bootnode, err = network.GetENRFromBootNode(nodeParamsLoader.ConsensusAPI)
 			if err != nil {
 				utils.PrintColoredError(fmt.Sprintf("couldn't get ENR from bootnode, reason: %s", err.Error()))
-				return err
+				return
 			}
 			nodeConf.ApiEndpoints = &network.NodeApi{
 				ConsensusApi: nodeParamsLoader.ConsensusAPI,
