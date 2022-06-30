@@ -37,6 +37,9 @@ const (
 
 	CommandOptionPath      = "path"
 	CommandOptionPathShort = "p"
+
+	CommandOptionExistingMnemonic      = "existingMnemonic"
+	CommandOptionExistingMnemonicShort = "r"
 )
 
 func readConsensusApiEndpoint(cmd *cobra.Command, nodeConf *network.NodeConfigs) (string, error) {
