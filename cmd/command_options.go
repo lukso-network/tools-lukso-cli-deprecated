@@ -40,6 +40,9 @@ const (
 
 	CommandOptionVersion = "version"
 	CommandOptionUpgrade = "upgrade"
+
+	CommandOptionExistingMnemonic      = "existingMnemonic"
+	CommandOptionExistingMnemonicShort = "r"
 )
 
 func readConsensusApiEndpoint(cmd *cobra.Command, nodeConf *network.NodeConfigs) (string, error) {

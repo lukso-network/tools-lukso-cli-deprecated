@@ -55,6 +55,12 @@ activate validators. The command gives greater control than "lukso network valid
 			return
 		}
 
+		existingMnemonic, err := cmd.Flags().GetString(CommandOptionExistingMnemonic)
+		if err != nil {
+			utils.PrintColoredError(err.Error())
+			return
+		}
+
 		if noPrompt && password == "" {
 			utils.PrintColoredError("need to provide a password with --password if no prompt")
 			return
@@ -83,7 +89,12 @@ activate validators. The command gives greater control than "lukso network valid
 			credentials := nodeConf.CreateCredentials()
 			// generate mnemonic
 			if noPrompt {
-				err = credentials.GenerateMnemonicWithoutPrompt()
+				if existingMnemonic != "" {
+					credentials.ValidatorMnemonic = existingMnemonic
+					credentials.WithdrawalMnemonic = existingMnemonic
+				} else {
+					err = credentials.GenerateMnemonicWithoutPrompt()
+				}
 			} else {
 				err = credentials.GenerateMnemonic()
 			}
