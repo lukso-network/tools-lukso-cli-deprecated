@@ -283,10 +283,11 @@ func (config *NodeConfigs) GetChain() Chain {
 	return GetChainByString(config.Chain.Name)
 }
 
-func GetENRFromBootNode(endpoint string) string {
+func GetENRFromBootNode(endpoint string) (string, error) {
 	response, err := beaconapi.NewBeaconClient(endpoint).Identity()
 	if err != nil {
 		utils.PrintColoredErrorWithReason("couldn't get bootnode enr", err)
+		return "", err
 	}
-	return response.Data.Enr
+	return response.Data.Enr, nil
 }
