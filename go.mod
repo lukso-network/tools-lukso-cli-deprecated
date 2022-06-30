@@ -4,6 +4,7 @@ go 1.17
 
 require (
 	github.com/ethereum/go-ethereum v1.10.17
+	github.com/google/go-github v17.0.0+incompatible
 	github.com/hashicorp/go-getter v1.6.1
 	github.com/joho/godotenv v1.4.0
 	github.com/manifoldco/promptui v0.9.0
@@ -25,6 +26,7 @@ require (
 	github.com/go-ole/go-ole v1.2.5 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/google/go-cmp v0.5.6 // indirect
+	github.com/google/go-querystring v1.0.0 // indirect
 	github.com/gorilla/websocket v1.4.2 // indirect
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.0.1 // indirect
 	github.com/hashicorp/golang-lru v0.5.5-0.20210104140557-80c98217689d // indirect
