@@ -17,7 +17,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
-	"errors"
+	"github.com/lukso-network/lukso-cli/src/utils"
 	"github.com/lukso-network/lukso-cli/src/version"
 	"github.com/spf13/cobra"
 )
@@ -32,10 +32,12 @@ var versionInstallCmd = &cobra.Command{
 		if upgrade {
 			latestVersion, err := version.GetLatestVersion()
 			if err != nil {
+				utils.PrintColoredError(err.Error())
 				return err
 			}
 			err = version.Install(latestVersion)
 			if err != nil {
+				utils.PrintColoredError(err.Error())
 				return err
 			}
 			return nil
@@ -43,11 +45,17 @@ var versionInstallCmd = &cobra.Command{
 
 		// Install specified version
 		specifiedVersion, err := cmd.Flags().GetString(CommandOptionVersion)
+		if specifiedVersion == "" {
+			utils.PrintColoredError("please specify the version you want to install")
+			return nil
+		}
 		if err != nil {
-			return errors.New("please specify the version you want to install")
+			utils.PrintColoredError(err.Error())
+			return err
 		}
 		err = version.Install(specifiedVersion)
 		if err != nil {
+			utils.PrintColoredError(err.Error())
 			return err
 		}
 		return nil
