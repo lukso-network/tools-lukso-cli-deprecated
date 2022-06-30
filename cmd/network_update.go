@@ -24,6 +24,7 @@ var updateCmd = &cobra.Command{
 		fmt.Println("Searching for updates")
 
 		nodeConf := network.MustGetNodeConfig()
+
 		chain := network.GetChainByString(nodeConf.Chain.Name)
 		chainId := nodeConf.Chain.ID
 
@@ -76,6 +77,11 @@ var updateCmd = &cobra.Command{
 			utils.PrintColoredError(fmt.Sprintf("couldn't load node params for chain, reason: %s", err.Error()))
 		} else {
 			hasUpdates = true
+			nodeConf.Consensus.Bootnode, err = network.GetENRFromBootNode(nodeParamsLoader.ConsensusAPI)
+			if err != nil {
+				utils.PrintColoredError(fmt.Sprintf("couldn't get ENR from bootnode, reason: %s", err.Error()))
+				return
+			}
 			nodeConf.ApiEndpoints = &network.NodeApi{
 				ConsensusApi: nodeParamsLoader.ConsensusAPI,
 				ExecutionApi: nodeParamsLoader.ExecutionAPI,
