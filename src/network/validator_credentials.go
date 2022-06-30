@@ -73,32 +73,42 @@ func (c *ValidatorCredentials) GenerateMnemonic() error {
 	if err != nil {
 		return err
 	}
-
+	useExisting, err := UseExistingMnemonicPrompt()
+	if err != nil {
+		return err
+	}
 	fmt.Println("Generating mnemonic")
-
-	output, err := GetMnemonic()
+	output, err := GetMnemonic(useExisting)
 	if err != nil {
 		return err
 	}
 	c.ValidatorMnemonic = output
 	c.WithdrawalMnemonic = output
 
-	propmt := promptui.Select{
+	err = c.GenerateWithdrawalCredentials()
+	if err != nil {
+		return err
+	}
+	
+	fmt.Println("A mnemonic was generated and stored in node_config.yaml.\n Make sure you don't loose it as you will not be able to recover your keystore if you loose it....")
+	return nil
+}
+
+func (c *ValidatorCredentials) GenerateWithdrawalCredentials() error {
+	promptWithdrawal := promptui.Select{
 		Label: "Generate separate withdrawal mnemonic? [Yes/No]",
 		Items: []string{"Yes", "No"},
 	}
-	_, generateVal, err := propmt.Run()
+	_, generateVal, err := promptWithdrawal.Run()
 	if err != nil {
 		return err
 	}
 	if generateVal == "Yes" {
-		c.WithdrawalMnemonic, err = GetMnemonic()
+		c.WithdrawalMnemonic, err = GetMnemonic(false)
 		if err != nil {
 			return err
 		}
 	}
-
-	fmt.Println("A mnemonic was generated and stored in node_config.yaml.\n Make sure you don't loose it as you will not be able to recover your keystore if you loose it....")
 	return nil
 }
 
@@ -110,12 +120,17 @@ func (c *ValidatorCredentials) GenerateMnemonicWithoutPrompt() error {
 
 	fmt.Println("Generating mnemonic")
 
-	output, err := GetMnemonic()
+	useExisting, err := UseExistingMnemonicPrompt()
+	if err != nil {
+		return err
+	}
+
+	output, err := GetMnemonic(useExisting)
 	if err != nil {
 		return err
 	}
 	c.ValidatorMnemonic = output
-	output, err = GetMnemonic()
+	output, err = GetMnemonic(useExisting)
 	if err != nil {
 		return err
 	}

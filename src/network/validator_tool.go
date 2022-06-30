@@ -2,6 +2,8 @@ package network
 
 import (
 	"fmt"
+	"github.com/manifoldco/promptui"
+	"github.com/spf13/cobra"
 	"os"
 	"os/exec"
 	"runtime"
@@ -21,10 +23,47 @@ func CheckAndDownloadValTool() error {
 	return nil
 }
 
-func GetMnemonic() (string, error) {
+func GetMnemonic(existing bool) (string, error) {
+	if existing {
+		existingMnemonicVal, err := getExistingMnemonic()
+		if err != nil {
+			return "", err
+		}
+		return existingMnemonicVal, err
+	}
 	output, err := exec.Command("./bin/network-validator-tool", "mnemonic").Output()
 	if err != nil {
 		return "", err
 	}
 	return string(output), err
+}
+
+func getExistingMnemonic() (string, error) {
+	prompt := promptui.Prompt{
+		Label: "Enter your existing mnemonic",
+	}
+	existingMnemonicVal, err := prompt.Run()
+	if err != nil {
+		cobra.CompErrorln(err.Error())
+		return "", err
+	}
+	if err != nil {
+		return "", err
+	}
+	return existingMnemonicVal, nil
+}
+
+func UseExistingMnemonicPrompt() (bool, error) {
+	promptExisting := promptui.Select{
+		Label: "Use existing mnemonic?? [Yes/No]",
+		Items: []string{"Yes", "No"},
+	}
+	_, existingVal, err := promptExisting.Run()
+	if err != nil {
+		return false, err
+	}
+	if existingVal == "Yes" {
+		return true, nil
+	}
+	return false, nil
 }

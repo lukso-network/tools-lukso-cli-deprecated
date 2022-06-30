@@ -81,12 +81,22 @@ activate validators`,
 		// create secrets
 		valSecrets := nodeConf.CreateCredentials()
 		// generate mnemonic
-		err = valSecrets.GenerateMnemonic()
+		flagExistingMnemonic, err := cmd.Flags().GetString(CommandOptionExistingMnemonic)
 		if err != nil {
 			cobra.CompErrorln(err.Error())
 			return
 		}
-
+		// user entered value
+		if flagExistingMnemonic != "" {
+			valSecrets.ValidatorMnemonic = flagExistingMnemonic
+			valSecrets.WithdrawalMnemonic = flagExistingMnemonic
+		} else {
+			err = valSecrets.GenerateMnemonic()
+			if err != nil {
+				cobra.CompErrorln(err.Error())
+				return
+			}
+		}
 		// generate deposit data
 		err = valSecrets.GenerateDepositData(nodeConf.DepositDetails, numOfVal)
 		if err != nil {
@@ -130,4 +140,5 @@ activate validators`,
 
 func init() {
 	validatorCmd.AddCommand(setupCmd)
+	setupCmd.Flags().StringP(CommandOptionExistingMnemonic, CommandOptionExistingMnemonicShort, "", "existing mnemonic")
 }
