@@ -1,17 +1,17 @@
 # Change Log
 
 
-## [v0.4.3-rc] - L16 Release
+## [v0.4.3] - L16 Release
 
 
 ### Fixed
 
-- docker compose configuration generating extra network stubs
+- docker compose configuration generating extra network stubs & not updating correctly
 ### Added
 
 - update ENR from bootnode dynamically
 - new `version` command to install and update different versions of the CLI
-- new `--existingMnemonic` flag to `lukso network validator setup` to utilise existing mnemonic
+- new `--existingMnemonic` (or `-r`) flag to `lukso network validator setup` to utilise existing mnemonics
 
 
 ## [v0.4.2] - L16 Release
