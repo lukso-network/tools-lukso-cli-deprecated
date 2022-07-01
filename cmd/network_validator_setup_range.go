@@ -191,6 +191,7 @@ activate validators. The command gives greater control than "lukso network valid
 
 func init() {
 	setupCmd.AddCommand(setupRangeCmd)
+	setupRangeCmd.Flags().StringP(CommandOptionExistingMnemonic, CommandOptionExistingMnemonicShort, "", "existing mnemonic")
 	setupRangeCmd.Flags().Int64P(CommandOptionFrom, CommandOptionFromShort, -1, "from position of validator key")
 	setupRangeCmd.Flags().Int64P(CommandOptionTo, CommandOptionToShort, -1, "from position of validator key")
 	setupRangeCmd.Flags().StringP(CommandOptionPassword, CommandOptionPasswordShort, "", "password for the keystore")
