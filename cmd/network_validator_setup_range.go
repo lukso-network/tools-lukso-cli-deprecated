@@ -55,7 +55,7 @@ activate validators. The command gives greater control than "lukso network valid
 			return
 		}
 
-		existingMnemonic, err := cmd.Flags().GetString(CommandOptionExistingMnemonic)
+		existingMnemonic, err := cmd.Parent().Flags().GetString(CommandOptionExistingMnemonic)
 		if err != nil {
 			utils.PrintColoredError(err.Error())
 			return
