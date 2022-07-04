@@ -8,6 +8,7 @@ import (
 	"github.com/spf13/viper"
 	"io/ioutil"
 	"os"
+	"strings"
 
 	"gopkg.in/yaml.v3"
 )
@@ -289,5 +290,5 @@ func GetENRFromBootNode(endpoint string) (string, error) {
 		utils.PrintColoredErrorWithReason("couldn't get bootnode enr", err)
 		return "", err
 	}
-	return response.Data.Enr, nil
+	return strings.TrimSuffix(response.Data.Enr, "=="), nil
 }
