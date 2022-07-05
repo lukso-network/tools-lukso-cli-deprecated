@@ -15,11 +15,12 @@ import (
 var validatorBackupCmd = &cobra.Command{
 	Use:     "backup",
 	Short:   "Creates a recovery file",
-	Long:    `Creates a recovery file that can be used to recreate the node somewhere els`,
+	Long:    `Creates a recovery file that can be used to recreate the node somewhere else`,
 	Example: "lukso network validator backup",
 	Run: func(cmd *cobra.Command, args []string) {
 		nodeConf := network.MustGetNodeConfig()
 		credentials := nodeConf.ValidatorCredentials
+		wallet := nodeConf.TransactionWallet
 		if credentials == nil || credentials.IsEmpty() {
 			utils.PrintColoredError(network.ErrMsgValidatorSecretNotPresent)
 			return
@@ -31,6 +32,7 @@ var validatorBackupCmd = &cobra.Command{
 			return
 		}
 
+		err := wallet.CreateWalletRecovery().Save()
 		fmt.Println("A file ./node_recovery.json was created. Store this in a save place.")
 		fmt.Println("You can recover your keystore with")
 		utils.Coloredln("   lukso network validator recover --path [PATH_TO_FILE]")
