@@ -5,7 +5,6 @@ import (
 	"github.com/ethereum/go-ethereum/accounts/keystore"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/crypto"
-	"github.com/lukso-network/lukso-cli/src/network"
 	"io/ioutil"
 	"strings"
 )
@@ -27,12 +26,10 @@ func BackupWallet(target, filename, passwordFilename string) (*WalletInfo, error
 	}
 	privateKeyBytes := crypto.FromECDSA(key.PrivateKey)
 
-	return &WalletInfo{
+	walletInfo := &WalletInfo{
 		PubKey:  strings.ToLower(key.Address.String()),
 		PrivKey: strings.Replace(hexutil.Encode(privateKeyBytes), "0x", "", 1),
-	}, nil
-}
+	}
 
-func (tw network.TransactionWallet) CreateWalletRecovery() network.NodeRecovery {
-	return network.NodeRecovery{}
+	return walletInfo, nil
 }
