@@ -7,10 +7,16 @@ import (
 )
 
 type NodeRecovery struct {
-	ValidatorMnemonic  string `json:"validatorMnemonic"`
-	WithdrawalMnemonic string `json:"withdrawalMnemonic"`
-	KeystoreIndexFrom  int64  `json:"keystoreIndexFrom"`
-	KeystoreIndexTo    int64  `json:"keystoreIndexTo"`
+	ValidatorCredentials struct {
+		ValidatorMnemonic  string `json:"validatorMnemonic"`
+		WithdrawalMnemonic string `json:"withdrawalMnemonic"`
+		KeystoreIndexFrom  int64  `json:"keystoreIndexFrom"`
+		KeystoreIndexTo    int64  `json:"keystoreIndexTo"`
+	} `json:"validatorCredentials"`
+	TransactionWallet struct {
+		PrivateKey string `json:"privateKey"`
+		PublicKey  string `json:"publicKey"`
+	}
 }
 
 func LoadNodeRecovery(source string) (*NodeRecovery, error) {
