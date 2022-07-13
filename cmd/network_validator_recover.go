@@ -92,6 +92,9 @@ var validatorRecoverCmd = &cobra.Command{
 		}
 
 		nodeConf.ValidatorCredentials = credentials
+
+		transactionWallet := new(network.TransactionWallet).FromNodeRecovery(*nr)
+		nodeConf.TransactionWallet = transactionWallet
 		err = nodeConf.Save()
 		if err != nil {
 			utils.PrintColoredError(fmt.Sprintf("couldn't save nodeConf, reason: %v", err.Error()))
