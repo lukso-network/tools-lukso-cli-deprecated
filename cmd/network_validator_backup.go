@@ -32,11 +32,11 @@ var validatorBackupCmd = &cobra.Command{
 			return
 		}
 
-		err = wallet.CreateNodeRecovery().Save()
-		if err != nil {
-			utils.PrintColoredErrorWithReason("couldn't save wallet info in recovery file", err)
-			return
-		}
+		err = wallet.CreateNodeRecovery().Append()
+		//if err != nil {
+		//	utils.PrintColoredErrorWithReason("couldn't save wallet info in recovery file", err)
+		//	return
+		//}
 		fmt.Println("A file ./node_recovery.json was created. Store this in a save place.")
 		fmt.Println("You can recover your keystore with")
 		utils.Coloredln("   lukso network validator recover --path [PATH_TO_FILE]")
