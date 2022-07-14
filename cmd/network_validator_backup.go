@@ -20,23 +20,22 @@ var validatorBackupCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		nodeConf := network.MustGetNodeConfig()
 		credentials := nodeConf.ValidatorCredentials
-		wallet := nodeConf.TransactionWallet
 		if credentials == nil || credentials.IsEmpty() {
 			utils.PrintColoredError(network.ErrMsgValidatorSecretNotPresent)
 			return
 		}
-
-		err := credentials.CreateNodeRecovery().Save()
-		if err != nil {
-			utils.PrintColoredErrorWithReason("couldn't save validator credentials in recovery file", err)
+		wallet := nodeConf.TransactionWallet
+		if wallet == nil || wallet.IsEmpty() {
+			utils.PrintColoredError(network.ErrMsgTransactionWalletNotPresent)
 			return
 		}
 
-		err = wallet.CreateNodeRecovery().Append()
-		//if err != nil {
-		//	utils.PrintColoredErrorWithReason("couldn't save wallet info in recovery file", err)
-		//	return
-		//}
+		err := nodeConf.CreateNodeRecovery().Save()
+		if err != nil {
+			utils.PrintColoredErrorWithReason("couldn't save validator credentials or transaction wallet in recovery file", err)
+			return
+		}
+
 		fmt.Println("A file ./node_recovery.json was created. Store this in a save place.")
 		fmt.Println("You can recover your keystore with")
 		utils.Coloredln("   lukso network validator recover --path [PATH_TO_FILE]")

@@ -40,22 +40,6 @@ func (c *ValidatorCredentials) Print() {
 	utils.ColoredPrintln("Validator Index To:", c.ValidatorIndexTo)
 }
 
-func (c *ValidatorCredentials) CreateNodeRecovery() NodeRecovery {
-	return NodeRecovery{
-		ValidatorCredentials: struct {
-			ValidatorMnemonic  string `json:"validatorMnemonic"`
-			WithdrawalMnemonic string `json:"withdrawalMnemonic"`
-			KeystoreIndexFrom  int64  `json:"keystoreIndexFrom"`
-			KeystoreIndexTo    int64  `json:"keystoreIndexTo"`
-		}{
-			ValidatorMnemonic:  c.ValidatorMnemonic,
-			WithdrawalMnemonic: c.WithdrawalMnemonic,
-			KeystoreIndexFrom:  c.ValidatorIndexFrom,
-			KeystoreIndexTo:    c.ValidatorIndexTo,
-		},
-	}
-}
-
 func (c *ValidatorCredentials) FromNodeRecovery(nr NodeRecovery) *ValidatorCredentials {
 	c.ValidatorIndexTo = nr.ValidatorCredentials.KeystoreIndexTo
 	c.ValidatorIndexFrom = nr.ValidatorCredentials.KeystoreIndexFrom
