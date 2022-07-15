@@ -41,8 +41,8 @@ func (c *ValidatorCredentials) Print() {
 }
 
 func (c *ValidatorCredentials) FromNodeRecovery(nr NodeRecovery) *ValidatorCredentials {
-	c.ValidatorIndexTo = nr.ValidatorCredentials.KeystoreIndexTo
-	c.ValidatorIndexFrom = nr.ValidatorCredentials.KeystoreIndexFrom
+	c.ValidatorIndexTo = nr.ValidatorCredentials.ValidatorIndexTo
+	c.ValidatorIndexFrom = nr.ValidatorCredentials.ValidatorIndexFrom
 	c.WithdrawalMnemonic = nr.ValidatorCredentials.WithdrawalMnemonic
 	c.ValidatorMnemonic = nr.ValidatorCredentials.ValidatorMnemonic
 	return c
