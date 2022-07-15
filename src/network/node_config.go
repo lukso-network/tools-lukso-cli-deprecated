@@ -292,3 +292,12 @@ func GetENRFromBootNode(endpoint string) (string, error) {
 	}
 	return strings.TrimSuffix(response.Data.Enr, "=="), nil
 }
+
+func (c *NodeConfigs) CreateNodeRecovery() NodeRecovery {
+	vc := *c.ValidatorCredentials
+	tw := *c.TransactionWallet
+	return NodeRecovery{
+		vc,
+		tw,
+	}
+}

@@ -7,16 +7,8 @@ import (
 )
 
 type NodeRecovery struct {
-	ValidatorCredentials struct {
-		ValidatorMnemonic  string `json:"validatorMnemonic"`
-		WithdrawalMnemonic string `json:"withdrawalMnemonic"`
-		KeystoreIndexFrom  int64  `json:"keystoreIndexFrom"`
-		KeystoreIndexTo    int64  `json:"keystoreIndexTo"`
-	} `json:"validatorCredentials"`
-	TransactionWallet struct {
-		PrivateKey string `json:"privateKey"`
-		PublicKey  string `json:"publicKey"`
-	}
+	ValidatorCredentials ValidatorCredentials `json:"validatorCredentials"`
+	TransactionWallet    TransactionWallet    `json:"transactionWallet"`
 }
 
 func LoadNodeRecovery(source string) (*NodeRecovery, error) {
@@ -39,12 +31,4 @@ func (nr NodeRecovery) Save() error {
 		return err
 	}
 	return os.WriteFile(NodeRecoveryFileLocation, bytes, os.ModePerm)
-}
-
-func (nr NodeRecovery) Append() error {
-	bytes, err := json.Marshal(nr)
-	if err != nil {
-		return err
-	}
-	return os.WriteFile(NodeRecoveryFileLocation, bytes, os.ModeAppend)
 }
