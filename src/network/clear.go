@@ -1,21 +1,19 @@
 package network
 
-import "os"
-
 func Clear(configs *NodeConfigs) error {
-	err := os.RemoveAll(configs.Execution.DataVolume)
+	err := removeContents(configs.Execution.DataVolume)
 	if err != nil {
 		return err
 	}
-	err = os.RemoveAll(configs.Consensus.DataVolume)
+	err = removeContents(configs.Consensus.DataVolume)
 	if err != nil {
 		return err
 	}
-	err = os.RemoveAll(configs.Validator.DataVolume)
+	err = removeContents(configs.Validator.DataVolume)
 	if err != nil {
 		return err
 	}
-	err = os.RemoveAll(configs.Configs.Volume)
+	err = removeContents(configs.Configs.Volume)
 	if err != nil {
 		return err
 	}
