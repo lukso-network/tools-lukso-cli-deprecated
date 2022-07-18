@@ -36,9 +36,9 @@ func (nr NodeRecovery) Save() error {
 }
 
 func (nr NodeRecovery) SaveWithDestination(dest string) error {
-	bytes, err := json.Marshal(nr)
+	b, err := json.Marshal(nr)
 	if err != nil {
 		return err
 	}
-	return os.WriteFile(dest, bytes, os.ModePerm)
+	return os.WriteFile(dest, b, os.ModePerm)
 }
