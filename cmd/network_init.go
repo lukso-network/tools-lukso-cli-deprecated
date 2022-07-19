@@ -35,15 +35,22 @@ from the github repository. It also updates node name and IP address in the .env
 	Example: "lukso network init --chain l16 --nodeName my_node",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		chain := network.GetChainByString(viper.GetString(CommandOptionChain))
-		nodeName, _ := cmd.Flags().GetString(CommandOptionNodeName)
-		devConfig, _ := cmd.Flags().GetString(CommandOptionDevConfig)
 
-		if chain == network.Dev && devConfig == "" {
-			utils.PrintColoredError("you need to provide a dev location if you want to use a dev chain: lukso network init --nodeName [NAME] -d test --chain dev")
+		// default is Mainnet but not supported yet
+		if chain == network.MainNet {
+			utils.PrintColoredError("you are trying to init a mainnet node...you are ahead of your time")
 			return nil
 		}
 
-		if nodeName == "" {
+		statsName, _ := cmd.Flags().GetString(CommandOptionNodeName)
+		devConfig, _ := cmd.Flags().GetString(CommandOptionDevConfig)
+
+		if chain == network.Dev && devConfig == "" {
+			utils.PrintColoredError("you need to provide a dev location if you want to use a dev chain: lukso network init --statsName [NAME] -d test --chain dev")
+			return nil
+		}
+
+		if statsName == "" {
 			// set number of validators
 			prompt := promptui.Prompt{
 				Label: "Enter the name of your node (how it appears on the stat pages)",
@@ -57,10 +64,10 @@ from the github repository. It also updates node name and IP address in the .env
 
 			name, err := prompt.Run()
 			if err != nil {
-				cobra.CompErrorln(err.Error())
+				utils.PrintColoredErrorWithReason("couldn't read stats name", err)
 				return nil
 			}
-			nodeName = name
+			statsName = name
 		}
 
 		nodeConf := network.GetDefaultNodeConfigsIfDoesntExist(chain)
@@ -70,44 +77,47 @@ from the github repository. It also updates node name and IP address in the .env
 		}
 
 		// Get IP And HostName
-		nodeDetails, err := network.GetIPAndHostName(nodeName)
+		nodeDetails, err := network.GetIPAndHostName(statsName)
 		if err != nil {
 			utils.PrintColoredError(fmt.Sprintf("\ncouldn't get ip or host name, reason %s", err.Error()))
 			return nil
 		}
 		nodeConf.Node = nodeDetails
 		// download node params
-		if chain != network.L16Beta {
-			nodeParams := network.NewNodeParamsLoader()
-			fmt.Println("devConfig:", devConfig)
+		nodeParams := network.NewNodeParamsLoader()
+		fmt.Println("devConfig:", devConfig)
 
-			location := ""
-			if chain == network.Dev {
-				location = nodeParams.GetDevLocation(devConfig)
-			} else {
-				location = nodeParams.GetLocation(chain)
-			}
-
-			fmt.Printf("Loading node params from  %s ...", location)
-			err := nodeParams.LoadNodeParams(location)
-			if err != nil {
-				fmt.Println("unsuccessful")
-				utils.PrintColoredError(fmt.Sprintf("couldn't load node params for dev chain, reason: %s", err.Error()))
-				return nil
-			}
-			nodeConf.ApiEndpoints = &network.NodeApi{
-				ConsensusApi: nodeParams.ConsensusAPI,
-				ExecutionApi: nodeParams.ExecutionAPI,
-			}
-			nodeConf.Chain.ID = nodeParams.NetworkID
-			nodeConf.Execution.StatsAddress = nodeParams.ExecutionStats
-			nodeConf.Consensus.StatsAddress = nodeParams.ConsensusStats
-			nodeConf.DepositDetails.Amount = nodeParams.MinStakeAmount
-			nodeConf.Execution.Version = nodeParams.GethVersion
-			nodeConf.Consensus.Version = nodeParams.PrysmVersion
-
-			fmt.Println("success")
+		location := ""
+		if chain == network.Dev {
+			location = nodeParams.GetDevLocation(devConfig)
+		} else {
+			location = nodeParams.GetLocation(chain)
 		}
+
+		fmt.Printf("Loading node params from  %s ...", location)
+		err = nodeParams.LoadNodeParams(location)
+		if err != nil {
+			fmt.Println("unsuccessful")
+			utils.PrintColoredError(fmt.Sprintf("couldn't load node params for dev chain, reason: %s", err.Error()))
+			return nil
+		}
+		nodeConf.Consensus.Bootnode, err = network.GetENRFromBootNode(nodeParams.ConsensusAPI)
+		if err != nil {
+			utils.PrintColoredError(fmt.Sprintf("couldn't get ENR from bootnode, reason: %s", err.Error()))
+			return err
+		}
+		nodeConf.ApiEndpoints = &network.NodeApi{
+			ConsensusApi: nodeParams.ConsensusAPI,
+			ExecutionApi: nodeParams.ExecutionAPI,
+		}
+		nodeConf.Chain.ID = nodeParams.NetworkID
+		nodeConf.Execution.StatsAddress = nodeParams.ExecutionStats
+		nodeConf.Consensus.StatsAddress = nodeParams.ConsensusStats
+		nodeConf.DepositDetails.Amount = nodeParams.MinStakeAmount
+		nodeConf.Execution.Version = nodeParams.GethVersion
+		nodeConf.Consensus.Version = nodeParams.PrysmVersion
+
+		fmt.Println("success")
 
 		err = nodeConf.Save()
 		if err != nil {

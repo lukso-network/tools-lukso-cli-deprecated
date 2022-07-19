@@ -24,6 +24,7 @@ var updateCmd = &cobra.Command{
 		fmt.Println("Searching for updates")
 
 		nodeConf := network.MustGetNodeConfig()
+
 		chain := network.GetChainByString(nodeConf.Chain.Name)
 		chainId := nodeConf.Chain.ID
 
@@ -56,38 +57,45 @@ var updateCmd = &cobra.Command{
 			}
 		}
 
-		if chain != network.L16Beta {
-			nodeParamsLoader := network.NewNodeParamsLoader()
+		nodeParamsLoader := network.NewNodeParamsLoader()
 
-			location := ""
-			if chain == network.Dev {
-				location = nodeParamsLoader.GetDevLocation(chainId)
-			} else {
-				location = nodeParamsLoader.GetLocation(chain)
-			}
+		location := ""
+		if chain == network.Dev {
+			location = nodeParamsLoader.GetDevLocation(chainId)
+			// Update network configuration
+			network.NewDevResourceDownloader(location, network.BeaconClientPrysm).DownloadAll()
+		} else {
+			location = nodeParamsLoader.GetLocation(chain)
+			// Update network configuration
+			network.NewResourceDownloader(chain, network.BeaconClientPrysm).DownloadAll()
+		}
 
-			fmt.Printf("Loading node params from  %s ...", location)
-			err := nodeParamsLoader.LoadNodeParams(location)
+		fmt.Printf("Loading node params from  %s ...", location)
+		err = nodeParamsLoader.LoadNodeParams(location)
+		if err != nil {
+			fmt.Println("unsuccessful")
+			utils.PrintColoredError(fmt.Sprintf("couldn't load node params for chain, reason: %s", err.Error()))
+		} else {
+			hasUpdates = true
+			nodeConf.Consensus.Bootnode, err = network.GetENRFromBootNode(nodeParamsLoader.ConsensusAPI)
 			if err != nil {
-				fmt.Println("unsuccessful")
-				utils.PrintColoredError(fmt.Sprintf("couldn't load node params for chain, reason: %s", err.Error()))
-			} else {
-				hasUpdates = true
-				nodeConf.ApiEndpoints = &network.NodeApi{
-					ConsensusApi: nodeParamsLoader.ConsensusAPI,
-					ExecutionApi: nodeParamsLoader.ExecutionAPI,
-				}
-				nodeConf.Chain.ID = nodeParamsLoader.NetworkID
-				nodeConf.Execution.StatsAddress = nodeParamsLoader.ExecutionStats
-				nodeConf.Consensus.StatsAddress = nodeParamsLoader.ConsensusStats
-				nodeConf.DepositDetails.Amount = nodeParamsLoader.MinStakeAmount
-				nodeConf.Execution.Version = nodeParamsLoader.GethVersion
-				nodeConf.Consensus.Version = nodeParamsLoader.PrysmVersion
-				err = nodeConf.Save()
-				fmt.Println("")
-				if err != nil {
-					fmt.Println("couldn't update node params, reason:", err.Error())
-				}
+				utils.PrintColoredError(fmt.Sprintf("couldn't get ENR from bootnode, reason: %s", err.Error()))
+				return
+			}
+			nodeConf.ApiEndpoints = &network.NodeApi{
+				ConsensusApi: nodeParamsLoader.ConsensusAPI,
+				ExecutionApi: nodeParamsLoader.ExecutionAPI,
+			}
+			nodeConf.Chain.ID = nodeParamsLoader.NetworkID
+			nodeConf.Execution.StatsAddress = nodeParamsLoader.ExecutionStats
+			nodeConf.Consensus.StatsAddress = nodeParamsLoader.ConsensusStats
+			nodeConf.DepositDetails.Amount = nodeParamsLoader.MinStakeAmount
+			nodeConf.Execution.Version = nodeParamsLoader.GethVersion
+			nodeConf.Consensus.Version = nodeParamsLoader.PrysmVersion
+			err = nodeConf.Save()
+			fmt.Println("")
+			if err != nil {
+				fmt.Println("couldn't update node params, reason:", err.Error())
 			}
 		}
 

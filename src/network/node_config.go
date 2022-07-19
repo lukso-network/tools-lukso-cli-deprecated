@@ -2,10 +2,13 @@ package network
 
 import (
 	"fmt"
+	"github.com/lukso-network/lukso-cli/api/beaconapi"
+	"github.com/lukso-network/lukso-cli/src/utils"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"io/ioutil"
 	"os"
+	"strings"
 
 	"gopkg.in/yaml.v3"
 )
@@ -18,14 +21,12 @@ func GetDefaultNodeConfig(chain Chain) *NodeConfigs {
 	switch chain {
 	case L16:
 		return DefaultL16NodeConfigs
-	case L16Beta:
-		return DefaultL16BetaNodeConfigs
 	case Local:
 		return DefaultLocalNodeConfigs
 	case Dev:
 		return DefaultDevNodeConfigs
 	default:
-		return DefaultL16BetaNodeConfigs
+		return DefaultL16NodeConfigs
 	}
 }
 
@@ -281,4 +282,22 @@ func (config *NodeConfigs) HasMnemonic() bool {
 
 func (config *NodeConfigs) GetChain() Chain {
 	return GetChainByString(config.Chain.Name)
+}
+
+func GetENRFromBootNode(endpoint string) (string, error) {
+	response, err := beaconapi.NewBeaconClient(endpoint).Identity()
+	if err != nil {
+		utils.PrintColoredErrorWithReason("couldn't get bootnode enr", err)
+		return "", err
+	}
+	return strings.TrimSuffix(response.Data.Enr, "=="), nil
+}
+
+func (c *NodeConfigs) CreateNodeRecovery() NodeRecovery {
+	vc := *c.ValidatorCredentials
+	tw := *c.TransactionWallet
+	return NodeRecovery{
+		vc,
+		tw,
+	}
 }

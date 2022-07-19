@@ -16,13 +16,19 @@ const (
 	CommandOptionDepositAddressShort = "a"
 
 	CommandOptionChain     = "chain"
-	CommandOptionNodeName  = "nodeName"
+	CommandOptionNodeName  = "stats-name"
 	CommandOptionDevConfig = "devConfig"
 
 	CommandOptionFrom      = "from"
 	CommandOptionFromShort = "f"
 	CommandOptionTo        = "to"
 	CommandOptionToShort   = "t"
+
+	CommandOptionPassword      = "password"
+	CommandOptionPasswordShort = "p"
+
+	CommandOptionNoPrompt      = "no-prompt"
+	CommandOptionNoPromptShort = "n"
 
 	CommandOptionMaxGasFee        = "maxGasFee"
 	CommandOptionMaxGasFeeShort   = "m"
@@ -31,6 +37,12 @@ const (
 
 	CommandOptionPath      = "path"
 	CommandOptionPathShort = "p"
+
+	CommandOptionVersion = "version"
+	CommandOptionUpgrade = "upgrade"
+
+	CommandOptionExistingMnemonic      = "existingMnemonic"
+	CommandOptionExistingMnemonicShort = "r"
 )
 
 func readConsensusApiEndpoint(cmd *cobra.Command, nodeConf *network.NodeConfigs) (string, error) {

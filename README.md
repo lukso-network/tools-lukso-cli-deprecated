@@ -71,6 +71,7 @@ Generate the doc with
 
 Release are created by creating a Git release. Make sure to 
 
-1. modify **cli_downloader.sh** with the desired version 
+1. modify **install.sh** with the desired version 
 2. add updates to CHANGELOG.md
+3. cmd/root.go  -> rootCmd.Version
 

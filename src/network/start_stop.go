@@ -3,10 +3,15 @@ package network
 import (
 	"errors"
 	"fmt"
+	"github.com/lukso-network/lukso-cli/src/utils"
 	"os/exec"
 )
 
 func runDockerServices(serviceList ...string) error {
+	err := checkDockerIsRunning()
+	if err != nil {
+		return err
+	}
 	dockerCommand := []string{"docker-compose", "up", "-d"}
 	dockerCommand = append(dockerCommand, serviceList...)
 	fmt.Println("You may need to provide super user (sudo) password to run docker (if needed)")
@@ -18,6 +23,10 @@ func runDockerServices(serviceList ...string) error {
 }
 
 func DownDockerServices() error {
+	err := checkDockerIsRunning()
+	if err != nil {
+		return err
+	}
 	command := exec.Command("sudo", "docker-compose", "down")
 	if cmdOutput, err := command.CombinedOutput(); err != nil {
 		fmt.Println(string(cmdOutput))
@@ -49,10 +58,24 @@ func StartValidatorNode() error {
 }
 
 func StopValidatorNode() error {
+	err := checkDockerIsRunning()
+	if err != nil {
+		return err
+	}
 	command := exec.Command("sudo", "docker-compose", "stop", "prysm_validator")
 	if cmdOutput, err := command.CombinedOutput(); err != nil {
 		fmt.Println(string(cmdOutput))
 		return err
+	}
+	return nil
+}
+
+func checkDockerIsRunning() error {
+	command := exec.Command("docker", "info")
+	err := command.Run()
+	if err != nil {
+		return errors.New(utils.ConsoleInColor(utils.ConsoleColorRed, "You need to have Docker installed and running to use the LUKSO CLI.\n"+
+			"Read the documentation (https://docs.docker.com/desktop/#download-and-install) to learn how to set Docker up."))
 	}
 	return nil
 }

@@ -15,7 +15,7 @@ import (
 var validatorBackupCmd = &cobra.Command{
 	Use:     "backup",
 	Short:   "Creates a recovery file",
-	Long:    `Creates a recovery file that can be used to recreate the node somewhere els`,
+	Long:    `Creates a recovery file that can be used to recreate the node somewhere else`,
 	Example: "lukso network validator backup",
 	Run: func(cmd *cobra.Command, args []string) {
 		nodeConf := network.MustGetNodeConfig()
@@ -24,17 +24,22 @@ var validatorBackupCmd = &cobra.Command{
 			utils.PrintColoredError(network.ErrMsgValidatorSecretNotPresent)
 			return
 		}
+		wallet := nodeConf.TransactionWallet
+		if wallet == nil || wallet.IsEmpty() {
+			utils.PrintColoredError(network.ErrMsgTransactionWalletNotPresent)
+			return
+		}
 
-		err := credentials.CreateNodeRecovery().Save()
+		err := nodeConf.CreateNodeRecovery().Save()
 		if err != nil {
-			utils.PrintColoredErrorWithReason("couldn't create recovery file", err)
+			utils.PrintColoredErrorWithReason("couldn't save validator credentials or transaction wallet in recovery file", err)
 			return
 		}
 
 		fmt.Println("A file ./node_recovery.json was created. Store this in a save place.")
 		fmt.Println("You can recover your keystore with")
 		utils.Coloredln("   lukso network validator recover --path [PATH_TO_FILE]")
-		fmt.Println("Make sure to NEVER run 2 nodes with the same keystore. You will prone to slashing.")
+		fmt.Println("Make sure to NEVER run 2 nodes with the same keystore as you could be prone to slashing.")
 	},
 }
 

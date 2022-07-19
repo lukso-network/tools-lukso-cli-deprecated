@@ -1,6 +1,51 @@
 # Change Log
 
 
+## [v0.4.3] - L16 Release
+
+
+### Fixed
+
+- docker compose configuration generating extra network stubs & not updating correctly
+### Added
+
+- update ENR from bootnode dynamically
+- new `version` command to install and update different versions of the CLI
+- new `--existingMnemonic` (or `-r`) flag to `lukso network validator setup` to utilise existing mnemonics
+
+
+## [v0.4.2] - L16 Release
+
+
+### Fixed
+
+- fixed bug in deposit (v0.4.1-rc)
+### Added
+
+- check to see if Docker is running
+- pull & update configurations when **lukso network update** is run
+### Changed
+
+- root command use description from `cli` to `lukso`
+
+
+## [v0.4.0] - L16 Release
+
+
+### Added
+
+- lukso network init without --chain param will error out
+### Changed
+
+- removed L16Beta references in code
+- --nodeName renamed to --stats-name in **lukso network init**
+
+
+### Fixed
+
+- spelling of LYX
+- contract address for L16
+
 ## [v0.3.6] - L16 Release
 
 

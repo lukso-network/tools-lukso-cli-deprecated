@@ -69,7 +69,7 @@ func Deposit(
 
 		if totalDepositedAmount > 0 {
 			fmt.Println("Validator has already a deposit with amount: \n", totalDepositedAmount)
-			//continue
+			continue
 		}
 
 		opts, err := createTransactionOpts(client, &tk, maxGasFee, priorityFee)
