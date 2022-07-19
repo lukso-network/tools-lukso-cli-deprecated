@@ -75,7 +75,7 @@ func (av *AddValidatorProcess) setupAddition() error {
 
 func (av *AddValidatorProcess) recoverKeystore() error {
 	fmt.Println("Creating a backup of your current keystore setup...")
-	err := av.configs.ValidatorCredentials.CreateNodeRecovery().SaveWithDestination(NodeRecoveryBackup)
+	err := av.configs.CreateNodeRecovery().SaveWithDestination(NodeRecoveryBackup)
 	if err != nil {
 		return err
 	}
