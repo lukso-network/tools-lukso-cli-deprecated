@@ -3,6 +3,7 @@ package network
 import (
 	"fmt"
 	"github.com/lukso-network/lukso-cli/src/utils"
+	"github.com/lukso-network/lukso-cli/src/wallet"
 	"github.com/manifoldco/promptui"
 	"os"
 	"strconv"
@@ -23,7 +24,7 @@ func NewAddValidatorProcess(configs *NodeConfigs) *AddValidatorProcess {
 	return &AddValidatorProcess{configs: configs}
 }
 
-func (av *AddValidatorProcess) Add() {
+func (av *AddValidatorProcess) Add(passwordFile string) {
 	err := av.setupAddition()
 	if err != nil {
 		utils.PrintColoredErrorWithReason("couldn't get num of new validators", err)
@@ -36,7 +37,7 @@ func (av *AddValidatorProcess) Add() {
 		return
 	}
 
-	err = av.createNewKeystore()
+	err = av.createNewKeystore(passwordFile)
 	if err != nil {
 		utils.PrintColoredErrorWithReason("couldn't create new keystore", err)
 		// TODO Creation of new keystore didn't work reestablish old one
@@ -48,12 +49,12 @@ func (av *AddValidatorProcess) Add() {
 
 func (av *AddValidatorProcess) setupAddition() error {
 	credentials := av.configs.ValidatorCredentials
-	fmt.Println("You are currently have:")
+	fmt.Println("You currently have:")
 	numOfValidators := credentials.ValidatorIndexTo - credentials.ValidatorIndexFrom
 	fmt.Printf("%d validators, the index range is [%d, %d]", numOfValidators, credentials.ValidatorIndexFrom, credentials.ValidatorIndexTo)
 	// set number of validators
 	prompt := promptui.Prompt{
-		Label: "How Many Validators Do You Want To Add?",
+		Label: "How many validators do you want to add?",
 	}
 
 	numOfAddsString, err := prompt.Run()
@@ -88,7 +89,7 @@ func (av *AddValidatorProcess) recoverKeystore() error {
 	return nil
 }
 
-func (av *AddValidatorProcess) createNewKeystore() error {
+func (av *AddValidatorProcess) createNewKeystore(passwordFile string) error {
 	oldCredentials := av.configs.ValidatorCredentials
 	oldCredentials.ValidatorIndexTo = av.newNumberOfValidators()
 	av.configs.ValidatorCredentials = oldCredentials
@@ -101,7 +102,10 @@ func (av *AddValidatorProcess) createNewKeystore() error {
 	if err != nil {
 		return err
 	}
-	password := "asdasd"
+	password, err := wallet.ReadPasswordFile(passwordFile)
+	if err != nil {
+		utils.PrintColoredError(err.Error())
+	}
 	err = av.configs.ValidatorCredentials.GenerateKeystoreWithRange(av.configs.ValidatorCredentials.ValidatorRange(), password)
 	if err != nil {
 		return err
