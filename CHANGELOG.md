@@ -1,5 +1,16 @@
 # Change Log
 
+## [v0.4.4-rc] - L16 Release
+
+### Fixed
+
+- clear command
+### Added
+
+- new refresh command - quickly restart and update your validator node
+- backup and restore your transaction wallet
+- add new validators to an existing setup
+
 
 ## [v0.4.3] - L16 Release
 
