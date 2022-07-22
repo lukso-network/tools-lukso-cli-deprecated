@@ -47,7 +47,7 @@ func (av *AddValidatorProcess) Add() {
 		return
 	}
 
-	err = av.cleanup()
+	err = av.cleanupKeystore()
 	if err != nil {
 		utils.PrintColoredErrorWithReason("couldn't clean up keystore backup files", err)
 		return
@@ -132,7 +132,7 @@ func (av *AddValidatorProcess) recoverKeystore() error {
 	return nil
 }
 
-func (av *AddValidatorProcess) cleanup() error {
+func (av *AddValidatorProcess) cleanupKeystore() error {
 	err := os.RemoveAll(NodeRecoveryBackup)
 	if err != nil {
 		utils.PrintColoredErrorWithReason("couldn't remove backup files", err)
