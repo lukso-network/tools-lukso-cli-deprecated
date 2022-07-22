@@ -3,7 +3,6 @@ package network
 import (
 	"fmt"
 	"github.com/lukso-network/lukso-cli/src/utils"
-	"github.com/lukso-network/lukso-cli/src/wallet"
 	"github.com/manifoldco/promptui"
 	"os"
 	"strconv"
@@ -18,40 +17,47 @@ type AddValidatorProcess struct {
 	configs         *NodeConfigs
 	numOfValidators int64
 	numOfAdds       int64
+	password        string
 }
 
-func NewAddValidatorProcess(configs *NodeConfigs) *AddValidatorProcess {
-	return &AddValidatorProcess{configs: configs}
+func NewAddValidatorProcess(configs *NodeConfigs, password string) *AddValidatorProcess {
+	return &AddValidatorProcess{configs: configs, password: password}
 }
 
-func (av *AddValidatorProcess) Add(passwordFile string) {
+func (av *AddValidatorProcess) Add() {
 	err := av.setupAddition()
 	if err != nil {
 		utils.PrintColoredErrorWithReason("couldn't get num of new validators", err)
 		return
 	}
 
-	err = av.recoverKeystore()
+	err = av.backupKeystore()
 	if err != nil {
 		utils.PrintColoredErrorWithReason("couldn't recover keystore", err)
 		return
 	}
 
-	err = av.createNewKeystore(passwordFile)
+	err = av.createNewKeystore()
 	if err != nil {
 		utils.PrintColoredErrorWithReason("couldn't create new keystore", err)
-		// TODO Creation of new keystore didn't work reestablish old one
+		err = av.recoverKeystore()
+		if err != nil {
+			utils.PrintColoredErrorWithReason("couldn't recover keystore", err)
+		}
 		return
 	}
 
-	// TODO delete old keystore
+	err = av.cleanupKeystore()
+	if err != nil {
+		utils.PrintColoredErrorWithReason("couldn't clean up keystore backup files", err)
+		return
+	}
 }
 
 func (av *AddValidatorProcess) setupAddition() error {
 	credentials := av.configs.ValidatorCredentials
-	fmt.Println("You currently have:")
 	numOfValidators := credentials.ValidatorIndexTo - credentials.ValidatorIndexFrom
-	fmt.Printf("%d validators, the index range is [%d, %d]", numOfValidators, credentials.ValidatorIndexFrom, credentials.ValidatorIndexTo)
+	fmt.Printf("You currently have %d validators, the index range is [%d, %d] \n", numOfValidators, credentials.ValidatorIndexFrom, credentials.ValidatorIndexTo)
 	// set number of validators
 	prompt := promptui.Prompt{
 		Label: "How many validators do you want to add?",
@@ -69,13 +75,14 @@ func (av *AddValidatorProcess) setupAddition() error {
 
 	av.numOfValidators = numOfValidators
 	av.numOfAdds = adds
-	fmt.Println("You want to add ", av.numOfAdds, "new validators. This will result in a total number of validators of ", av.numOfAdds+av.numOfValidators)
+	fmt.Println("You want to add", av.numOfAdds, "new validators. This will result in a total number of", av.numOfAdds+av.numOfValidators, "validators.")
 	return nil
 }
 
-func (av *AddValidatorProcess) recoverKeystore() error {
+func (av *AddValidatorProcess) backupKeystore() error {
 	fmt.Println("Creating a backup of your current keystore setup...")
-	err := av.configs.CreateNodeRecovery().SaveWithDestination(NodeRecoveryBackup)
+	configs := *av.configs
+	err := configs.CreateNodeRecovery().SaveWithDestination(NodeRecoveryBackup)
 	if err != nil {
 		return err
 	}
@@ -89,7 +96,7 @@ func (av *AddValidatorProcess) recoverKeystore() error {
 	return nil
 }
 
-func (av *AddValidatorProcess) createNewKeystore(passwordFile string) error {
+func (av *AddValidatorProcess) createNewKeystore() error {
 	oldCredentials := av.configs.ValidatorCredentials
 	oldCredentials.ValidatorIndexTo = av.newNumberOfValidators()
 	av.configs.ValidatorCredentials = oldCredentials
@@ -102,11 +109,7 @@ func (av *AddValidatorProcess) createNewKeystore(passwordFile string) error {
 	if err != nil {
 		return err
 	}
-	password, err := wallet.ReadPasswordFile(passwordFile)
-	if err != nil {
-		utils.PrintColoredError(err.Error())
-	}
-	err = av.configs.ValidatorCredentials.GenerateKeystoreWithRange(av.configs.ValidatorCredentials.ValidatorRange(), password)
+	err = av.configs.ValidatorCredentials.GenerateKeystoreWithRange(av.configs.ValidatorCredentials.ValidatorRange(), av.password)
 	if err != nil {
 		return err
 	}
@@ -115,4 +118,30 @@ func (av *AddValidatorProcess) createNewKeystore(passwordFile string) error {
 
 func (av *AddValidatorProcess) newNumberOfValidators() int64 {
 	return av.numOfAdds + av.numOfValidators
+}
+
+func (av *AddValidatorProcess) recoverKeystore() error {
+	err := os.RemoveAll(av.configs.Keystore.Volume)
+	if err != nil {
+		return err
+	}
+	err = os.Rename(KeystoreBackupName, av.configs.Keystore.Volume)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (av *AddValidatorProcess) cleanupKeystore() error {
+	err := os.RemoveAll(NodeRecoveryBackup)
+	if err != nil {
+		utils.PrintColoredErrorWithReason("couldn't remove node recovery backup files", err)
+		return err
+	}
+	err = os.RemoveAll(KeystoreBackupName)
+	if err != nil {
+		utils.PrintColoredErrorWithReason("couldn't remove keystore backup files", err)
+		return err
+	}
+	return nil
 }
