@@ -40,11 +40,14 @@ func (av *AddValidatorProcess) Add() {
 	err = av.createNewKeystore()
 	if err != nil {
 		utils.PrintColoredErrorWithReason("couldn't create new keystore", err)
-
 		return
 	}
 
-	// TODO delete old keystore
+	err = os.RemoveAll(NodeRecoveryBackup)
+	if err != nil {
+		utils.PrintColoredErrorWithReason("couldn't remove backup files", err)
+		return
+	}
 }
 
 func (av *AddValidatorProcess) setupAddition() error {
