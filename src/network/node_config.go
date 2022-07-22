@@ -84,30 +84,30 @@ type TransactionWallet struct {
 	PrivateKey string `yaml:""`
 }
 
-func (nc *NodeConfigs) getPort(portName string) *PortDescription {
-	if nc.Ports == nil {
+func (config *NodeConfigs) getPort(portName string) *PortDescription {
+	if config.Ports == nil {
 		return nil
 	}
-	portDesc := nc.Ports[portName]
+	portDesc := config.Ports[portName]
 	return &portDesc
 }
 
-func (nc *NodeConfigs) CreateCredentials() *ValidatorCredentials {
-	nc.ValidatorCredentials = &ValidatorCredentials{}
-	return nc.ValidatorCredentials
+func (config *NodeConfigs) CreateCredentials() *ValidatorCredentials {
+	config.ValidatorCredentials = &ValidatorCredentials{}
+	return config.ValidatorCredentials
 }
 
-func (nc *NodeConfigs) WriteOrUpdateNodeConfig() error {
-	yamlData, err := yaml.Marshal(nc)
+func (config *NodeConfigs) WriteOrUpdateNodeConfig() error {
+	yamlData, err := yaml.Marshal(config)
 	if err != nil {
 		return err
 	}
 	return os.WriteFile(NodeConfigLocation, yamlData, os.ModePerm)
 }
 
-func (nc *NodeConfigs) UpdateExternalIP() (bool, error) {
+func (config *NodeConfigs) UpdateExternalIP() (bool, error) {
 	fmt.Println("Fetching external IP....")
-	oldIP := nc.Node.IP
+	oldIP := config.Node.IP
 	ip, err := getPublicIP()
 	if err != nil {
 		return false, err
@@ -116,8 +116,8 @@ func (nc *NodeConfigs) UpdateExternalIP() (bool, error) {
 	if oldIP == ip {
 		return false, nil
 	} else {
-		nc.Node.IP = ip
-		err := nc.WriteOrUpdateNodeConfig()
+		config.Node.IP = ip
+		err := config.WriteOrUpdateNodeConfig()
 		if err != nil {
 			return false, err
 		}
@@ -125,8 +125,8 @@ func (nc *NodeConfigs) UpdateExternalIP() (bool, error) {
 	}
 }
 
-func (nc *NodeConfigs) UpdateBootnodes() (bool, error) {
-	chain := GetChainByString(nc.Chain.Name)
+func (config *NodeConfigs) UpdateBootnodes() (bool, error) {
+	chain := GetChainByString(config.Chain.Name)
 	bootnodes, err := NewBootnodeUpdater(chain).DownloadLatestBootnodes()
 	if err != nil {
 		return false, err
@@ -137,21 +137,21 @@ func (nc *NodeConfigs) UpdateBootnodes() (bool, error) {
 	}
 
 	hasUpdates := false
-	if nc.Consensus.Bootnode != bootnodes[0].Consensus {
+	if config.Consensus.Bootnode != bootnodes[0].Consensus {
 		fmt.Println("Updating bootnode for the consensus chain...")
 		hasUpdates = true
-		nc.Consensus.Bootnode = bootnodes[0].Consensus
+		config.Consensus.Bootnode = bootnodes[0].Consensus
 	}
-	if nc.Execution.Bootnode != bootnodes[0].Execution {
+	if config.Execution.Bootnode != bootnodes[0].Execution {
 		fmt.Println("Updating bootnode for the execution chain...")
 		hasUpdates = true
-		nc.Execution.Bootnode = bootnodes[0].Execution
+		config.Execution.Bootnode = bootnodes[0].Execution
 	}
 
 	if !hasUpdates {
 		return false, nil
 	} else {
-		err := nc.WriteOrUpdateNodeConfig()
+		err := config.WriteOrUpdateNodeConfig()
 		if err != nil {
 			return false, err
 		}
@@ -159,9 +159,9 @@ func (nc *NodeConfigs) UpdateBootnodes() (bool, error) {
 	}
 }
 
-func (nc *NodeConfigs) UpdateDevBootnodes(devLocation string) (bool, error) {
-	chain := GetChainByString(nc.Chain.Name)
-	GetChainByString(nc.Chain.Name)
+func (config *NodeConfigs) UpdateDevBootnodes(devLocation string) (bool, error) {
+	chain := GetChainByString(config.Chain.Name)
+	GetChainByString(config.Chain.Name)
 	bootnodes, err := NewBootnodeUpdaterDev(chain, devLocation).DownloadLatestBootnodes()
 	if err != nil {
 		return false, err
@@ -172,21 +172,21 @@ func (nc *NodeConfigs) UpdateDevBootnodes(devLocation string) (bool, error) {
 	}
 
 	hasUpdates := false
-	if nc.Consensus.Bootnode != bootnodes[0].Consensus {
+	if config.Consensus.Bootnode != bootnodes[0].Consensus {
 		fmt.Println("Updating bootnode for the consensus chain...")
 		hasUpdates = true
-		nc.Consensus.Bootnode = bootnodes[0].Consensus
+		config.Consensus.Bootnode = bootnodes[0].Consensus
 	}
-	if nc.Execution.Bootnode != bootnodes[0].Execution {
+	if config.Execution.Bootnode != bootnodes[0].Execution {
 		fmt.Println("Updating bootnode for the execution chain...")
 		hasUpdates = true
-		nc.Execution.Bootnode = bootnodes[0].Execution
+		config.Execution.Bootnode = bootnodes[0].Execution
 	}
 
 	if !hasUpdates {
 		return false, nil
 	} else {
-		err := nc.WriteOrUpdateNodeConfig()
+		err := config.WriteOrUpdateNodeConfig()
 		if err != nil {
 			return false, err
 		}
@@ -293,18 +293,18 @@ func GetENRFromBootNode(endpoint string) (string, error) {
 	return strings.TrimSuffix(response.Data.Enr, "=="), nil
 }
 
-func (c *NodeConfigs) CreateNodeRecovery() NodeRecovery {
+func (config *NodeConfigs) CreateNodeRecovery() NodeRecovery {
 	var tw TransactionWallet
-	if c.TransactionWallet == nil {
+	if config.TransactionWallet == nil {
 		tw = TransactionWallet{
 			PublicKey:  "",
 			PrivateKey: "",
 		}
 	} else {
-		tw = *c.TransactionWallet
+		tw = *config.TransactionWallet
 	}
 	return NodeRecovery{
-		*c.ValidatorCredentials,
+		*config.ValidatorCredentials,
 		tw,
 	}
 }
