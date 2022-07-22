@@ -7,6 +7,7 @@ package cmd
 import (
 	"fmt"
 	"github.com/lukso-network/lukso-cli/src/network"
+	"github.com/lukso-network/lukso-cli/src/utils"
 	"os"
 	"time"
 
@@ -34,6 +35,8 @@ var restartCmd = &cobra.Command{
 			cobra.CompErrorln(err.Error())
 			os.Exit(1)
 		}
+
+		utils.ColoredPrintln("LUKSO Network", "successfully restarted")
 	},
 }
 
