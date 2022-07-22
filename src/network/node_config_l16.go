@@ -31,6 +31,7 @@ var DefaultL16NodeConfigs = &NodeConfigs{
 		DataVolume: "./data/validator_data",
 	},
 	ValidatorCredentials: &ValidatorCredentials{},
+	TransactionWallet:    &TransactionWallet{},
 	Ports: map[string]PortDescription{
 		"geth": {
 			HttpPort: "8545",
