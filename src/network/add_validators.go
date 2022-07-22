@@ -17,13 +17,14 @@ type AddValidatorProcess struct {
 	configs         *NodeConfigs
 	numOfValidators int64
 	numOfAdds       int64
+	password        string
 }
 
-func NewAddValidatorProcess(configs *NodeConfigs) *AddValidatorProcess {
-	return &AddValidatorProcess{configs: configs}
+func NewAddValidatorProcess(configs *NodeConfigs, password string) *AddValidatorProcess {
+	return &AddValidatorProcess{configs: configs, password: password}
 }
 
-func (av *AddValidatorProcess) Add(password string) {
+func (av *AddValidatorProcess) Add() {
 	err := av.setupAddition()
 	if err != nil {
 		utils.PrintColoredErrorWithReason("couldn't get num of new validators", err)
@@ -36,10 +37,10 @@ func (av *AddValidatorProcess) Add(password string) {
 		return
 	}
 
-	err = av.createNewKeystore(password)
+	err = av.createNewKeystore()
 	if err != nil {
 		utils.PrintColoredErrorWithReason("couldn't create new keystore", err)
-		// TODO Creation of new keystore didn't work reestablish old one
+
 		return
 	}
 
@@ -88,7 +89,7 @@ func (av *AddValidatorProcess) recoverKeystore() error {
 	return nil
 }
 
-func (av *AddValidatorProcess) createNewKeystore(password string) error {
+func (av *AddValidatorProcess) createNewKeystore() error {
 	oldCredentials := av.configs.ValidatorCredentials
 	oldCredentials.ValidatorIndexTo = av.newNumberOfValidators()
 	av.configs.ValidatorCredentials = oldCredentials
@@ -101,7 +102,7 @@ func (av *AddValidatorProcess) createNewKeystore(password string) error {
 	if err != nil {
 		return err
 	}
-	err = av.configs.ValidatorCredentials.GenerateKeystoreWithRange(av.configs.ValidatorCredentials.ValidatorRange(), password)
+	err = av.configs.ValidatorCredentials.GenerateKeystoreWithRange(av.configs.ValidatorCredentials.ValidatorRange(), av.password)
 	if err != nil {
 		return err
 	}

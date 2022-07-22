@@ -24,8 +24,8 @@ var validatorAddCmd = &cobra.Command{
 			utils.PrintColoredError(err.Error())
 		}
 		network.
-			NewAddValidatorProcess(network.MustGetNodeConfig()).
-			Add(p)
+			NewAddValidatorProcess(network.MustGetNodeConfig(), p).
+			Add()
 	},
 }
 
