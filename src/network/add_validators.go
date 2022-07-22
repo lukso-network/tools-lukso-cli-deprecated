@@ -49,9 +49,8 @@ func (av *AddValidatorProcess) Add(passwordFile string) {
 
 func (av *AddValidatorProcess) setupAddition() error {
 	credentials := av.configs.ValidatorCredentials
-	fmt.Println("You currently have:")
 	numOfValidators := credentials.ValidatorIndexTo - credentials.ValidatorIndexFrom
-	fmt.Printf("%d validators, the index range is [%d, %d]", numOfValidators, credentials.ValidatorIndexFrom, credentials.ValidatorIndexTo)
+	fmt.Printf("You currently have %d validators, the index range is [%d, %d] \n", numOfValidators, credentials.ValidatorIndexFrom, credentials.ValidatorIndexTo)
 	// set number of validators
 	prompt := promptui.Prompt{
 		Label: "How many validators do you want to add?",
@@ -69,13 +68,14 @@ func (av *AddValidatorProcess) setupAddition() error {
 
 	av.numOfValidators = numOfValidators
 	av.numOfAdds = adds
-	fmt.Println("You want to add ", av.numOfAdds, "new validators. This will result in a total number of validators of ", av.numOfAdds+av.numOfValidators)
+	fmt.Println("You want to add", av.numOfAdds, "new validators. This will result in a total number of", av.numOfAdds+av.numOfValidators, "validators.")
 	return nil
 }
 
 func (av *AddValidatorProcess) recoverKeystore() error {
 	fmt.Println("Creating a backup of your current keystore setup...")
-	err := av.configs.CreateNodeRecovery().SaveWithDestination(NodeRecoveryBackup)
+	configs := *av.configs
+	err := configs.CreateNodeRecovery().SaveWithDestination(NodeRecoveryBackup)
 	if err != nil {
 		return err
 	}

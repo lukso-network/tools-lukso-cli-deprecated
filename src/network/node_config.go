@@ -294,10 +294,17 @@ func GetENRFromBootNode(endpoint string) (string, error) {
 }
 
 func (c *NodeConfigs) CreateNodeRecovery() NodeRecovery {
-	vc := *c.ValidatorCredentials
-	tw := *c.TransactionWallet
+	var tw TransactionWallet
+	if c.TransactionWallet == nil {
+		tw = TransactionWallet{
+			PublicKey:  "",
+			PrivateKey: "",
+		}
+	} else {
+		tw = *c.TransactionWallet
+	}
 	return NodeRecovery{
-		vc,
+		*c.ValidatorCredentials,
 		tw,
 	}
 }
