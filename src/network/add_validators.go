@@ -31,7 +31,7 @@ func (av *AddValidatorProcess) Add() {
 		return
 	}
 
-	err = av.recoverKeystore()
+	err = av.backupKeystore()
 	if err != nil {
 		utils.PrintColoredErrorWithReason("couldn't recover keystore", err)
 		return
@@ -40,12 +40,16 @@ func (av *AddValidatorProcess) Add() {
 	err = av.createNewKeystore()
 	if err != nil {
 		utils.PrintColoredErrorWithReason("couldn't create new keystore", err)
+		err = av.recoverKeystore()
+		if err != nil {
+			utils.PrintColoredErrorWithReason("couldn't recover keystore", err)
+		}
 		return
 	}
 
-	err = os.RemoveAll(NodeRecoveryBackup)
+	err = av.cleanup()
 	if err != nil {
-		utils.PrintColoredErrorWithReason("couldn't remove backup files", err)
+		utils.PrintColoredErrorWithReason("couldn't clean up keystore backup files", err)
 		return
 	}
 }
@@ -75,7 +79,7 @@ func (av *AddValidatorProcess) setupAddition() error {
 	return nil
 }
 
-func (av *AddValidatorProcess) recoverKeystore() error {
+func (av *AddValidatorProcess) backupKeystore() error {
 	fmt.Println("Creating a backup of your current keystore setup...")
 	configs := *av.configs
 	err := configs.CreateNodeRecovery().SaveWithDestination(NodeRecoveryBackup)
@@ -114,4 +118,30 @@ func (av *AddValidatorProcess) createNewKeystore() error {
 
 func (av *AddValidatorProcess) newNumberOfValidators() int64 {
 	return av.numOfAdds + av.numOfValidators
+}
+
+func (av *AddValidatorProcess) recoverKeystore() error {
+	err := os.RemoveAll(av.configs.Keystore.Volume)
+	if err != nil {
+		return err
+	}
+	err = os.Rename(KeystoreBackupName, av.configs.Keystore.Volume)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (av *AddValidatorProcess) cleanup() error {
+	err := os.RemoveAll(NodeRecoveryBackup)
+	if err != nil {
+		utils.PrintColoredErrorWithReason("couldn't remove backup files", err)
+		return err
+	}
+	err = os.RemoveAll(KeystoreBackupName)
+	if err != nil {
+		utils.PrintColoredErrorWithReason("couldn't remove backup files", err)
+		return err
+	}
+	return nil
 }
