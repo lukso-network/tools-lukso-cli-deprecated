@@ -49,7 +49,7 @@ func GetEnvironmentConfig() map[string]string {
 
 	newEnvData["PRYSM_BEACON_VERSION"] = c.Version
 	newEnvData["GETH_VERSION"] = e.Version
-	newEnvData["GETH_ETHERBASE"] = nodeConfig.TransactionWallet.PublicKey
+	newEnvData["GETH_ETHERBASE"] = e.Etherbase
 
 	newEnvData["GETH_NETWORK_ID"] = nodeConfig.Chain.ID
 	newEnvData["PRYSM_BOOTSTRAP_NODE"] = c.Bootnode

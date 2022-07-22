@@ -7,6 +7,7 @@ package cmd
 import (
 	"fmt"
 	"github.com/lukso-network/lukso-cli/src/network"
+	"github.com/lukso-network/lukso-cli/src/utils"
 	"github.com/spf13/cobra"
 	"os"
 )
@@ -25,6 +26,7 @@ consensus engine, execution engine and eth2-stats containers.`,
 			cobra.CompErrorln(err.Error())
 			os.Exit(1)
 		}
+		utils.ColoredPrintln("LUKSO Network", "successfully started")
 	},
 }
 
