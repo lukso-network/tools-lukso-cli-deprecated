@@ -52,7 +52,7 @@ func KeyFromWalletAndPasswordFile(keystoreUTCPath string, password string) (*key
 func ReadPasswordFile(passwordFile string) (string, error) {
 	password, err := ioutil.ReadFile(passwordFile)
 	if err != nil {
-		return "", fmt.Errorf("couldn't read wallet file %v %v", passwordFile, err.Error())
+		return "", fmt.Errorf("couldn't read wallet password file %v %v", passwordFile, err.Error())
 	}
 
 	return string(password), nil

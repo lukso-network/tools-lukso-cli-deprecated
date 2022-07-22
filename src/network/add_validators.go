@@ -3,7 +3,6 @@ package network
 import (
 	"fmt"
 	"github.com/lukso-network/lukso-cli/src/utils"
-	"github.com/lukso-network/lukso-cli/src/wallet"
 	"github.com/manifoldco/promptui"
 	"os"
 	"strconv"
@@ -24,7 +23,7 @@ func NewAddValidatorProcess(configs *NodeConfigs) *AddValidatorProcess {
 	return &AddValidatorProcess{configs: configs}
 }
 
-func (av *AddValidatorProcess) Add(passwordFile string) {
+func (av *AddValidatorProcess) Add(password string) {
 	err := av.setupAddition()
 	if err != nil {
 		utils.PrintColoredErrorWithReason("couldn't get num of new validators", err)
@@ -37,7 +36,7 @@ func (av *AddValidatorProcess) Add(passwordFile string) {
 		return
 	}
 
-	err = av.createNewKeystore(passwordFile)
+	err = av.createNewKeystore(password)
 	if err != nil {
 		utils.PrintColoredErrorWithReason("couldn't create new keystore", err)
 		// TODO Creation of new keystore didn't work reestablish old one
@@ -89,7 +88,7 @@ func (av *AddValidatorProcess) recoverKeystore() error {
 	return nil
 }
 
-func (av *AddValidatorProcess) createNewKeystore(passwordFile string) error {
+func (av *AddValidatorProcess) createNewKeystore(password string) error {
 	oldCredentials := av.configs.ValidatorCredentials
 	oldCredentials.ValidatorIndexTo = av.newNumberOfValidators()
 	av.configs.ValidatorCredentials = oldCredentials
@@ -101,10 +100,6 @@ func (av *AddValidatorProcess) createNewKeystore(passwordFile string) error {
 	err = av.configs.ValidatorCredentials.GenerateDepositDataWithRange(av.configs.DepositDetails, oldCredentials.ValidatorRange())
 	if err != nil {
 		return err
-	}
-	password, err := wallet.ReadPasswordFile(passwordFile)
-	if err != nil {
-		utils.PrintColoredError(err.Error())
 	}
 	err = av.configs.ValidatorCredentials.GenerateKeystoreWithRange(av.configs.ValidatorCredentials.ValidatorRange(), password)
 	if err != nil {
