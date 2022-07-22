@@ -135,12 +135,12 @@ func (av *AddValidatorProcess) recoverKeystore() error {
 func (av *AddValidatorProcess) cleanupKeystore() error {
 	err := os.RemoveAll(NodeRecoveryBackup)
 	if err != nil {
-		utils.PrintColoredErrorWithReason("couldn't remove backup files", err)
+		utils.PrintColoredErrorWithReason("couldn't remove node recovery backup files", err)
 		return err
 	}
 	err = os.RemoveAll(KeystoreBackupName)
 	if err != nil {
-		utils.PrintColoredErrorWithReason("couldn't remove backup files", err)
+		utils.PrintColoredErrorWithReason("couldn't remove keystore backup files", err)
 		return err
 	}
 	return nil
