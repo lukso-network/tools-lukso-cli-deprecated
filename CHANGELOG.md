@@ -1,6 +1,6 @@
 # Change Log
 
-## [v0.4.4-rc] - L16 Release
+## [v0.4.4] - L16 Release
 
 ### Fixed
 
