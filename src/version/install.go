@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	ReleaseURL = "https://github.com/lukso-network/lukso-cli/releases/download/%s/tools-lukso-cli-%s-%s"
+	ReleaseURL = "https://github.com/lukso-network/lukso-cli/releases/download/%s/lukso-cli-%s-%s"
 	UserPath   = "/usr/local/bin"
 	TempPath   = "/tmp/"
 )
