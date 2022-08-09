@@ -21,9 +21,12 @@ func (config *NodeConfigs) gethGethPeerPort() (string, error) {
 	return "", errors.New("gethPorts are not available in config file")
 }
 
-func (config *NodeConfigs) getTransactionWalletPublicKey(defaultEtherbase string) string {
+func (config *NodeConfigs) getTransactionWalletPublicKey() string {
 	if config.TransactionWallet == nil {
-		return defaultEtherbase
+		if config.Execution.Etherbase != "" {
+			return config.Execution.Etherbase
+		}
+		return GetDefaultNodeConfig(config.GetChain()).Execution.Etherbase
 	}
 	return config.TransactionWallet.PublicKey
 }
@@ -56,9 +59,7 @@ func GetEnvironmentConfig() map[string]string {
 
 	newEnvData["PRYSM_BEACON_VERSION"] = c.Version
 	newEnvData["GETH_VERSION"] = e.Version
-
-	etherBase := nodeConfig.getTransactionWalletPublicKey(e.Etherbase)
-	newEnvData["GETH_ETHERBASE"] = etherBase
+	newEnvData["GETH_ETHERBASE"] = nodeConfig.getTransactionWalletPublicKey()
 
 	newEnvData["GETH_NETWORK_ID"] = nodeConfig.Chain.ID
 	newEnvData["PRYSM_BOOTSTRAP_NODE"] = c.Bootnode
