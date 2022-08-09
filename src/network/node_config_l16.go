@@ -16,7 +16,7 @@ var DefaultL16NodeConfigs = &NodeConfigs{
 		StatsAddress: "",
 		Verbosity:    "3",
 		Version:      "v0.2.1",
-		Etherbase:    "0x7781121fd00A009670E31b76A2bf99b3A2D6878D",
+		Etherbase:    "0xCce25D1620bD5E33485B808B30D3c805eA28dBe3",
 		DataVolume:   "./data/execution_data",
 		Bootnode:     "",
 	},
