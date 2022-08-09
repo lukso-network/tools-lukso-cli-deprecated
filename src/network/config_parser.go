@@ -2,6 +2,7 @@ package network
 
 import (
 	"errors"
+	"fmt"
 	"github.com/spf13/cobra"
 )
 
@@ -22,7 +23,7 @@ func (config *NodeConfigs) gethGethPeerPort() (string, error) {
 }
 
 func (config *NodeConfigs) getEtherBase() string {
-	if config.TransactionWallet == nil {
+	if config.TransactionWallet.PublicKey == "" {
 		if config.Execution.Etherbase != "" {
 			return config.Execution.Etherbase
 		}
@@ -59,6 +60,7 @@ func GetEnvironmentConfig() map[string]string {
 
 	newEnvData["PRYSM_BEACON_VERSION"] = c.Version
 	newEnvData["GETH_VERSION"] = e.Version
+	fmt.Println(nodeConfig.getEtherBase())
 	newEnvData["GETH_ETHERBASE"] = nodeConfig.getEtherBase()
 
 	newEnvData["GETH_NETWORK_ID"] = nodeConfig.Chain.ID
