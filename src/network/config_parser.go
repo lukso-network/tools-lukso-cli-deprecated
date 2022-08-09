@@ -2,7 +2,6 @@ package network
 
 import (
 	"errors"
-	"fmt"
 	"github.com/spf13/cobra"
 )
 
@@ -60,7 +59,7 @@ func GetEnvironmentConfig() map[string]string {
 
 	newEnvData["PRYSM_BEACON_VERSION"] = c.Version
 	newEnvData["GETH_VERSION"] = e.Version
-	fmt.Println(nodeConfig.getEtherBase())
+
 	newEnvData["GETH_ETHERBASE"] = nodeConfig.getEtherBase()
 
 	newEnvData["GETH_NETWORK_ID"] = nodeConfig.Chain.ID
