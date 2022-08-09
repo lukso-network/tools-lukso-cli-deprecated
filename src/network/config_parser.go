@@ -23,7 +23,7 @@ func (config *NodeConfigs) gethGethPeerPort() (string, error) {
 }
 
 func (config *NodeConfigs) getEtherBase() string {
-	if config.TransactionWallet.PublicKey == "" {
+	if config.TransactionWallet == nil || config.TransactionWallet.PublicKey == "" {
 		if config.Execution.Etherbase != "" {
 			return config.Execution.Etherbase
 		}
