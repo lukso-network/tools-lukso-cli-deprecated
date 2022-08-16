@@ -143,21 +143,9 @@ func (c *ValidatorCredentials) GenerateDepositData(details *DepositDetails, numb
 }
 
 func (c *ValidatorCredentials) GenerateKeystore(numberOfValidators int, password string) error {
-	err := CheckAndDownloadValTool()
-	if err != nil {
-		return err
-	}
 	nodeConfigs := MustGetNodeConfig()
 	keyStoreLocation := nodeConfigs.Keystore.Volume
-	walletCmd := exec.Command("./bin/network-validator-tool", "keystores",
-		"--insecure",
-		"--out-loc", keyStoreLocation,
-		"--prysm-pass", password,
-		"--source-max", fmt.Sprintf("%d", numberOfValidators),
-		"--source-min", "0",
-		"--source-mnemonic", c.ValidatorMnemonic,
-	)
-	err = walletCmd.Run()
+	err := GenerateKeystores(uint64(numberOfValidators), 0, c.ValidatorMnemonic, true, keyStoreLocation, password)
 	if err != nil {
 		return err
 	}
@@ -192,21 +180,9 @@ func (c *ValidatorCredentials) GenerateDepositDataWithRange(details *DepositDeta
 }
 
 func (c *ValidatorCredentials) GenerateKeystoreWithRange(vRange types.ValidatorRange, password string) error {
-	err := CheckAndDownloadValTool()
-	if err != nil {
-		return err
-	}
 	nodeConfigs := MustGetNodeConfig()
 	keyStoreLocation := nodeConfigs.Keystore.Volume
-	walletCmd := exec.Command("./bin/network-validator-tool", "keystores",
-		"--insecure",
-		"--out-loc", keyStoreLocation,
-		"--prysm-pass", password,
-		"--source-max", fmt.Sprintf("%d", vRange.To),
-		"--source-min", fmt.Sprintf("%d", vRange.From),
-		"--source-mnemonic", c.ValidatorMnemonic,
-	)
-	err = walletCmd.Run()
+	err := GenerateKeystores(uint64(vRange.To), uint64(vRange.From), c.ValidatorMnemonic, true, keyStoreLocation, password)
 	if err != nil {
 		return err
 	}
