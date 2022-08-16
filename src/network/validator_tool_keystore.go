@@ -9,7 +9,6 @@ import (
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
 	"github.com/protolambda/go-keystorev4"
-	"github.com/tyler-smith/go-bip39"
 	e2types "github.com/wealdtech/go-eth2-types/v2"
 	util "github.com/wealdtech/go-eth2-util"
 	"golang.org/x/sync/errgroup"
@@ -106,14 +105,6 @@ func NewKeyEntry(priv e2types.PrivateKey, insecure bool) (*KeyEntry, error) {
 // Narrow pubkeys: we don't want 0xAb... to be different from ab...
 func narrowedPubkey(pub string) string {
 	return strings.TrimPrefix(strings.ToLower(pub), "0x")
-}
-
-func mnemonicToSeed(mnemonic string) (seed []byte, err error) {
-	mnemonic = strings.TrimSpace(mnemonic)
-	if !bip39.IsMnemonicValid(mnemonic) {
-		return nil, errors.New("mnemonic is not valid")
-	}
-	return bip39.NewSeed(mnemonic, ""), nil
 }
 
 func selectVals(sourceMnemonic string,

@@ -117,11 +117,6 @@ func (c *ValidatorCredentials) GenerateMnemonicWithoutPrompt() error {
 }
 
 func (c *ValidatorCredentials) GenerateDepositData(details *DepositDetails, numberOfValidators int) error {
-	err := CheckAndDownloadValTool()
-	if err != nil {
-		return err
-	}
-
 	depositCmd := exec.Command("./bin/network-validator-tool", "deposit-data",
 		"--as-json-list",
 		"--fork-version", details.ForkVersion,
@@ -132,6 +127,7 @@ func (c *ValidatorCredentials) GenerateDepositData(details *DepositDetails, numb
 		"--withdrawals-mnemonic", c.WithdrawalMnemonic,
 	)
 	commandOutput, err := depositCmd.Output()
+
 	if err != nil {
 		return err
 	}
