@@ -7,8 +7,8 @@ import (
 	"github.com/manifoldco/promptui"
 	"gopkg.in/yaml.v3"
 	"os"
-	"os/exec"
 	"path"
+	"strconv"
 )
 
 type DepositDetails struct {
@@ -117,21 +117,16 @@ func (c *ValidatorCredentials) GenerateMnemonicWithoutPrompt() error {
 }
 
 func (c *ValidatorCredentials) GenerateDepositData(details *DepositDetails, numberOfValidators int) error {
-	depositCmd := exec.Command("./bin/network-validator-tool", "deposit-data",
-		"--as-json-list",
-		"--fork-version", details.ForkVersion,
-		"--source-max", fmt.Sprintf("%d", numberOfValidators),
-		"--source-min", "0",
-		"--amount", details.Amount,
-		"--validators-mnemonic", c.ValidatorMnemonic,
-		"--withdrawals-mnemonic", c.WithdrawalMnemonic,
-	)
-	commandOutput, err := depositCmd.Output()
-
+	amountGwei, err := strconv.ParseUint(details.Amount, 10, 64)
 	if err != nil {
 		return err
 	}
-	err = os.WriteFile(details.DepositFileLocation, commandOutput, os.ModePerm)
+	dd, err := CreateDepositData(details.ForkVersion, uint64(numberOfValidators), 0,
+		amountGwei, c.ValidatorMnemonic, c.WithdrawalMnemonic, true)
+	if err != nil {
+		return err
+	}
+	err = os.WriteFile(details.DepositFileLocation, []byte(dd), os.ModePerm)
 	if err != nil {
 		return err
 	}
@@ -150,25 +145,19 @@ func (c *ValidatorCredentials) GenerateKeystore(numberOfValidators int, password
 }
 
 func (c *ValidatorCredentials) GenerateDepositDataWithRange(details *DepositDetails, vRange types.ValidatorRange) error {
-	err := CheckAndDownloadValTool()
+	amountGwei, err := strconv.ParseUint(details.Amount, 10, 64)
 	if err != nil {
 		return err
 	}
-
-	depositCmd := exec.Command("./bin/network-validator-tool", "deposit-data",
-		"--as-json-list",
-		"--fork-version", details.ForkVersion,
-		"--source-max", fmt.Sprintf("%d", vRange.To),
-		"--source-min", fmt.Sprintf("%d", vRange.From),
-		"--amount", details.Amount,
-		"--validators-mnemonic", c.ValidatorMnemonic,
-		"--withdrawals-mnemonic", c.WithdrawalMnemonic,
-	)
-	commandOutput, err := depositCmd.Output()
+	dd, err := CreateDepositData(details.ForkVersion, uint64(vRange.To), uint64(vRange.From),
+		amountGwei, c.ValidatorMnemonic, c.WithdrawalMnemonic, true)
 	if err != nil {
 		return err
 	}
-	err = os.WriteFile(details.DepositFileLocation, commandOutput, os.ModePerm)
+	if err != nil {
+		return err
+	}
+	err = os.WriteFile(details.DepositFileLocation, []byte(dd), os.ModePerm)
 	if err != nil {
 		return err
 	}

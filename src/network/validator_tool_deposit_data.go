@@ -13,7 +13,7 @@ import (
 	"strings"
 )
 
-func GenerateDepositData(forkVersion string, accountMax uint64, accountMin uint64, amountGwei uint64, validatorsMnemonic string, withdrawalsMnemonic string, asJsonList bool) (string, error) {
+func CreateDepositData(forkVersion string, accountMax uint64, accountMin uint64, amountGwei uint64, validatorsMnemonic string, withdrawalsMnemonic string, asJsonList bool) (string, error) {
 	var genesisForkVersion common.Version
 	err := genesisForkVersion.UnmarshalText([]byte(forkVersion))
 	if err != nil {
