@@ -3,9 +3,10 @@ package network
 import (
 	"fmt"
 	"github.com/manifoldco/promptui"
+	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
+	"github.com/tyler-smith/go-bip39"
 	"os"
-	"os/exec"
 	"runtime"
 )
 
@@ -31,11 +32,15 @@ func GetMnemonic(existing bool) (string, error) {
 		}
 		return existingMnemonicVal, err
 	}
-	output, err := exec.Command("./bin/network-validator-tool", "mnemonic").Output()
+	entropy, err := bip39.NewEntropy(256)
 	if err != nil {
-		return "", err
+		errors.Wrap(err, "cannot get 256 bits of entropy")
 	}
-	return string(output), err
+	mnemonic, err := bip39.NewMnemonic(entropy)
+	if err != nil {
+		errors.Wrap(err, "cannot get 256 bits of entropy")
+	}
+	return mnemonic, err
 }
 
 func getExistingMnemonic() (string, error) {

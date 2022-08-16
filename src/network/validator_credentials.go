@@ -60,10 +60,6 @@ func (c *ValidatorCredentials) IsEmpty() bool {
 }
 
 func (c *ValidatorCredentials) GenerateMnemonic() error {
-	err := CheckAndDownloadValTool()
-	if err != nil {
-		return err
-	}
 	useExisting, err := UseExistingMnemonicPrompt()
 	if err != nil {
 		return err
@@ -104,13 +100,7 @@ func (c *ValidatorCredentials) GenerateWithdrawalCredentials() error {
 }
 
 func (c *ValidatorCredentials) GenerateMnemonicWithoutPrompt() error {
-	err := CheckAndDownloadValTool()
-	if err != nil {
-		return err
-	}
-
 	fmt.Println("Generating mnemonic")
-
 	output, err := GetMnemonic(false)
 	if err != nil {
 		return err
