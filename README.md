@@ -1,44 +1,43 @@
 # LUKSO CLI
 
 
-## Download
+## Installation
 
-### Install
-Use the following command to download `lukso` inside `/usr/local/bin` directory.  
-
-```
-sudo curl https://raw.githubusercontent.com/lukso-network/lukso-cli/main/install.sh | sudo bash
-```
- 
-
-### RC
-
-to only download the binary use
+Use the following command to install `lukso` binary into `/usr/local/bin` directory:
 
 ```
+sudo curl https://install.l16.lukso.network | sudo bash
+```
+
+
+If you want to install the **current release candidate**, use the following command:
+
+```sh
 sudo curl https://raw.githubusercontent.com/lukso-network/lukso-cli/main/install-rc.sh | sudo bash
 ```
  
 
-## Commands
+## Documentation
 
-[HERE](./docs/cli.md) you can find the documentation of the commands.
+See the [full documentation](./docs/cli.md) for more.
 
-### Network
 The network subcommand contains commands relevant for running a node or adding a validator. 
 
-    lukso network 
+```sh
+lukso network 
+```
 
-### Wallet
 The wallet subcommand deals with the properties of a single wallet 
 
-    lukso wallet
+```sh
+lukso wallet
+```
 
-### UP
 The up subcommand deals with the universal profile smart contracts
 
-    lukso up
-
+```sh
+lukso up
+```
 
 ## Development
 
@@ -49,8 +48,8 @@ The up subcommand deals with the universal profile smart contracts
 
     cobra init --pkg-name luksocli
 
-## Test
 
+## Tests
     
 
 ### Add A New Command
