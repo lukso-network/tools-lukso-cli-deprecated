@@ -54,7 +54,7 @@ lukso up
 
 ### Add A New Command
 
-Execute
+Running the test
 
     cobra-cli add [COMMAND_NAME] # lukso-cli
 
