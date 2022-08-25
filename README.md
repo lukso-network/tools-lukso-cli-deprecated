@@ -1,4 +1,4 @@
-# LUKSO CLI
+# LUKSO Network CLI
 
 
 ## Installation
