@@ -33,12 +33,6 @@ The wallet subcommand deals with the properties of a single wallet
 lukso wallet
 ```
 
-The up subcommand deals with the universal profile smart contracts
-
-```sh
-lukso up
-```
-
 ## Development
 
 
