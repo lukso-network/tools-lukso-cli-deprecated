@@ -1,27 +1,11 @@
 package network
 
 import (
-	"fmt"
 	"github.com/manifoldco/promptui"
+	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
-	"os"
-	"os/exec"
-	"runtime"
+	"github.com/tyler-smith/go-bip39"
 )
-
-// CheckAndDownloadValTool checks if validator tool is present or not. If not then download the validator tool according to platform (linux / darwin)
-func CheckAndDownloadValTool() error {
-	if !FileExists("./bin/network-validator-tool") {
-		fmt.Println("downloading network-validator-tool for your system")
-		valToolLocation := fmt.Sprintf("https://github.com/lukso-network/network-validator-tools/releases/download/v1.0.0/network-validator-tools-v1.0.0-%s-%s", runtime.GOOS, runtime.GOARCH)
-		err := downloadFile(valToolLocation, "./bin/network-validator-tool")
-		if err != nil {
-			return err
-		}
-		return os.Chmod("./bin/network-validator-tool", os.ModePerm)
-	}
-	return nil
-}
 
 func GetMnemonic(existing bool) (string, error) {
 	if existing {
@@ -31,11 +15,15 @@ func GetMnemonic(existing bool) (string, error) {
 		}
 		return existingMnemonicVal, err
 	}
-	output, err := exec.Command("./bin/network-validator-tool", "mnemonic").Output()
+	entropy, err := bip39.NewEntropy(256)
 	if err != nil {
-		return "", err
+		errors.Wrap(err, "cannot get 256 bits of entropy")
 	}
-	return string(output), err
+	mnemonic, err := bip39.NewMnemonic(entropy)
+	if err != nil {
+		errors.Wrap(err, "cannot get 256 bits of entropy")
+	}
+	return mnemonic, err
 }
 
 func getExistingMnemonic() (string, error) {

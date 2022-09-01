@@ -7,8 +7,8 @@ import (
 	"github.com/manifoldco/promptui"
 	"gopkg.in/yaml.v3"
 	"os"
-	"os/exec"
 	"path"
+	"strconv"
 )
 
 type DepositDetails struct {
@@ -60,10 +60,6 @@ func (c *ValidatorCredentials) IsEmpty() bool {
 }
 
 func (c *ValidatorCredentials) GenerateMnemonic() error {
-	err := CheckAndDownloadValTool()
-	if err != nil {
-		return err
-	}
 	useExisting, err := UseExistingMnemonicPrompt()
 	if err != nil {
 		return err
@@ -104,13 +100,7 @@ func (c *ValidatorCredentials) GenerateWithdrawalCredentials() error {
 }
 
 func (c *ValidatorCredentials) GenerateMnemonicWithoutPrompt() error {
-	err := CheckAndDownloadValTool()
-	if err != nil {
-		return err
-	}
-
 	fmt.Println("Generating mnemonic")
-
 	output, err := GetMnemonic(false)
 	if err != nil {
 		return err
@@ -127,25 +117,16 @@ func (c *ValidatorCredentials) GenerateMnemonicWithoutPrompt() error {
 }
 
 func (c *ValidatorCredentials) GenerateDepositData(details *DepositDetails, numberOfValidators int) error {
-	err := CheckAndDownloadValTool()
+	amountGwei, err := strconv.ParseUint(details.Amount, 10, 64)
 	if err != nil {
 		return err
 	}
-
-	depositCmd := exec.Command("./bin/network-validator-tool", "deposit-data",
-		"--as-json-list",
-		"--fork-version", details.ForkVersion,
-		"--source-max", fmt.Sprintf("%d", numberOfValidators),
-		"--source-min", "0",
-		"--amount", details.Amount,
-		"--validators-mnemonic", c.ValidatorMnemonic,
-		"--withdrawals-mnemonic", c.WithdrawalMnemonic,
-	)
-	commandOutput, err := depositCmd.Output()
+	dd, err := CreateDepositData(details.ForkVersion, uint64(numberOfValidators), 0,
+		amountGwei, c.ValidatorMnemonic, c.WithdrawalMnemonic, true)
 	if err != nil {
 		return err
 	}
-	err = os.WriteFile(details.DepositFileLocation, commandOutput, os.ModePerm)
+	err = os.WriteFile(details.DepositFileLocation, []byte(dd), os.ModePerm)
 	if err != nil {
 		return err
 	}
@@ -153,21 +134,9 @@ func (c *ValidatorCredentials) GenerateDepositData(details *DepositDetails, numb
 }
 
 func (c *ValidatorCredentials) GenerateKeystore(numberOfValidators int, password string) error {
-	err := CheckAndDownloadValTool()
-	if err != nil {
-		return err
-	}
 	nodeConfigs := MustGetNodeConfig()
 	keyStoreLocation := nodeConfigs.Keystore.Volume
-	walletCmd := exec.Command("./bin/network-validator-tool", "keystores",
-		"--insecure",
-		"--out-loc", keyStoreLocation,
-		"--prysm-pass", password,
-		"--source-max", fmt.Sprintf("%d", numberOfValidators),
-		"--source-min", "0",
-		"--source-mnemonic", c.ValidatorMnemonic,
-	)
-	err = walletCmd.Run()
+	err := GenerateKeystores(uint64(numberOfValidators), 0, c.ValidatorMnemonic, true, keyStoreLocation, password)
 	if err != nil {
 		return err
 	}
@@ -176,25 +145,19 @@ func (c *ValidatorCredentials) GenerateKeystore(numberOfValidators int, password
 }
 
 func (c *ValidatorCredentials) GenerateDepositDataWithRange(details *DepositDetails, vRange types.ValidatorRange) error {
-	err := CheckAndDownloadValTool()
+	amountGwei, err := strconv.ParseUint(details.Amount, 10, 64)
 	if err != nil {
 		return err
 	}
-
-	depositCmd := exec.Command("./bin/network-validator-tool", "deposit-data",
-		"--as-json-list",
-		"--fork-version", details.ForkVersion,
-		"--source-max", fmt.Sprintf("%d", vRange.To),
-		"--source-min", fmt.Sprintf("%d", vRange.From),
-		"--amount", details.Amount,
-		"--validators-mnemonic", c.ValidatorMnemonic,
-		"--withdrawals-mnemonic", c.WithdrawalMnemonic,
-	)
-	commandOutput, err := depositCmd.Output()
+	dd, err := CreateDepositData(details.ForkVersion, uint64(vRange.To), uint64(vRange.From),
+		amountGwei, c.ValidatorMnemonic, c.WithdrawalMnemonic, true)
 	if err != nil {
 		return err
 	}
-	err = os.WriteFile(details.DepositFileLocation, commandOutput, os.ModePerm)
+	if err != nil {
+		return err
+	}
+	err = os.WriteFile(details.DepositFileLocation, []byte(dd), os.ModePerm)
 	if err != nil {
 		return err
 	}
@@ -202,21 +165,9 @@ func (c *ValidatorCredentials) GenerateDepositDataWithRange(details *DepositDeta
 }
 
 func (c *ValidatorCredentials) GenerateKeystoreWithRange(vRange types.ValidatorRange, password string) error {
-	err := CheckAndDownloadValTool()
-	if err != nil {
-		return err
-	}
 	nodeConfigs := MustGetNodeConfig()
 	keyStoreLocation := nodeConfigs.Keystore.Volume
-	walletCmd := exec.Command("./bin/network-validator-tool", "keystores",
-		"--insecure",
-		"--out-loc", keyStoreLocation,
-		"--prysm-pass", password,
-		"--source-max", fmt.Sprintf("%d", vRange.To),
-		"--source-min", fmt.Sprintf("%d", vRange.From),
-		"--source-mnemonic", c.ValidatorMnemonic,
-	)
-	err = walletCmd.Run()
+	err := GenerateKeystores(uint64(vRange.To), uint64(vRange.From), c.ValidatorMnemonic, true, keyStoreLocation, password)
 	if err != nil {
 		return err
 	}
