@@ -3,8 +3,8 @@ Copyright © 2022 The LUKSO authors
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+the Free Software Foundation, either upgrade 3 of the License, or
+(at your option) any later upgrade.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -18,12 +18,12 @@ package cmd
 
 import "github.com/spf13/cobra"
 
-// versionsCmd represents the versions command
-var versionCmd = &cobra.Command{
-	Use:   "version",
-	Short: "subcommand \"version\". Relates to versioning the LUKSO CLI tool.",
+// upgradeCmd represents the upgrades command
+var upgradeCmd = &cobra.Command{
+	Use:   "upgrade",
+	Short: "Upgrades the LUKSO CLI to a specific version",
 }
 
 func init() {
-	rootCmd.AddCommand(versionCmd)
+	rootCmd.AddCommand(upgradeCmd)
 }

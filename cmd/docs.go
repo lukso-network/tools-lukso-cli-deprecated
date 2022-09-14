@@ -12,8 +12,9 @@ import (
 
 // docsGenerateCmd represents the docsGenerate command
 var docsGenerateCmd = &cobra.Command{
-	Use:   "docs",
-	Short: "Generate documents for lukso-cli",
+	Hidden: true,
+	Use:    "docs",
+	Short:  "Generate documents for lukso-cli",
 	Long: `This command generates documents for all the available command of lukso-cli.
 You will find documentations inside "docs" directory`,
 	Run: func(cmd *cobra.Command, args []string) {

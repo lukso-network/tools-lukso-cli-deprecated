@@ -14,12 +14,12 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// validatorDescribeCmd represents the describe command
-var validatorDescribeCmd = &cobra.Command{
-	Use:     "describe",
+// validatorStatusCmd represents the status command
+var validatorStatusCmd = &cobra.Command{
+	Use:     "status",
 	Short:   "Show detailed status of the validators",
 	Long:    `It shows validator count, addresses and transaction status.`,
-	Example: "lukso network validator describe",
+	Example: "lukso network validator status",
 	Run: func(cmd *cobra.Command, args []string) {
 		// get local node configuration
 		nodeConf := network.MustGetNodeConfig()
@@ -76,5 +76,5 @@ var validatorDescribeCmd = &cobra.Command{
 }
 
 func init() {
-	validatorCmd.AddCommand(validatorDescribeCmd)
+	validatorCmd.AddCommand(validatorStatusCmd)
 }

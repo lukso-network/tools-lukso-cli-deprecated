@@ -13,9 +13,8 @@ import (
 // validatorDescribeByKeyCmd represents the check command
 var validatorDescribeByKeyCmd = &cobra.Command{
 	Use:     "byKey",
-	Short:   "Show detailed status of the validators as deposited in the DepositDetails Contract",
-	Long:    `Show detailed status of the validators as deposited in the DepositDetails Contract.`,
-	Example: "lukso network validator check",
+	Short:   "Show detailed status of a active & deposited validator via a validator key",
+	Example: "lukso network validator status byKey",
 	Run: func(cmd *cobra.Command, args []string) {
 		// get node conf from --chain param or get default chain
 		nodeConf := network.GetDefaultNodeConfigByOptionParam(viper.GetString(CommandOptionChain))
@@ -50,7 +49,7 @@ var validatorDescribeByKeyCmd = &cobra.Command{
 }
 
 func init() {
-	validatorDescribeCmd.AddCommand(validatorDescribeByKeyCmd)
+	validatorStatusCmd.AddCommand(validatorDescribeByKeyCmd)
 	validatorDescribeByKeyCmd.Flags().StringP(CommandOptionExecutionApi, CommandOptionExecutionApiShort, "", "execution api endpoint")
 	validatorDescribeByKeyCmd.Flags().StringP(CommandOptionConsensusApi, CommandOptionConsensusApiShort, "", "consensus api endpoint")
 	validatorDescribeByKeyCmd.Flags().StringP("key", "k", "", "validator key to be described - keep empty to describe your validators defined in keystore")

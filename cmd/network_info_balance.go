@@ -17,9 +17,9 @@ import (
 // balanceCmd represents the balance command
 var balanceCmd = &cobra.Command{
 	Use:     "balance",
-	Short:   "returns the balance of a given address",
-	Long:    `This command will return the balance of a given address based on the network given.`,
-	Example: "lukso network balance -a 0x....",
+	Short:   "Returns the balance of a given address",
+	Long:    `Returns the balance of a given address based on the network given.`,
+	Example: "lukso network info balance -a 0x....",
 	Run: func(cmd *cobra.Command, args []string) {
 		address, _ := cmd.Flags().GetString("address")
 		if address == "" {
@@ -51,7 +51,7 @@ var balanceCmd = &cobra.Command{
 }
 
 func init() {
-	networkCmd.AddCommand(balanceCmd)
+	infoCmd.AddCommand(balanceCmd)
 	balanceCmd.Flags().StringP("address", "a", "", "ethereum address")
 	balanceCmd.Flags().StringP(CommandOptionExecutionApi, CommandOptionExecutionApiShort, "", "execution api endpoint")
 }

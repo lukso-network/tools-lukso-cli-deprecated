@@ -33,9 +33,12 @@ func DescribeNetwork(baseUrl string, epoch int64) error {
 	}
 
 	utils.ColoredPrintln("Participation Epoch", participationResponse.Epoch)
+	//TODO: is this needed? What does it mean.
 	utils.ColoredPrintln("Is Finalized", participationResponse.Finalized)
+	// TODO: In percentages
 	utils.ColoredPrintln("Participation Rate", participationResponse.Participation.GlobalParticipationRate)
-	utils.ColoredPrintln("Eligible Ether", participationResponse.Participation.EligibleEther)
-	utils.ColoredPrintln("Voted Ether", participationResponse.Participation.VotedEther)
+	//TODO: convert from Gwei to LYX
+	utils.ColoredPrintln("Eligible LYX", participationResponse.Participation.EligibleEther)
+	utils.ColoredPrintln("Voted LYX", participationResponse.Participation.VotedEther)
 	return nil
 }

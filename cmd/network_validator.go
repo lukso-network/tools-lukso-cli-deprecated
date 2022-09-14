@@ -11,7 +11,7 @@ import (
 // validatorLogCmd represents the validator command
 var validatorCmd = &cobra.Command{
 	Use:   "validator",
-	Short: "Subcommand to perform validator related works",
+	Short: "Validator client commands",
 }
 
 func init() {

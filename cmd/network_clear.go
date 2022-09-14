@@ -13,7 +13,7 @@ import (
 // clearCmd represents the clear command
 var clearCmd = &cobra.Command{
 	Use:   "clear",
-	Short: "Remove logs and data directory for all clients",
+	Short: "Remove logs and data directory for all clients.",
 	Long: `This command is responsible to remove data directory and logs for all the running clients (e.g. consensus
 engine, execution engine and validator client)`,
 	Example: "lukso network clear",

@@ -15,13 +15,13 @@ var cfgFile string
 // networkCmd represents the network command
 var networkCmd = &cobra.Command{
 	Use:   "network",
-	Short: "subcommand \"network\" for LUKSO network related things",
+	Short: "Subcommand \"network\" for LUKSO network related things",
 }
 
 func init() {
 	rootCmd.AddCommand(networkCmd)
-
+	//TODO: Make all usage sentences with uppercase
 	//networkCmd.PersistentFlags().StringVar(&cfgFile, network.CommandOptionNodeConf, "", "config file (default is MY_NODE_DIRECTORY/node_config.yaml)")
-	networkCmd.PersistentFlags().String(CommandOptionChain, network.DefaultNetworkID, "provide chain you want to target [l16,...]")
+	networkCmd.PersistentFlags().String(CommandOptionChain, network.DefaultNetworkID, "Provide chain you want to target [l16,...]")
 	viper.BindPFlag(CommandOptionChain, networkCmd.PersistentFlags().Lookup(CommandOptionChain))
 }

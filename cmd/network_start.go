@@ -14,10 +14,9 @@ import (
 
 // startCmd represents the start command
 var startCmd = &cobra.Command{
-	Use:   "start",
-	Short: "Spin up consensus, execution and eth2-stats docker container",
-	Long: `start command spins up LUKSO node using .env and docker-compose file. It spins up
-consensus engine, execution engine and eth2-stats containers.`,
+	Use:     "start",
+	Short:   "Starts consensus, execution and eth2-stats clients",
+	Long:    `Starts LUKSO node with the consensus engine, execution engine and eth2-stats clients.`,
 	Example: "lukso network start",
 	Run: func(cmd *cobra.Command, args []string) {
 		updateEnv()

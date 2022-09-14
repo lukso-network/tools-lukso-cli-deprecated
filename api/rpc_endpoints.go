@@ -60,12 +60,12 @@ type Peer struct {
 	} `json:"network"`
 	Protocols struct {
 		Eth struct {
-			Version    int    `json:"version"`
+			Version    int    `json:"upgrade"`
 			Difficulty int    `json:"difficulty"`
 			Head       string `json:"head"`
 		} `json:"eth"`
 		Snap struct {
-			Version int `json:"version"`
+			Version int `json:"upgrade"`
 		} `json:"snap"`
 	} `json:"protocols"`
 }

@@ -47,7 +47,7 @@ type depositInfoV1 struct {
 	Signature             string `json:"signature"`
 	DepositDataRoot       string `json:"deposit_data_root"`
 	Value                 uint64 `json:"value"`
-	Version               uint64 `json:"version"`
+	Version               uint64 `json:"upgrade"`
 }
 
 // depositInfoV3 is an ethdo V3 deposit structure.
@@ -61,7 +61,7 @@ type depositInfoV3 struct {
 	DepositMessageRoot    string `json:"deposit_message_root"`
 	ForkVersion           string `json:"fork_version"`
 	Amount                uint64 `json:"amount"`
-	Version               uint64 `json:"version"`
+	Version               uint64 `json:"upgrade"`
 }
 
 // depositInfoV3b is an alternative V3 deposit structure.
@@ -141,7 +141,7 @@ func tryV3DepositInfoFromJSON(data []byte) ([]*DepositInfo, error) {
 	depositInfos := make([]*DepositInfo, len(depositData))
 	for i, deposit := range depositData {
 		if deposit.Version != 3 {
-			return nil, errors.New("incorrect V3 deposit version")
+			return nil, errors.New("incorrect V3 deposit upgrade")
 		}
 		publicKey, err := hex.DecodeString(strings.TrimPrefix(deposit.PublicKey, "0x"))
 		if err != nil {
@@ -165,7 +165,7 @@ func tryV3DepositInfoFromJSON(data []byte) ([]*DepositInfo, error) {
 		}
 		forkVersion, err := hex.DecodeString(strings.TrimPrefix(deposit.ForkVersion, "0x"))
 		if err != nil {
-			return nil, errors.New("fork version invalid")
+			return nil, errors.New("fork upgrade invalid")
 		}
 		depositInfos[i] = &DepositInfo{
 			Name:                  deposit.Name,
@@ -195,10 +195,10 @@ func tryV3bDepositInfoFromJSON(data []byte) ([]*DepositInfo, error) {
 	for i, deposit := range depositData {
 		version, err := strconv.ParseUint(deposit.Version, 10, 64)
 		if err != nil {
-			return nil, errors.New("invalid V3 deposit version")
+			return nil, errors.New("invalid V3 deposit upgrade")
 		}
 		if version != 3 {
-			return nil, errors.New("incorrect V3 deposit version")
+			return nil, errors.New("incorrect V3 deposit upgrade")
 		}
 		publicKey, err := hex.DecodeString(strings.TrimPrefix(deposit.PublicKey, "0x"))
 		if err != nil {
@@ -222,7 +222,7 @@ func tryV3bDepositInfoFromJSON(data []byte) ([]*DepositInfo, error) {
 		}
 		forkVersion, err := hex.DecodeString(strings.TrimPrefix(deposit.ForkVersion, "0x"))
 		if err != nil {
-			return nil, errors.New("fork version invalid")
+			return nil, errors.New("fork upgrade invalid")
 		}
 		amount, err := strconv.ParseUint(deposit.Amount, 10, 64)
 		if err != nil {
@@ -276,7 +276,7 @@ func tryCLIDepositInfoFromJSON(data []byte) ([]*DepositInfo, error) {
 		}
 		forkVersion, err := hex.DecodeString(strings.TrimPrefix(deposit.ForkVersion, "0x"))
 		if err != nil {
-			return nil, errors.New("fork version invalid")
+			return nil, errors.New("fork upgrade invalid")
 		}
 		depositInfos[i] = &DepositInfo{
 			PublicKey:             publicKey,
@@ -303,7 +303,7 @@ func tryV1DepositInfoFromJSON(data []byte) ([]*DepositInfo, error) {
 	depositInfos := make([]*DepositInfo, len(depositData))
 	for i, deposit := range depositData {
 		if deposit.Version < 1 || deposit.Version > 2 {
-			return nil, errors.New("incorrect deposit version")
+			return nil, errors.New("incorrect deposit upgrade")
 		}
 		publicKey, err := hex.DecodeString(strings.TrimPrefix(deposit.PublicKey, "0x"))
 		if err != nil {

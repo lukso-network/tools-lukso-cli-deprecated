@@ -3,8 +3,8 @@ Copyright © 2022 The LUKSO authors
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+the Free Software Foundation, either upgrade 3 of the License, or
+(at your option) any later upgrade.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -31,10 +31,7 @@ import (
 // setupCmd represents the setup command
 var setupRangeCmd = &cobra.Command{
 	Use:   "range",
-	Short: "Prepare a keystore to join the network",
-	Long: `This command prepares wallet, deposit_data and creates a secret.yaml file. These files are necessary to
-activate validators. The command gives greater control than "lukso network validator setup" over creating a keystore by describing the position of the keys derived from the mnemonic.`,
-	Example: "lukso network validator setup range --from 0 --to 10",
+	Short: "Prepare your validators for a given network",
 	Run: func(cmd *cobra.Command, args []string) {
 		vRange, err := readRangeFromCommand(cmd)
 		if err != nil {

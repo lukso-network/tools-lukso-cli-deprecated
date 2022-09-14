@@ -212,6 +212,7 @@ func MustGetNodeConfig() *NodeConfigs {
 	// Search config in home directory with name ".cli" (without extension).
 	viper.AddConfigPath(".")
 	viper.SetConfigType("yaml")
+	//TODO: Change from node_config to client_configuration
 	viper.SetConfigName("node_config")
 
 	viper.AutomaticEnv()

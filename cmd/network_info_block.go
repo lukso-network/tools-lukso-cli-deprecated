@@ -17,9 +17,9 @@ import (
 // blockCmd represents the block command
 var blockCmd = &cobra.Command{
 	Use:     "block",
-	Short:   "returns a block at number",
-	Long:    `This command will return the execution block at the given position`,
-	Example: "lukso network block -n 100",
+	Short:   "Returns a block at a given number",
+	Long:    `Block returns the execution block at the given position`,
+	Example: "lukso network info block -n 100",
 	Run: func(cmd *cobra.Command, args []string) {
 		number, _ := cmd.Flags().GetInt64("number")
 		baseUrl, _ := cmd.Flags().GetString(CommandOptionExecutionApi)
@@ -55,7 +55,7 @@ var blockCmd = &cobra.Command{
 }
 
 func init() {
-	networkCmd.AddCommand(blockCmd)
+	infoCmd.AddCommand(blockCmd)
 	blockCmd.Flags().Int64P("number", "n", -2, "block number of geth block")
 	blockCmd.Flags().StringP(CommandOptionExecutionApi, CommandOptionExecutionApiShort, "", "executionApi endpoint")
 }

@@ -12,10 +12,9 @@ import (
 
 // stopCmd represents the stop command
 var stopCmd = &cobra.Command{
-	Use:   "stop",
-	Short: "Stops running docker containers",
-	Long: `This command stops consensus engine, execution engine, validator client and eth2-stats.
-It uses docker-compose file to stop these containers`,
+	Use:     "stop",
+	Short:   "Stops all running clients",
+	Long:    `Stops consensus client, execution client, validator client and eth2-stats client.`,
 	Example: "lukso network stop",
 	Run: func(cmd *cobra.Command, args []string) {
 		err := network.DownDockerServices()

@@ -17,7 +17,7 @@ func CreateDepositData(forkVersion string, accountMax uint64, accountMin uint64,
 	var genesisForkVersion common.Version
 	err := genesisForkVersion.UnmarshalText([]byte(forkVersion))
 	if err != nil {
-		return "", errors.Wrap(err, "cannot decode fork version")
+		return "", errors.Wrap(err, "cannot decode fork upgrade")
 	}
 
 	valSeed, err := mnemonicToSeed(validatorsMnemonic)
@@ -80,7 +80,7 @@ func CreateDepositData(forkVersion string, accountMax uint64, accountMin uint64,
 			"signature":              hex.EncodeToString(data.Signature[:]),
 			"value":                  uint64(data.Amount),
 			"deposit_data_root":      hex.EncodeToString(dataRoot[:]),
-			"version":                1, // ethereal cli requirement
+			"upgrade":                1, // ethereal cli requirement
 		}
 		jsonStr, err := json.Marshal(jsonData)
 		if asJsonList && i+1 < accountMax {
