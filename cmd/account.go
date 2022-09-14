@@ -23,7 +23,7 @@ import (
 // accountCmd represents the account command
 var accountCmd = &cobra.Command{
 	Use:   "account",
-	Short: "Key store creation, parsing and other account related functionality",
+	Short: "Key store creation, decryption and other account related functionality",
 }
 
 func init() {
