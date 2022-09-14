@@ -15,7 +15,7 @@ var cfgFile string
 // networkCmd represents the network command
 var networkCmd = &cobra.Command{
 	Use:   "network",
-	Short: "Subcommand \"network\" for LUKSO network related things",
+	Short: "LUKSO network related functionality",
 }
 
 func init() {

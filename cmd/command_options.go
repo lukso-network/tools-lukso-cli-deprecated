@@ -38,7 +38,7 @@ const (
 	CommandOptionPath      = "path"
 	CommandOptionPathShort = "p"
 
-	CommandOptionVersion = "upgrade"
+	CommandOptionVersion = "version"
 	CommandOptionUpgrade = "upgrade"
 
 	CommandOptionExistingMnemonic      = "existingMnemonic"
