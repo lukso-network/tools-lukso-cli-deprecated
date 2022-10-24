@@ -12,14 +12,14 @@ import (
 // executionCmd represents the execution command
 var executionCmd = &cobra.Command{
 	Use:     "execution",
-	Short:   "Show logs for execution engine",
-	Long:    `This command shows log for geth container where execution engine is running`,
-	Example: "lukso network log execution --tail 30 -f",
+	Short:   "Show logs for execution client",
+	Long:    `Returns logs for geth client, where execution engine is running`,
+	Example: "lukso network logs execution --tail 30 -f",
 	Run: func(cmd *cobra.Command, args []string) {
 		network.ReadLog("lukso-geth", tail, follow)
 	},
 }
 
 func init() {
-	logCmd.AddCommand(executionCmd)
+	logsCmd.AddCommand(executionCmd)
 }

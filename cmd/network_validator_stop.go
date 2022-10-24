@@ -12,7 +12,7 @@ import (
 // validatorStopCmd represents the validator command
 var validatorStopCmd = &cobra.Command{
 	Use:     "stop",
-	Short:   "This subcommand stops the validator client",
+	Short:   "Stop the validator client",
 	Example: "lukso network validator start",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		return network.StopValidatorNode()

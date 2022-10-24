@@ -14,12 +14,13 @@ import (
 // describeCmd represents the describe command
 var updateCmd = &cobra.Command{
 	Use:   "update",
-	Short: "updates the node with the latest params",
-	Long: `Updates the with the latest params [bootnodes, client versions,...]. You need to restart the nodes to make the changes become effective.
+	Short: "Updates & overrides the clients configurations automatically.",
+	Long: `Updates the clients configurations automatically - this will override existing configurations. You need to restart the nodes to make the changes become effective.
 
 	
 `, Example: "lukso network update",
 	Run: func(cmd *cobra.Command, args []string) {
+		//TODO: add prompt to override all configurations that might be overriden
 		hasUpdates := false
 		fmt.Println("Searching for updates")
 

@@ -11,10 +11,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// walletDescribeCmd represents the create command
-var walletDescribeCmd = &cobra.Command{
-	Use:     "describe",
-	Short:   "Describes a wallet by reading the wallet and  password file ",
+// accountDecryptCmd represents the create command
+var accountDecryptCmd = &cobra.Command{
+	Use:     "decrypt",
+	Short:   "Decrypts and describes an account with taking in a password file.",
 	Long:    "This command will describe a wallet and password file in a target directory.",
 	Example: "lukso wallet create -p [PASSWORD] -d [TARGET_DIRECTORY] -l [LABEL]",
 	Run: func(cmd *cobra.Command, args []string) {
@@ -36,10 +36,10 @@ var walletDescribeCmd = &cobra.Command{
 }
 
 func init() {
-	walletCmd.AddCommand(walletDescribeCmd)
-	walletDescribeCmd.Flags().StringP("walletFile", "w", "", "the location of the wallet file")
-	walletDescribeCmd.Flags().StringP("passwordFile", "p", "", "the location of the password file")
+	accountCmd.AddCommand(accountDecryptCmd)
+	accountDecryptCmd.Flags().StringP("walletFile", "w", "", "the location of the wallet file")
+	accountDecryptCmd.Flags().StringP("passwordFile", "p", "", "the location of the password file")
 
-	walletDescribeCmd.MarkFlagRequired("walletFile")
-	walletDescribeCmd.MarkFlagRequired("passwordFile")
+	accountDecryptCmd.MarkFlagRequired("walletFile")
+	accountDecryptCmd.MarkFlagRequired("passwordFile")
 }

@@ -16,9 +16,9 @@ import (
 // nodeCmd represents the node command
 var nodeCmd = &cobra.Command{
 	Use:     "node",
-	Short:   "gets a description of peers",
-	Long:    `shows the peers of this node`,
-	Example: "lukso network describe node",
+	Short:   "Gets a description of peers",
+	Long:    `Shows the peers of this node`,
+	Example: "lukso network status node",
 	Run: func(cmd *cobra.Command, args []string) {
 		nodeConf := network.MustGetNodeConfig()
 
@@ -61,5 +61,5 @@ var nodeCmd = &cobra.Command{
 }
 
 func init() {
-	describeCmd.AddCommand(nodeCmd)
+	statusCmd.AddCommand(nodeCmd)
 }

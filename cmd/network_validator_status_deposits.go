@@ -15,9 +15,8 @@ import (
 // validatorDescribeDepositsCmd represents the check command
 var validatorDescribeDepositsCmd = &cobra.Command{
 	Use:     "deposits",
-	Short:   "Show detailed status of the validators as deposited in the DepositDetails Contract",
-	Long:    `Show detailed status of the validators as deposited in the DepositDetails Contract.`,
-	Example: "lukso network validator check",
+	Short:   "Show detailed status of all active & deposited validators",
+	Example: "lukso network validator status deposits",
 	Run: func(cmd *cobra.Command, args []string) {
 		// get node conf from --chain param or get default chain
 		nodeConf, err := network.LoadNodeConf()
@@ -61,7 +60,7 @@ var validatorDescribeDepositsCmd = &cobra.Command{
 }
 
 func init() {
-	validatorDescribeCmd.AddCommand(validatorDescribeDepositsCmd)
+	validatorStatusCmd.AddCommand(validatorDescribeDepositsCmd)
 	validatorDescribeDepositsCmd.Flags().StringP(CommandOptionExecutionApi, CommandOptionExecutionApiShort, "", "execution api endpoint")
 	validatorDescribeDepositsCmd.Flags().StringP(CommandOptionConsensusApi, CommandOptionConsensusApiShort, "", "consensus api endpoint")
 	validatorDescribeDepositsCmd.Flags().StringP(CommandOptionDepositAddress, CommandOptionDepositAddressShort, "", "the address of the deposit contract")

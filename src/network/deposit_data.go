@@ -11,7 +11,7 @@ type DepositData struct {
 	PubKey                string `json:"pubkey"`
 	Signature             string `json:"signature"`
 	Value                 int    `json:"value"`
-	Version               int    `json:"version"`
+	Version               int    `json:"upgrade"`
 	WithdrawalCredentials string `json:"withdrawal_credentials"`
 }
 

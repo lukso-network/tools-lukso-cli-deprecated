@@ -14,7 +14,7 @@ import (
 // validatorAddCmd represents the validator command
 var validatorAddCmd = &cobra.Command{
 	Use:     "add",
-	Short:   "This adds validators to your existing setup",
+	Short:   "Generates additional validator keys",
 	Example: "lukso network validator add",
 	Run: func(cmd *cobra.Command, args []string) {
 		passwordFile, _ := cmd.Flags().GetString("passwordFile")
@@ -31,6 +31,7 @@ var validatorAddCmd = &cobra.Command{
 
 func init() {
 	validatorCmd.AddCommand(validatorAddCmd)
+	// TODO: change passwordFile to password everywhere
 	validatorAddCmd.Flags().StringP("passwordFile", "p", "", "the location of the password file")
 	validatorAddCmd.MarkFlagRequired("passwordFile")
 }

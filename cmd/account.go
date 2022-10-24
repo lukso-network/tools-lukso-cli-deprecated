@@ -3,8 +3,8 @@ Copyright © 2022 The LUKSO authors
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+the Free Software Foundation, either upgrade 3 of the License, or
+(at your option) any later upgrade.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -20,12 +20,12 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// networkCmd represents the network command
-var walletCmd = &cobra.Command{
-	Use:   "wallet",
-	Short: "subcommand \"wallet\" for creation, parsing and other related of wallets",
+// accountCmd represents the account command
+var accountCmd = &cobra.Command{
+	Use:   "account",
+	Short: "Key store creation, decryption and other account related functionality",
 }
 
 func init() {
-	rootCmd.AddCommand(walletCmd)
+	rootCmd.AddCommand(accountCmd)
 }

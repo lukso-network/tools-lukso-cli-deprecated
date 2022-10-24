@@ -15,12 +15,9 @@ const CommandOptionDry = "dry"
 
 // depositCmd represents the deposit command
 var depositCmd = &cobra.Command{
-	Use:   "deposit",
-	Short: "Send DepositDetails transactions to activate validator",
-	Long: `After preparing wallets and deposit data, this command prepares deposit transactions to the deposit contract
-address. Remember it will need your wallet address and private keys. Thus it will deduct balance from your wallet.
-
-This tool is necessary to activate new validators`,
+	Use:     "deposit",
+	Short:   "Send deposit transactions to activate validators",
+	Long:    `Prepares and sends deposit transactions to activate new validators.`,
 	Example: "lukso network validator deposit",
 	Run: func(cmd *cobra.Command, args []string) {
 		dry, _ := cmd.Flags().GetBool(CommandOptionDry)

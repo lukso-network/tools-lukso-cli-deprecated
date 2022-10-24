@@ -77,7 +77,7 @@ var createCmd = &cobra.Command{
 }
 
 func init() {
-	walletCmd.AddCommand(createCmd)
+	accountCmd.AddCommand(createCmd)
 	createCmd.Flags().StringP("label", "l", "", "indicates the name of the wallet and password file")
 	createCmd.Flags().StringP("dir", "d", "", "is the target directory of the wallet and password file")
 	createCmd.Flags().StringP("password", "p", "", "password of the wallet stored in password file")
