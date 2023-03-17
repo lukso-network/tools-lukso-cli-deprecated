@@ -12,8 +12,8 @@ const (
 	DockerComposeDefaultName = "docker-compose.yml"
 	DockerGitLocation        = "https://raw.githubusercontent.com/lukso-network/network-configs/main/%s/docker/docker-compose.%s.yml"
 	ConfigGitLocation        = "https://raw.githubusercontent.com/lukso-network/network-configs/main/%s/configs"
-	DevDockerGitLocation     = "https://raw.githubusercontent.com/lukso-network/network-configs/main/dev/%s/docker/docker-compose.%s.yml"
-	DevConfigGitLocation     = "https://raw.githubusercontent.com/lukso-network/network-configs/main/dev/%s/configs"
+	DevDockerGitLocation     = "https://raw.githubusercontent.com/lukso-network/network-configs/main/devnets/%s/docker/docker-compose.%s.yml"
+	DevConfigGitLocation     = "https://raw.githubusercontent.com/lukso-network/network-configs/main/devnets/%s/configs"
 )
 
 type ResourceDownloader struct {

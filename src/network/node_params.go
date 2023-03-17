@@ -5,7 +5,7 @@ import (
 	"fmt"
 )
 
-const NodeParamsDevLocation = "https://raw.githubusercontent.com/lukso-network/network-configs/main/dev/%s/%s"
+const NodeParamsDevLocation = "https://raw.githubusercontent.com/lukso-network/network-configs/main/devnets/%s/%s"
 const NodeParamsLocation = "https://raw.githubusercontent.com/lukso-network/network-configs/main/%s/%s"
 
 type NodeParams struct {
