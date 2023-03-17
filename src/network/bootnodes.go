@@ -5,7 +5,7 @@ import (
 	"fmt"
 )
 
-const BootNodeLocation = "https://raw.githubusercontent.com/lukso-network/network-configs/main/%s/%s/%s"
+const BootNodeLocation = "https://raw.githubusercontent.com/lukso-network/network-configs/main/devnets/%s/%s/%s"
 
 type Bootnode struct {
 	Consensus string `json:"consensus"`
